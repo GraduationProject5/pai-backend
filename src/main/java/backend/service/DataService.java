@@ -7,6 +7,6 @@ import backend.vo.Table;
  */
 public interface DataService {
 
-    Table createTable(Table table);
+    String createTable(String userID,String projectID,Table table);
 
 }
