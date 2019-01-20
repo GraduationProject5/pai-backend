@@ -5,4 +5,5 @@ package backend.enumclass;
  */
 public enum ColumnType {
     BIGINT,DOUBLE,DECIMAL,STRING,BOOLEAN,DATETIME
+
 }

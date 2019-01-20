@@ -9,4 +9,10 @@ public class Column {
     public String columnName ;
     public ColumnType columnType ;
     public String description ;
+
+    private char splitChar = ';';
+
+    public String toString(){
+        return columnName+splitChar+columnType.toString()+splitChar+description;
+    }
 }
