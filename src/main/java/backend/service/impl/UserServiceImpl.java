@@ -15,9 +15,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User login(String phone, String password) {
+    public User login(String email, String password) {
 
-        User user = userRepository.findByPhoneAndPassword(phone,password) ;
+        User user = userRepository.findByEmailAndPassword(email,password) ;
 
         if( null == user )  return null ;
         if( user.getActivated() == false )  return null ;
@@ -25,5 +25,8 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-
+    //TODO
+    public int register(String email, String password) {
+        return 0;
+    }
 }

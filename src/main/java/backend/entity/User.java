@@ -11,15 +11,15 @@ import javax.persistence.*;
 public class User {
 
     private int userID ;
-    private String phone ;
+    private String email ;
     private String password ;
     private boolean isActivated ;   //账号状态
 
     public User(){
     }
 
-    public User(String phone,String password){
-        this.phone = phone ;
+    public User(String email,String password){
+        this.email = email ;
         this.password = password ;
         this.isActivated = false ;
     }
@@ -35,11 +35,11 @@ public class User {
 
     @Basic
     @Column(name="phone", nullable = false, length = 11)
-    public String getPhone(){
-        return this.phone ;
+    public String getEmail(){
+        return this.email ;
     }
-    public void setPhone(String phone) {
-        this.phone = phone ;
+    public void setEmail(String email) {
+        this.email = email ;
     }
 
     @Basic
@@ -68,7 +68,7 @@ public class User {
         User entity = (User) o;
 
         if (userID != entity.userID) return false;
-        if (phone != null ? !phone.equals(entity.phone) : entity.phone != null) return false;
+        if (email != null ? !email.equals(entity.email) : entity.email != null) return false;
         if (password != null ? !password.equals(entity.password) : entity.password != null) return false;
         if (isActivated != entity.isActivated) return false;
 
@@ -77,7 +77,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        int result = phone != null ? phone.hashCode() : 0;
+        int result = email != null ? email.hashCode() : 0;
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + userID;
         return result;
