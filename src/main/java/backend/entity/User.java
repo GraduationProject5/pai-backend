@@ -10,10 +10,9 @@ import javax.persistence.*;
 @Table(name = "user", schema = "GraduationProject5")
 public class User {
 
-    private int userID ;
+    private long userID ;
     private String email ;
     private String password ;
-    private boolean isActivated ;   //账号状态
 
     public User(){
     }
@@ -21,20 +20,19 @@ public class User {
     public User(String email,String password){
         this.email = email ;
         this.password = password ;
-        this.isActivated = false ;
     }
 
     @GeneratedValue
     @Id
     @Column(name= "user_id",nullable = false)
-    public int getUserID(){
+    public long getUserID(){
         return this.userID ;
     }
-    public void setUserID(int newID) { this.userID = newID ; }
+    public void setUserID(long newID) { this.userID = newID ; }
 
 
     @Basic
-    @Column(name="phone", nullable = false, length = 11)
+    @Column(name="email", nullable = false)
     public String getEmail(){
         return this.email ;
     }
@@ -43,21 +41,12 @@ public class User {
     }
 
     @Basic
-    @Column(name = "password", nullable = false, length = 20)
+    @Column(name = "password", nullable = false)
     public String getPassword(){
         return this.password ;
     }
     public void setPassword(String password){
         this.password = password ;
-    }
-
-    @Basic
-    @Column(name="activated", nullable = false)
-    public boolean getActivated(){
-        return this.isActivated ;
-    }
-    public void setActivated(boolean b){
-        this.isActivated = b ;
     }
 
     @Override
@@ -70,16 +59,8 @@ public class User {
         if (userID != entity.userID) return false;
         if (email != null ? !email.equals(entity.email) : entity.email != null) return false;
         if (password != null ? !password.equals(entity.password) : entity.password != null) return false;
-        if (isActivated != entity.isActivated) return false;
 
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        int result = email != null ? email.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + userID;
-        return result;
-    }
 }
