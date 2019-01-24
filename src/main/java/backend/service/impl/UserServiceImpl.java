@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmailAndPassword(email,password) ;
 
         if( null == user )  return null ;
-        if( user.getActivated() == false )  return null ;
 
         return user;
     }

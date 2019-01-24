@@ -1,7 +1,7 @@
 package backend.entity;
 
 import javax.persistence.*;
-
+import javax.persistence.Table;
 /**
  * Created by lienming on 2019/1/17.
  */

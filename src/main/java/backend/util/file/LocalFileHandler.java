@@ -1,6 +1,6 @@
 package backend.util.file;
 
-import backend.vo.Table;
+import backend.vo.TableVO;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -120,7 +120,7 @@ public class LocalFileHandler {
     }
 
     public static boolean createProjectTable
-            (String userID, String projectID, Table table){
+            (String userID, String projectID, TableVO table){
         String targetPath = getUserProjectsPath(userID) +
                 File.separator + projectID + table.tableName ;
         File file = new File(targetPath) ;
