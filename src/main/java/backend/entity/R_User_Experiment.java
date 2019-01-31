@@ -24,7 +24,9 @@ public class R_User_Experiment {
     public long getRueID(){
         return this.rueID ;
     }
-    public void setRutID(long newID) { this.rueID = newID ; }
+    public void setRueID(long newID) { this.rueID = newID ; }
+
+
 
 
     @Basic

@@ -16,5 +16,5 @@ public interface DataService {
     long createTableByScript(long userID, TableVO tableVO, String ScriptText);
 
     //TODO 插入数据
-    void insertData(long userID);
+//    void insertData(long userID);
 }

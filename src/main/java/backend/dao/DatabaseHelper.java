@@ -1,9 +1,6 @@
 package backend.dao;
 
-import backend.entity.Experiment;
-import backend.entity.R_User_Experiment;
-import backend.entity.R_User_Table;
-import backend.entity.TablePO;
+import backend.entity.*;
 import backend.enumclass.ColumnType;
 import backend.vo.ColumnVO;
 import backend.vo.TableVO;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class DatabaseHelper {
 
@@ -23,10 +21,11 @@ public class DatabaseHelper {
     ExperimentRepository experimentRepository;
     @Autowired
     RUserExperimentRepository rUserExperimentRepository;
-
+    @Autowired
+    UserRepository userRepository;
 
     private String driver = "com.mysql.jdbc.Driver";
-    private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai";
+    private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true";
 
     //数据库连接账号密码
     private String user = "root" ;
@@ -49,6 +48,7 @@ public class DatabaseHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void destroy(){
@@ -86,7 +86,7 @@ public class DatabaseHelper {
     }
 
     //return tableID
-    public long excuteCreateTableByVO(long userID,TableVO tableVO){
+    public long executeCreateTableByVO(long userID,TableVO tableVO){
         String sql = formatMysqlCreate(tableVO);
         if(createTableByText(sql))
             return createTableRelationship(userID,tableVO);
@@ -95,7 +95,7 @@ public class DatabaseHelper {
     }
 
     //return tableID
-    public long excuteCreateTableByScript(long userID,TableVO tableVO,String sql){
+    public long executeCreateTableByScript(long userID,TableVO tableVO,String sql){
         if(createTableByText(sql))
             return createTableRelationship(userID,tableVO);
         else
@@ -118,8 +118,12 @@ public class DatabaseHelper {
 
     public TablePO createTablePO(String tableName,String description){
         TablePO tp = new TablePO(tableName,description);
-        TablePO tp_getID = tablePORepository.save(tp);
-        return tp_getID;
+        System.out.println(tp.getTableID());
+        System.out.println(tp.getTableName());
+        System.out.println(tp.getDescription());
+
+        tablePORepository.save(tp);
+        return  null ;
     }
 
     public R_User_Table createR_User_Table(long userID,TablePO tablePO_getID){
@@ -132,7 +136,7 @@ public class DatabaseHelper {
 
 
 
-    public long excuteCreateExperiment(long userID, String experimentName,String description){
+    public long executeCreateExperiment(long userID, String experimentName,String description){
         Experiment experiment = createExperiment(experimentName,description);
         long eid = experiment.getExperimentID();
         createR_User_Experiment(userID,experiment);
@@ -152,22 +156,103 @@ public class DatabaseHelper {
         return rue_getID;
     }
 
-    //TODO
+    //返回列数
     public int getTableColumns(String tableName) {
         DatabaseMetaData dbmd;
+        int columnNum = 0 ;
         try {
             dbmd = con.getMetaData();
-            ResultSet tableRet = dbmd.getTables(null, "%",m_TableName,new String[]{"TABLE"});
+            ResultSet colRet = dbmd.getColumns(null, "%",tableName,"%");
+
+            String columnName;
+            String columnType;
+            while(colRet.next()) {
+//                columnName = colRet.getString("COLUMN_NAME");
+//                columnType = colRet.getString("TYPE_NAME");
+//                int datasize = colRet.getInt("COLUMN_SIZE");
+//                int digits = colRet.getInt("DECIMAL_DIGITS");
+//                int nullable = colRet.getInt("NULLABLE");
+//                System.out.println(columnName+" "+columnType+" "+datasize+" "+digits+" "+ nullable);
+                columnNum++;
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return 0;
+        return columnNum;
     }
 
-//    public static void main(String[] args){
+
+    //lines:每行  splitChar 列分隔符
+
+    public void insertData(long userID,String tableName,String[] lines,String splitChar) {
+
+        try {
+            this.con.setAutoCommit(false);
+
+            String sql = formatInsertExpression(tableName);
+            PreparedStatement ps = con.prepareStatement
+                    (sql);
+
+            int columnNum = getTableColumns(tableName);
+            for(int i=0;i<lines.length;i++){
+                String[] parts = lines[i].split(splitChar);
+                for(int j=0;j<parts.length;j++) {
+                    String part = parts[j];
+                    if (isDigit(part)) {
+                        //Long or Int ?
+                        ps.setInt(j+1,Integer.parseInt(part));
+                    }
+                    else if(isBoolean(part)){
+                        ps.setBoolean(j+1,Boolean.parseBoolean(part));
+                    } else
+                        ps.setString(j+1,part);
+                }
+                ps.addBatch();
+            }
+
+            ps.executeBatch();
+            con.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                con.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public String formatInsertExpression(String tableName){
+        String prefix = "INSERT INTO " + tableName + " VALUES(" ;
+        String postfix = ")";
+        int columnNum = getTableColumns(tableName);
+        for(int i=0;i<columnNum-1;i++){
+            prefix += "?,";
+        }
+        prefix += "?"+postfix;
+        return prefix;
+    }
+
+    public boolean isDigit(String str){
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
+    }
+
+    public boolean isBoolean(String str){
+        String lower_str = str.toLowerCase();
+        if("true".equals(lower_str)||"false".equals(lower_str))
+            return true;
+        return false ;
+    }
+
+
+    public static void main(String[] args){
 //        DatabaseHelper dh = new DatabaseHelper();
-//
+
 //        List<ColumnVO> clist = new ArrayList<>();
 //        ColumnVO cvo1 = new ColumnVO() ;
 //        cvo1.columnName = "c1" ;
@@ -182,10 +267,21 @@ public class DatabaseHelper {
 //        TableVO tableVO = new TableVO();
 //        tableVO.tableName="test1";
 //        tableVO.columnVOList=clist;
-//        String sql = dh.formatMysqlCreate(tableVO);
-//        dh.createTable(sql);
+//        dh.executeCreateTableByVO(1,tableVO);
+
+
+
+//未测试成功 ，因为要启动项目 @Autowired repository
+//        String[] lines = {
+//                "2,asd,ewr",
+//                "23,ss,sss"
+//        };
 //
-//    }
+//        dh.insertData(1,"user",lines,",");
+
+//        User user = new User("223re","ASDw");
+//       System.out.println(null==dh.userRepository.findByEmailAndPassword("javalem@163.com","asd"));
+    }
 
 
 }

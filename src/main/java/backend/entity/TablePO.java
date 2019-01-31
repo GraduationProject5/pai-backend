@@ -4,7 +4,7 @@ package backend.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "table", schema = "GraduationProject5")
+@Table(name = "tablePO", schema = "GraduationProject5")
 public class TablePO {
     private long tableID ;
     private String tableName ;

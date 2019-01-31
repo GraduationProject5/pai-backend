@@ -66,11 +66,11 @@ public class UserController {
 
         Map<String,Object> result = new TreeMap<>() ;
 
-        int query_userid = userService.register(email,password) ;
+        long query_userid = userService.register(email,password) ;
 
         System.out.println("register result: " +query_userid) ;
-
-        switch ( query_userid ) {
+        int query_int = (int)query_userid;
+        switch ( query_int ) {
             case -1:
                 result.put("result",false) ;
                 result.put("message", "email illegal");
