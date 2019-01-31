@@ -25,7 +25,11 @@ public class UserServiceImpl implements UserService {
     }
 
     //TODO
-    public int register(String email, String password) {
-        return 0;
+    public long register(String email, String password) {
+        User tmp = userRepository.findByEmailAndPassword(email,password) ;
+        if( null != tmp )
+            return -1;
+        User user = new User(email,password);
+        return userRepository.save(user).getUserID();
     }
 }

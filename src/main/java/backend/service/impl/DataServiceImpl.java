@@ -1,5 +1,6 @@
 package backend.service.impl;
 
+import backend.dao.DatabaseHelper;
 import backend.service.DataService;
 import backend.vo.TableVO;
 
@@ -8,20 +9,24 @@ import backend.vo.TableVO;
  */
 public class DataServiceImpl implements DataService {
 
-    //TODO
-    /*
-        根据给定列，直接在数据库里建表，返回tableID
-     */
-    public long createTableByVO(String userID, String experimentID, TableVO tableVO) {
-        return 0;
+    private static DatabaseHelper databaseHelper = new DatabaseHelper() ;
+
+    public long createExperiment(long userID, String experimentName,String description){
+        return databaseHelper.excuteCreateExperiment(userID,experimentName,description);
     }
 
-    //TODO
     /*
-            根据SQL脚本，直接在数据库里建表，返回tableID
+        根据给定列建表，返回tableID
+     */
+    public long createTableByVO(long userID, TableVO tableVO) {
+        return databaseHelper.excuteCreateTableByVO(userID,tableVO);
+    }
+
+    /*
+            根据SQL建表，返回tableID
          */
-    public long createTableByScript(String userID, String experimentID, String ScriptText) {
-        return 0;
+    public long createTableByScript(long userID,TableVO tableVO,String scriptText) {
+        return databaseHelper.excuteCreateTableByScript(userID,tableVO,scriptText);
     }
 
 }

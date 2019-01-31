@@ -7,8 +7,12 @@ import backend.vo.TableVO;
  */
 public interface DataService {
 
-    long createTableByVO(String userID, String experimentID, TableVO tableVO);
+    long createExperiment(long userID, String experimentName,String description);
 
-    long createTableByScript(String userID, String experimentID, String ScriptText);
+    //表的列属性存在VO
+    long createTableByVO(long userID,  TableVO tableVO);
+
+    //表的列属性描述在ScriptText
+    long createTableByScript(long userID, TableVO tableVO, String ScriptText);
 
 }
