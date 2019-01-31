@@ -29,4 +29,10 @@ public class DataServiceImpl implements DataService {
         return databaseHelper.excuteCreateTableByScript(userID,tableVO,scriptText);
     }
 
+    public void insertData(long userID){
+
+    }
+
+
+
 }

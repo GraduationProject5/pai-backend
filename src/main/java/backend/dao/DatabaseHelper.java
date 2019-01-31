@@ -27,6 +27,7 @@ public class DatabaseHelper {
 
     private String driver = "com.mysql.jdbc.Driver";
     private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai";
+
     //数据库连接账号密码
     private String user = "root" ;
     private String password = "xx" ;
@@ -57,11 +58,6 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 
 
@@ -136,8 +132,6 @@ public class DatabaseHelper {
 
 
 
-
-
     public long excuteCreateExperiment(long userID, String experimentName,String description){
         Experiment experiment = createExperiment(experimentName,description);
         long eid = experiment.getExperimentID();
@@ -158,6 +152,18 @@ public class DatabaseHelper {
         return rue_getID;
     }
 
+    //TODO
+    public int getTableColumns(String tableName) {
+        DatabaseMetaData dbmd;
+        try {
+            dbmd = con.getMetaData();
+            ResultSet tableRet = dbmd.getTables(null, "%",m_TableName,new String[]{"TABLE"});
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
 
 //    public static void main(String[] args){
 //        DatabaseHelper dh = new DatabaseHelper();

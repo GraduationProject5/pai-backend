@@ -15,4 +15,6 @@ public interface DataService {
     //表的列属性描述在ScriptText
     long createTableByScript(long userID, TableVO tableVO, String ScriptText);
 
+    //TODO 插入数据
+    void insertData(long userID);
 }
