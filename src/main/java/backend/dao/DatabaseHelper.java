@@ -1,14 +1,16 @@
 package backend.dao;
 
+import backend.daorepository.*;
 import backend.entity.*;
-import backend.enumclass.ColumnType;
 import backend.vo.ColumnVO;
 import backend.vo.TableVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class DatabaseHelper {
@@ -23,6 +25,9 @@ public class DatabaseHelper {
     RUserExperimentRepository rUserExperimentRepository;
     @Autowired
     UserRepository userRepository;
+
+
+
 
     private String driver = "com.mysql.jdbc.Driver";
     private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true";
@@ -78,6 +83,7 @@ public class DatabaseHelper {
         try {
             st = con.createStatement();
             st.execute(mysqlText);
+            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -89,23 +95,23 @@ public class DatabaseHelper {
     public long executeCreateTableByVO(long userID,TableVO tableVO){
         String sql = formatMysqlCreate(tableVO);
         if(createTableByText(sql))
-            return createTableRelationship(userID,tableVO);
+            return createTableRelationship(userID,tableVO.tableName,tableVO.description);
         else
             return -1;
     }
 
     //return tableID
-    public long executeCreateTableByScript(long userID,TableVO tableVO,String sql){
+    public long executeCreateTableByScript(long userID,String tableName,String sql){
         if(createTableByText(sql))
-            return createTableRelationship(userID,tableVO);
+            return createTableRelationship(userID,tableName,"");
         else
             return -1;
     }
 
-    public long createTableRelationship(long userID,TableVO tableVO){
-        String tableName = tableVO.tableName;
-        List<ColumnVO> list = tableVO.columnVOList;
-        String description = tableVO.description;
+    public long createTableRelationship(long userID,String tableName,String description){
+//        String tableName = tableVO.tableName;
+//        List<ColumnVO> list = tableVO.columnVOList;
+//        String description = tableVO.description;
 
         TablePO tablePO = createTablePO(tableName,description);
         long tableID = tablePO.getTableID();
@@ -186,7 +192,7 @@ public class DatabaseHelper {
 
     //lines:每行  splitChar 列分隔符
 
-    public void insertData(long userID,String tableName,String[] lines,String splitChar) {
+    public void insertToUserTable(long userID,String tableName,String[] lines,String splitChar) {
 
         try {
             this.con.setAutoCommit(false);
@@ -214,6 +220,7 @@ public class DatabaseHelper {
 
             ps.executeBatch();
             con.commit();
+            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -224,6 +231,61 @@ public class DatabaseHelper {
             }
         }
 
+    }
+
+    //TODO 没有测试！获取用户表的所有行
+    public List getFromUserTable(long userID,String tableName){
+        TablePO tablePO = tablePORepository.findByTableName(tableName);
+        long tableID = tablePO.getTableID();
+
+        String query_sql = "SELECT * FROM "+tableName+";";
+
+        Statement st = null;
+        ResultSet resultSet = null ;
+        List list = new ArrayList();
+
+        try {
+            st = con.createStatement();
+            resultSet = st.executeQuery(query_sql);
+
+            ResultSetMetaData md = resultSet.getMetaData();//获取键名
+            int columnCount = md.getColumnCount();//获取行的数量
+
+            while(resultSet.next()){
+                Map rowData = new HashMap();//声明Map
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData.put(md.getColumnName(i), resultSet.getObject(i));//获取键名及值
+                }
+                list.add(rowData);
+            }
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    //TODO 获取用户的所有表信息[tableID,tableName,description]，不包含表的列属性
+    public List<TablePO> getDatabasesByUser(long userID){
+
+        List<R_User_Table> rutlist = rUserTableRepository.findByUserID(userID);
+
+        List<TablePO> tablePOList = new ArrayList<>();
+        for(R_User_Table rut:rutlist){
+            long tableID = rut.getTableID();
+            TablePO tablePO = tablePORepository.findByTableID(tableID);
+            tablePOList.add(tablePO);
+        }
+        if(tablePOList.size()>0)
+            return tablePOList;
+        else
+            return null;
+    }
+
+    //TODO 测试！
+    public List<Experiment> getExperimentsByUser(long userID){
+        return experimentRepository.findByUserID(userID);
     }
 
     public String formatInsertExpression(String tableName){
@@ -249,7 +311,7 @@ public class DatabaseHelper {
         return false ;
     }
 
-
+    //test
     public static void main(String[] args){
 //        DatabaseHelper dh = new DatabaseHelper();
 

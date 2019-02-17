@@ -1,4 +1,4 @@
-package backend.dao;
+package backend.daorepository;
 
 import backend.entity.R_Experiment_Table_Component;
 import org.springframework.data.jpa.repository.JpaRepository;

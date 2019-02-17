@@ -6,10 +6,7 @@ import backend.util.register.email.EmailUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
@@ -19,13 +16,14 @@ import java.util.TreeMap;
  * Created by lienming on 2019/1/17.
  */
 @Controller
-//test
+//@RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
     private UserService userService ;
 
-    @RequestMapping(value = "/")
+    //test
+    @RequestMapping(value = "/test")
     @ResponseBody
     public String testUser() {
         User user = userService.login("javalem@163.com","asdasd");
@@ -43,25 +41,50 @@ public class UserController {
                         @RequestParam("password") String password) {
 
         User user = userService.login(email,password) ;
-//        System.out.println(query_userid);
         if(user != null ) {
 //            session.setAttribute(SystemDefault.USER_ID,query_userid);
 //            String userName = userService.getUserInfo(query_userid).getUserName() ;
-//            session.setAttribute("userName",userName);
-//            return "redirect:/member/index" ;
-            return "success!user:"+user.getEmail();
+            session.setAttribute("email",user.getEmail());
+            session.setAttribute("userID",user.getUserID());
+            return "redirect:/member/index" ;
+//            return "success!user:"+user.getEmail();
         }
         if(user == null) {
-            model.addAttribute("error_msg","账号密码错误");
+            model.addAttribute("result","账号密码错误");
         }
 
         return "user/error";
 
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String doManagerLogout(HttpSession session) {
+        session.removeAttribute("email");
+        return "user/login";
+    }
+
     @PostMapping(value = "/sendEmail")
     @ResponseBody
-    public Map<String,Object> sendEmail(@RequestParam(value = "mail") String email,
+    public Map<String,Object> sendEmail(@RequestParam(value = "email") String email) {
+
+        Map<String,Object> result = new TreeMap<>() ;
+
+        boolean exist = userService.checkExist(email) ;
+        if(exist){
+            result.put("result",false);
+            result.put("message", "email exist");
+        } else {
+            String code = EmailUtility.sendAccountActivateEmail(email);
+            result.put("result",true) ;
+            result.put("code",code); //用于验证
+        }
+
+        return result;
+    }
+
+    @PostMapping(value = "/register")
+    @ResponseBody
+    public Map<String,Object> register(@RequestParam(value = "email") String email,
                                         @RequestParam(value = "password") String password) {
 
         Map<String,Object> result = new TreeMap<>() ;
@@ -69,6 +92,7 @@ public class UserController {
         long query_userid = userService.register(email,password) ;
 
         System.out.println("register result: " +query_userid) ;
+
         int query_int = (int)query_userid;
         switch ( query_int ) {
             case -1:
@@ -93,6 +117,8 @@ public class UserController {
 
 
     }
+
+
 
 
 

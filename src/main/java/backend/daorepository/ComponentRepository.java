@@ -1,4 +1,4 @@
-package backend.dao;
+package backend.daorepository;
 
 import backend.entity.Component;
 import org.springframework.data.jpa.repository.JpaRepository;

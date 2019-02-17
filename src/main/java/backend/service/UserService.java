@@ -9,4 +9,6 @@ public interface UserService {
     User login(String email, String password);
 
     long register(String email, String password);
+
+    boolean checkExist(String email);
 }

@@ -1,4 +1,4 @@
-package backend.dao;
+package backend.daorepository;
 
 import backend.entity.R_Section_Component;
 import org.springframework.data.jpa.repository.JpaRepository;

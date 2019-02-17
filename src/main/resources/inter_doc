@@ -1,7 +1,5 @@
 jQuery接口
 
-返回的需要什么数据请前端指出吧...
-
 1.用户登陆
 $.ajax({
 	url :  "/user/login",
@@ -86,7 +84,7 @@ data: {
 }
 
 10.创建实验
-url: "/experiment/create"
+url: "/experiment/createExperiment"
 data: {
 	userid : ,
 	experimentName : ,

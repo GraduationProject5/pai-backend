@@ -1,6 +1,6 @@
 package backend.service.impl;
 
-import backend.dao.UserRepository;
+import backend.daorepository.UserRepository;
 import backend.entity.User;
 import backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +28,16 @@ public class UserServiceImpl implements UserService {
     public long register(String email, String password) {
         User tmp = userRepository.findByEmailAndPassword(email,password) ;
         if( null != tmp )
-            return -1;
+            return -1; //
         User user = new User(email,password);
         return userRepository.save(user).getUserID();
+    }
+
+    public boolean checkExist(String email) {
+        User tmp = userRepository.findByEmail(email);
+        if( null != tmp )
+            return false;
+        else
+            return true;
     }
 }
