@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping(value = "/login")
     @ResponseBody
     public String login(HttpSession session, Model model,
-                        @RequestParam("username") String email,
+                        @RequestParam("email") String email,
                         @RequestParam("password") String password) {
 
         User user = userService.login(email,password) ;
@@ -70,6 +70,7 @@ public class UserController {
         Map<String,Object> result = new TreeMap<>() ;
 
         boolean exist = userService.checkExist(email) ;
+
         if(exist){
             result.put("result",false);
             result.put("message", "email exist");

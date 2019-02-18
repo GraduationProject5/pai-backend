@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
     public boolean checkExist(String email) {
         User tmp = userRepository.findByEmail(email);
         if( null != tmp )
-            return false;
-        else
             return true;
+        else
+            return false;
     }
 }
