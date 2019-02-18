@@ -4,7 +4,9 @@ import backend.entity.Component;
 import backend.entity.Model;
 import backend.entity.Section;
 import backend.service.SceneService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SceneServiceImpl implements SceneService {
     public Model createModel() {
         return null;

@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lienming on 2019/1/17.
@@ -29,8 +31,14 @@ public class DataController {
     public String createTableByColumn(Model model,
                         @SessionAttribute("userID")String userID,
                         @RequestParam("tableName") String tableName,
-                        @RequestParam("columnList") List<ColumnVO> columnVOList,
+                        @RequestBody Map<String,ColumnVO> map,
                         @RequestParam("description")String description) {
+
+        List<ColumnVO> columnVOList = new ArrayList<>();
+        for(String key : map.keySet()){
+            ColumnVO cvo = map.get(key);
+            columnVOList.add(cvo);
+        }
 
         long tableID = dataService.createTableByVO
                 (Long.parseLong(userID),tableName,columnVOList,description);

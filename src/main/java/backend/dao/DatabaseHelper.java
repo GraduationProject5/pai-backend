@@ -5,6 +5,8 @@ import backend.entity.*;
 import backend.vo.ColumnVO;
 import backend.vo.TableVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+@Repository
 public class DatabaseHelper {
 
     @Autowired
@@ -124,12 +127,12 @@ public class DatabaseHelper {
 
     public TablePO createTablePO(String tableName,String description){
         TablePO tp = new TablePO(tableName,description);
-        System.out.println(tp.getTableID());
-        System.out.println(tp.getTableName());
-        System.out.println(tp.getDescription());
+//        System.out.println(tp.getTableID());
+//        System.out.println(tp.getTableName());
+//        System.out.println(tp.getDescription());
 
-        tablePORepository.save(tp);
-        return  null ;
+        TablePO tablePO =  tablePORepository.save(tp);
+        return  tablePO ;
     }
 
     public R_User_Table createR_User_Table(long userID,TablePO tablePO_getID){
@@ -322,7 +325,7 @@ public class DatabaseHelper {
     }
 
     //test
-    public static void main(String[] args){
+//    public static void main(String[] args){
 //        DatabaseHelper dh = new DatabaseHelper();
 
 //        List<ColumnVO> clist = new ArrayList<>();
@@ -353,7 +356,7 @@ public class DatabaseHelper {
 
 //        User user = new User("223re","ASDw");
 //       System.out.println(null==dh.userRepository.findByEmailAndPassword("javalem@163.com","asd"));
-    }
+//    }
 
 
 }

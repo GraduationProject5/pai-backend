@@ -42,7 +42,6 @@ public class UserControllerTest {
 
     @Test
     public void testLogin() throws Exception{
-        //调用接口，传入添加的用户参数
         mvc.perform(MockMvcRequestBuilders
                         .post("/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -57,7 +56,6 @@ public class UserControllerTest {
 
     @Test
     public void testSendEmail() throws Exception{
-        //调用接口，传入添加的用户参数
         mvc.perform(MockMvcRequestBuilders
                 .post("/sendEmail")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -71,7 +69,6 @@ public class UserControllerTest {
 
     @Test
     public void testRegister() throws Exception{
-        //调用接口，传入添加的用户参数
         mvc.perform(MockMvcRequestBuilders
                 .post("/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

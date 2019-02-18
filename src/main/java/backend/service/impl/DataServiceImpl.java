@@ -6,6 +6,7 @@ import backend.entity.TablePO;
 import backend.service.DataService;
 import backend.vo.ColumnVO;
 import backend.vo.TableVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.List;
 @Service
 public class DataServiceImpl implements DataService {
 
-    private static DatabaseHelper databaseHelper = new DatabaseHelper() ;
+    @Autowired
+    private DatabaseHelper databaseHelper  ;
 
     public long createExperiment(long userID, String experimentName,String description){
         return databaseHelper.executeCreateExperiment(userID,experimentName,description);

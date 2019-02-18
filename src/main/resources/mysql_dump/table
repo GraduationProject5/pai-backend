@@ -80,7 +80,7 @@ CREATE TABLE `hibernate_sequence` (
 
 LOCK TABLES `hibernate_sequence` WRITE;
 /*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
-INSERT INTO `hibernate_sequence` VALUES (1);
+INSERT INTO `hibernate_sequence` VALUES (6);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,7 +195,7 @@ CREATE TABLE `r_user_table` (
   `user_id` bigint(20) NOT NULL,
   `table_id` bigint(20) NOT NULL,
   PRIMARY KEY (`rut_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,6 +204,7 @@ CREATE TABLE `r_user_table` (
 
 LOCK TABLES `r_user_table` WRITE;
 /*!40000 ALTER TABLE `r_user_table` DISABLE KEYS */;
+INSERT INTO `r_user_table` VALUES (5,1,4);
 /*!40000 ALTER TABLE `r_user_table` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,27 +233,28 @@ LOCK TABLES `section` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `table`
+-- Table structure for table `tablePO`
 --
 
-DROP TABLE IF EXISTS `table`;
+DROP TABLE IF EXISTS `tablePO`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `table` (
+CREATE TABLE `tablePO` (
   `table_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `table_name` varchar(100) NOT NULL,
   `description` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`table_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `table`
+-- Dumping data for table `tablePO`
 --
 
-LOCK TABLES `table` WRITE;
-/*!40000 ALTER TABLE `table` DISABLE KEYS */;
-/*!40000 ALTER TABLE `table` ENABLE KEYS */;
+LOCK TABLES `tablePO` WRITE;
+/*!40000 ALTER TABLE `tablePO` DISABLE KEYS */;
+INSERT INTO `tablePO` VALUES (4,'user1_testCreateTableByColumn','testCreateTableByColumn');
+/*!40000 ALTER TABLE `tablePO` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -267,7 +269,7 @@ CREATE TABLE `user` (
   `email` varchar(50) NOT NULL,
   `password` varchar(30) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,8 +278,31 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'javalem@163.com','asdasd');
+INSERT INTO `user` VALUES (1,'javalem@163.com','asdasd'),(3,'trere@rere.com','asdasdasd');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user1_testCreateTableByColumn`
+--
+
+DROP TABLE IF EXISTS `user1_testCreateTableByColumn`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user1_testCreateTableByColumn` (
+  `c2` varchar(100) NOT NULL,
+  `c1` int(11) NOT NULL,
+  PRIMARY KEY (`c1`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user1_testCreateTableByColumn`
+--
+
+LOCK TABLES `user1_testCreateTableByColumn` WRITE;
+/*!40000 ALTER TABLE `user1_testCreateTableByColumn` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user1_testCreateTableByColumn` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -289,4 +314,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-24 17:16:34
+-- Dump completed on 2019-02-18 23:15:47
