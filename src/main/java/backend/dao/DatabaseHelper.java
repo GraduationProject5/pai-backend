@@ -285,7 +285,17 @@ public class DatabaseHelper {
 
     //TODO 测试！
     public List<Experiment> getExperimentsByUser(long userID){
-        return experimentRepository.findByUserID(userID);
+        List<R_User_Experiment> ruelist = rUserExperimentRepository.findByUserID(userID);
+        List<Experiment> elist = new ArrayList<>();
+        for ( R_User_Experiment rue :ruelist){
+            long experimentID = rue.getExperimentID() ;
+            Experiment e = experimentRepository.findByExperimentID(experimentID);
+            elist.add(e);
+        }
+        if(elist.size()>0)
+            return elist;
+        else
+            return null;
     }
 
     public String formatInsertExpression(String tableName){
