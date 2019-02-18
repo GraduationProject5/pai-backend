@@ -110,9 +110,9 @@ public class UserController {
                 return result ;
             default:
 //                EmailUtility.sendAccountActivateEmail("javalem@163.com",query_userid+"");
-                String code = EmailUtility.sendAccountActivateEmail(email);
+//                String code = EmailUtility.sendAccountActivateEmail(email);
                 result.put("result",true) ;
-                result.put("code",code); //用于验证
+//                result.put("code",code); //用于验证
                 return result;
         }
 
