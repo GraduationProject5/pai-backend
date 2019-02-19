@@ -73,7 +73,7 @@ public class UserController {
 
         if(exist){
             result.put("result",false);
-            result.put("message", "email exist");
+            result.put("code", "-1");
         } else {
             String code = EmailUtility.sendAccountActivateEmail(email);
             result.put("result",true) ;
@@ -87,7 +87,7 @@ public class UserController {
     @ResponseBody
     public Map<String,Object> register(@RequestParam(value = "email") String email,
                                         @RequestParam(value = "password") String password) {
-
+                        //@RequestParam(value = "code") String code
         Map<String,Object> result = new TreeMap<>() ;
 
         long query_userid = userService.register(email,password) ;
@@ -113,6 +113,7 @@ public class UserController {
 //                String code = EmailUtility.sendAccountActivateEmail(email);
                 result.put("result",true) ;
 //                result.put("code",code); //用于验证
+                result.put("message", "success");
                 return result;
         }
 

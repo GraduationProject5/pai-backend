@@ -57,10 +57,12 @@ public class DataController {
     //用户建表 （通过MySql脚本）
     @PostMapping(value = "/createTableByScript")
     @ResponseBody
-    public String createTableByColumn(Model model,
+    public String createTableByScript(Model model,
                                       @SessionAttribute("userID")String userID,
                                       @RequestParam("tableName") String tableName,
-                                      @RequestParam("sqlScript") String sqlScript) {
+                                      @RequestBody Map<String,String> map ) {
+
+        String sqlScript = map.get("sql") ;
 
         long tableID = dataService.createTableByScript
                 (Long.parseLong(userID),tableName,sqlScript);
@@ -81,7 +83,7 @@ public class DataController {
     @ResponseBody
     public String importData(@SessionAttribute("userID")String userID,
                              @RequestParam("tableName") String tableName,
-                             @RequestParam("file") String[] file) {
+                             @RequestBody String[] file) {
         dataService.insertData(Long.parseLong(userID),tableName,file,";");
 
         return "data/..3";

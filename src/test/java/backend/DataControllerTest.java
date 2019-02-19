@@ -69,5 +69,28 @@ public class DataControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void testCreateTableByScript() throws Exception{
+
+        String sql =
+                "create table user1_testCreateTableByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
+
+        Map<String,String> map = new HashMap();
+        map.put("sql",sql);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/data/createTableByScript")
+                .sessionAttr("userID",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JSONObject.toJSONString(map))
+                .param("tableName","user1_testCreateTableByScript")
+                )
+                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print())
+                .andReturn();
+    }
+
+
 
 }
