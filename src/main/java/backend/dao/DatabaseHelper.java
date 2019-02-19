@@ -206,17 +206,23 @@ public class DatabaseHelper {
 
             int columnNum = getTableColumns(tableName);
             for(int i=0;i<lines.length;i++){
+//                System.out.println(lines[i]);
                 String[] parts = lines[i].split(splitChar);
+
                 for(int j=0;j<parts.length;j++) {
                     String part = parts[j];
+//                    System.out.println(part);
+
+                    //TODO 日期？
                     if (isDigit(part)) {
                         //Long or Int ?
                         ps.setInt(j+1,Integer.parseInt(part));
                     }
                     else if(isBoolean(part)){
                         ps.setBoolean(j+1,Boolean.parseBoolean(part));
-                    } else
-                        ps.setString(j+1,part);
+                    } else {
+                        ps.setString(j + 1, part);
+                    }
                 }
                 ps.addBatch();
             }

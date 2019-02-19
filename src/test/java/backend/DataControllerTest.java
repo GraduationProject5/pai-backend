@@ -91,6 +91,76 @@ public class DataControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void testImportData_1() throws Exception{
 
+        String[] file = {
+                "1;2;3",
+                "4;5;6",
+                "7;8;9"
+        };
+
+        Map<String,String[]> map = new HashMap();
+
+        map.put("file",file);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/data/importData")
+                .sessionAttr("userID",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JSONObject.toJSONString(map))
+                .param("tableName","user1_testCreateTableByScript")
+        )
+                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print())
+                .andReturn();
+
+    }
+
+    @Test
+    public void testImportData_2() throws Exception{
+        String[] file = {
+                "aaa;111",
+                "bbb;222",
+                "ccc;333"
+        };
+
+        Map<String,String[]> map = new HashMap();
+
+        map.put("file",file);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/data/importData")
+                .sessionAttr("userID",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JSONObject.toJSONString(map))
+                .param("tableName","user1_testCreateTableByColumn")
+        )
+                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print())
+                .andReturn();
+
+    }
+
+    //TODO 未完成
+    @Test
+    public void testAllTable() throws Exception{
+
+        Map<String,String[]> map = new HashMap();
+
+//        map.put("file",file);
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/data/allTable")
+                .sessionAttr("userID",1)
+                    )
+                .andExpect(status().isOk())
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print())
+                .andReturn();
+
+    }
 
 }

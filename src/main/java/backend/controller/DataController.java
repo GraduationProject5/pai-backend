@@ -83,14 +83,18 @@ public class DataController {
     @ResponseBody
     public String importData(@SessionAttribute("userID")String userID,
                              @RequestParam("tableName") String tableName,
-                             @RequestBody String[] file) {
-        dataService.insertData(Long.parseLong(userID),tableName,file,";");
+                             @RequestParam(value = "splitChar",defaultValue = ";") String splitChar,
+                             @RequestBody Map<String,String[]> map) {
+        //默认分隔符为 ;
+        String[] file = map.get("file");
+
+        dataService.insertData(Long.parseLong(userID),tableName,file,splitChar);
 
         return "data/..3";
     }
 
     //查看用户自建表列表
-    @PostMapping(value = "/allTable")
+    @RequestMapping(value = "/allTable")
     @ResponseBody
     public String allTable(Model model,
                             @SessionAttribute("userID")String userID) {
