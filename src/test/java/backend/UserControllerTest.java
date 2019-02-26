@@ -43,7 +43,7 @@ public class UserControllerTest {
     @Test
     public void testLogin() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                        .post("/login")
+                        .post("/user/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email","javalem@163.com")
                         .param("password","asdasd"))
@@ -57,12 +57,12 @@ public class UserControllerTest {
     @Test
     public void testSendEmail() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                .post("/sendEmail")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("email","335143116@qq.com")
+                .post("/user/sendEmail")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("email","javalem@163.com")
                 )
                 .andExpect(status().isOk())
-                .andExpect(status().is2xxSuccessful())
+//                .andExpect(status().is4xxClientError())
                 .andDo(print())
                 .andReturn();
     }
@@ -70,7 +70,7 @@ public class UserControllerTest {
     @Test
     public void testRegister() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                .post("/register")
+                .post("/user/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("email","trere@rere.com")
                 .param("password","asdasdasd")
