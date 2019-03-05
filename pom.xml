@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pai-backend</name>
 	<description>Demo project for Spring Boot</description>
+    <packaging>jar</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -78,6 +79,8 @@
 				<!--热部署添加-->
 				<configuration>
 					<fork>true</fork>
+                    <!--支持静态文件热部署-->
+                    <addResources>true</addResources>
 				</configuration>
 			</plugin>
 		</plugins>
