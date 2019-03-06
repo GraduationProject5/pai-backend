@@ -33,11 +33,11 @@ public class DatabaseHelper {
 
 
     private String driver = "com.mysql.jdbc.Driver";
-    private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true";
+    private String url = "jdbc:mysql://localhost:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&verifyServerCertificate=false&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true";
 
     //数据库连接账号密码
     private String user = "root" ;
-    private String password = "xx" ;
+    private String password = "1156489606cbB!";
 
     private Connection con = null ;
 
