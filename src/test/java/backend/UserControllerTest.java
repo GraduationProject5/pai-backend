@@ -72,7 +72,7 @@ public class UserControllerTest {
         mvc.perform(MockMvcRequestBuilders
                 .post("/user/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("email","trere@rere.com")
+                .param("email", "tredd121re@rere.com")
                 .param("password","asdasdasd")
         )
                 .andExpect(status().isOk())

@@ -3,9 +3,9 @@ package backend.controller;
 import backend.entity.User;
 import backend.service.UserService;
 import backend.util.register.email.EmailUtility;
-import net.sf.json.JSONObject;
+//import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
