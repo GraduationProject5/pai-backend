@@ -1,5 +1,5 @@
 // Created by chen.
-#!groovy
+//#!groovy
 pipeline{
 	agent any
 	//定义仓库地址
@@ -23,6 +23,7 @@ pipeline{
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
+                    echo ${build_tag}
                 }
 			}
 		}
@@ -37,12 +38,9 @@ pipeline{
 		stage('编译+单元测试'){
 			steps {
 				echo "start compile"
-				//切换目录
-				dir(SERVICE_DIR) {
-					//重新打包
-					sh "ls -l"
-					sh 'mvn -U -am clean install'
-				}
+                sh "ls -l"
+                sh 'mvn -U -am clean install'
+
 			}
 		}
 
@@ -50,33 +48,31 @@ pipeline{
             steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
-                dir(SERVICE_DIR){
+
                     sh "ls -l"
                     sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
-                }
+
             }
         }
 
-       stage('推送镜像') {
-            steps {
-                echo "start push image"
-                dir(SERVICE_DIR){
-                  sh "ls -l"
-                  withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'docker_registryPassword', usernameVariable: 'docker_registryUsername')]) {
-                      sh "docker login -u ${docker_registryUsername} -p ${docker_registryPassword} ${DOCKER_REGISTRY_HOST}"
-                      sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
-                  }
-                }
-            }
-       }
+        stage('推送镜像') {
+                    steps {
+                        echo "start push image"
 
-       stage('启动服务') {
-            steps {
-                echo "start deploy"
-                dir(SERVICE_DIR){
-                    sh "ls -l"
-                }
-            }
-       }
+                          sh "ls -l"
+                          withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'docker_registryPassword', usernameVariable: 'docker_registryUsername')]) {
+                              sh "docker login -u ${docker_registryUsername} -p ${docker_registryPassword} ${DOCKER_REGISTRY_HOST}"
+                              sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
+
+                        }
+                    }
+               }
+
+        stage('启动服务') {
+                    steps {
+                        echo "start deploy"
+                        sh "ls -l"
+                    }
+               }
     }
 }
