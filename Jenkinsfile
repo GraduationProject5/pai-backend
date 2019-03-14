@@ -31,6 +31,7 @@ pipeline{
 		stage('代码静态检查'){
 			steps {
 				//伪代码检查
+				echo ${build_tag}
 				echo "start code check"
 			}
 		}
@@ -39,7 +40,7 @@ pipeline{
 			steps {
 				echo "start compile"
                 sh "ls -l"
-                sh 'mvn -U -am clean install'
+                sh "mvn -U -am clean install"
 
 			}
 		}
