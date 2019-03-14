@@ -2,7 +2,7 @@
 # This is a jenkins detection script
 # Create by chen
 
-JENKINS=`systemctl status sshd | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1`
+JENKINS=`systemctl status jenkins | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1`
 
 if [ "$JENKINS" == "running" ]
         then
