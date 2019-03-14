@@ -17,7 +17,7 @@ pipeline{
 				echo "start fetch code from git:${REPOSITORY}"
 				//清空当前目录
 				deleteDir()
-				//拉去代码
+				//拉取代码
 				git "${REPOSITORY}"
 				script {
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
@@ -68,29 +68,15 @@ pipeline{
                   }
                 }
             }
-        }
+       }
 
-	    stage('构建镜像'){
-			steps {
-				echo "start build image"
-				dir('sso-client1') {
-					//build镜像
-					sh 'docker build -t hub.c.163.com/longfeizheng/sso-client1:1.0 .'
-					//登录163云仓库
-					sh 'docker login -u longfei_zheng@163.com -p password hub.c.163.com'
-					//推送镜像到163仓库
-					sh 'docker push hub.c.163.com/longfeizheng/sso-client1:1.0'
-				}
-			}
-		}
-
-        stage('启动服务'){
+       stage('启动服务') {
             steps {
-                echo "start sso-merryyou"
-                //重启服务
-                bat 'docker-compose up -d --build'
+                echo "start deploy"
+                dir(SERVICE_DIR){
+                    sh "ls -l"
+                }
             }
-        }
-
-	}
+       }
+    }
 }
