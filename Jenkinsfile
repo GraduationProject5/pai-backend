@@ -1,10 +1,13 @@
+// Created by chen.
 #!groovy
 pipeline{
 	agent any
 	//定义仓库地址
 	environment {
-		REPOSITORY="https://gitee.com/merryyou/sso-merryyou.git"
+		REPOSITORY="https://github.com/GraduationProject5/pai-backend.git"
 		SERVICE_DIR="pai-backend"
+		DOCKER_REGISTRY_HOST="registry.cn-shanghai.aliyuncs.com"
+		DOCKER_REGISTRY="registry.cn-shanghai.aliyuncs.com/cbb_registry/pai-backend"
 	}
 
 	stages {
@@ -67,7 +70,7 @@ pipeline{
             }
         }
 
-		stage('构建镜像'){
+	    stage('构建镜像'){
 			steps {
 				echo "start build image"
 				dir('sso-client1') {
@@ -81,13 +84,13 @@ pipeline{
 			}
 		}
 
-		stage('启动服务'){
-			steps {
-				echo "start sso-merryyou"
-				//重启服务
-				bat 'docker-compose up -d --build'
-			}
-		}
+        stage('启动服务'){
+            steps {
+                echo "start sso-merryyou"
+                //重启服务
+                bat 'docker-compose up -d --build'
+            }
+        }
 
 	}
 }
