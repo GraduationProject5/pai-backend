@@ -23,8 +23,8 @@ pipeline{
                     time = sh(returnStdout: true, script: 'date "+%Y%m%d%H%M"').trim()
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
-                    echo ${build_tag}
                 }
+                echo ${build_tag}
 			}
 		}
 
