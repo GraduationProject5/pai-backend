@@ -1,6 +1,6 @@
 #!/bin/bash
 # This is a jenkins detection script
-# Create by chen
+# Created by chen
 
 JENKINS=`systemctl status jenkins | grep Active | awk '{print $3}' | cut -d "(" -f2 | cut -d ")" -f1`
 

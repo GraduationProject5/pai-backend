@@ -70,11 +70,9 @@ pipeline{
         stage('更新YAML镜像版本') {
                     steps{
                         echo "start change yaml image tag"
-                        dir(SERVICE_DIR){
-                            sh "ls -l"
-                            sh "sed -i 's/<BUILD_TAG>/${build_tag}/' docker-compose.yml"
-                            sh "cat docker-compose.yml"
-                        }
+                        sh "ls -l"
+                        sh "sed -i 's/<BUILD_TAG>/${build_tag}/' docker-compose.yml"
+                        sh "cat docker-compose.yml"
                     }
                 }
 
