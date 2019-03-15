@@ -24,15 +24,15 @@ pipeline{
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
                 }
-                echo "${build_tag}"
+                //echo "${build_tag}"
 			}
 		}
 
 		stage('代码静态检查'){
 			steps {
 				//伪代码检查
-				echo "${build_tag}"
-				echo "start code check"
+				//echo "${build_tag}"
+				//echo "start code check"
 			}
 		}
 
@@ -71,6 +71,7 @@ pipeline{
                     steps {
                         echo "start deploy"
                         sh "ls -l"
+                        sh "docker-compose up -d --build"
                     }
                }
     }
