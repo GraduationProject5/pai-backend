@@ -55,33 +55,41 @@ pipeline{
         }
 
         stage('推送镜像') {
-                    steps {
-                        echo "start push image"
+            steps {
+                echo "start push image"
 
-                          sh "ls -l"
-                          withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'docker_registryPassword', usernameVariable: 'docker_registryUsername')]) {
-                              sh "docker login -u ${docker_registryUsername} -p ${docker_registryPassword} ${DOCKER_REGISTRY_HOST}"
-                              sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
+                  sh "ls -l"
+                  withCredentials([usernamePassword(credentialsId: 'docker_registry', passwordVariable: 'docker_registryPassword', usernameVariable: 'docker_registryUsername')]) {
+                      sh "docker login -u ${docker_registryUsername} -p ${docker_registryPassword} ${DOCKER_REGISTRY_HOST}"
+                      sh "docker push ${DOCKER_REGISTRY}:${build_tag}"
 
-                        }
-                    }
-               }
+                }
+            }
+        }
 
         stage('更新YAML镜像版本') {
-                    steps{
-                        echo "start change yaml image tag"
-                        sh "ls -l"
-                        sh "sed -i 's/<BUILD_TAG>/${build_tag}/' docker-compose.yml"
-                        sh "cat docker-compose.yml"
-                    }
-                }
+            steps{
+                echo "start change yaml image tag"
+                sh "ls -l"
+                sh "sed -i 's/<BUILD_TAG>/${build_tag}/' docker-compose.yml"
+                sh "cat docker-compose.yml"
+            }
+        }
 
         stage('启动服务') {
-                    steps {
-                        echo "start deploy"
-                        sh "ls -l"
-                        sh "docker-compose up -d"
-                    }
-               }
+            steps {
+                echo "start deploy"
+                sh "ls -l"
+                sh "docker-compose up -d"
+            }
+       }
+    }
+    post {
+        always {
+          step([$class: 'Mailer',
+            notifyEveryUnstableBuild: true,
+            recipients: "1156489606@qq.com",
+            sendToIndividuals: true])
+        }
     }
 }
