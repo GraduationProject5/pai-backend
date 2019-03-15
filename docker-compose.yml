@@ -1,0 +1,6 @@
+version: '2'
+services:
+  pai-backend:
+    image: pai-backend-docker/pai-backend:<BUILD_TAG>
+    ports:
+      - "13100:4040"
