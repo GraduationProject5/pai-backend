@@ -3,6 +3,6 @@
 version: '2'
 services:
   pai-backend:
-    image: pai-backend-docker/pai-backend:<BUILD_TAG>
+    image: registry.cn-shanghai.aliyuncs.com/cbb_registry/pai-backend:<BUILD_TAG>
     ports:
       - "13100:4040"

@@ -80,7 +80,7 @@ pipeline{
                     steps {
                         echo "start deploy"
                         sh "ls -l"
-                        sh "docker-compose up -d --build"
+                        sh "docker-compose up -d"
                     }
                }
     }
