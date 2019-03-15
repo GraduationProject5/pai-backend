@@ -12,7 +12,7 @@
 	<artifactId>pai-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pai-backend</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Graduation project for Spring Boot</description>
     <packaging>jar</packaging>
 
 	<properties>
@@ -74,6 +74,12 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -81,11 +87,20 @@
 				<!--热部署添加-->
 				<configuration>
 					<fork>true</fork>
+					<executable>true</executable>
                     <!--支持静态文件热部署-->
                     <addResources>true</addResources>
 				</configuration>
 			</plugin>
 
+			<!-- 打包时跳过单元测试 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
 			<!-- Docker maven plugin -->
 			<plugin>
 				<groupId>com.spotify</groupId>
@@ -103,8 +118,6 @@
 					</resources>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
-
 </project>

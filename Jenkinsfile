@@ -24,7 +24,7 @@ pipeline{
                     git_version = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%h"').trim()
                     build_tag = time+git_version
                 }
-                echo ${build_tag}
+                echo "${build_tag}"
 			}
 		}
 
@@ -40,8 +40,7 @@ pipeline{
 			steps {
 				echo "start compile"
                 sh "ls -l"
-                sh "mvn -U -am clean install"
-
+                sh "mvn -U -am clean package"
 			}
 		}
 
@@ -49,9 +48,8 @@ pipeline{
             steps {
                 echo "start build image"
                 echo "image tag : ${build_tag}"
-
-                    sh "ls -l"
-                    sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
+                sh "ls -l"
+                sh "docker build -t ${DOCKER_REGISTRY}:${build_tag} ."
 
             }
         }
