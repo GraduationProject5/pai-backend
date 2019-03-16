@@ -44,7 +44,7 @@ pipeline{
 			}
 		}
 
-        stage('代码静态检查'){
+        stage('代码test'){
             steps {
                 //伪代码检查
                 echo "${build_tag}"
