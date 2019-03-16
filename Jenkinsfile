@@ -40,7 +40,7 @@ pipeline{
 			steps {
 				echo "start compile"
                 sh "ls -l"
-                sh "mvn -U -am clean package"
+                sh "mvn -U -e -am clean package"
 			}
 		}
 
