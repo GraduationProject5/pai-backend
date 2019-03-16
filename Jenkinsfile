@@ -67,7 +67,7 @@ pipeline{
             }
         }
 
-        stage('更新YAML镜像版本') {
+        stage('更新yml镜像版本') {
             steps{
                 echo "start change yaml image tag"
                 sh "ls -l"
@@ -84,12 +84,14 @@ pipeline{
             }
        }
     }
-    post {
+
+    post{
         always {
-          step([$class: 'Mailer',
-            notifyEveryUnstableBuild: true,
-            recipients: "1156489606@qq.com",
-            sendToIndividuals: true])
+            emailext(
+                subject: '${ENV, var="JOB_NAME"}-第${BUILD_NUMBER}次构建日志',
+                body: '${FILE,path="email.html"}',
+                to: '1156489606@qq.com'
+            )
         }
     }
 }
