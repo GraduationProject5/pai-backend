@@ -89,7 +89,7 @@ pipeline{
         always {
             emailext(
                 subject: '${ENV, var="JOB_NAME"}-第${BUILD_NUMBER}次构建日志',
-                body: '${FILE,path="email.html"}',
+                body: '${FILE,path="jenkins-email.html"}',
                 to: '1156489606@qq.com'
             )
         }
