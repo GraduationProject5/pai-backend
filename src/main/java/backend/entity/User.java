@@ -1,12 +1,19 @@
 package backend.entity;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.persistence.Table;
+
 /**
  * Created by lienming on 2019/1/17.
  */
 
 @Entity
+//@Getter
+//@Builder
 @Table(name = "user", schema = "GraduationProject5")
 public class User {
 
@@ -51,7 +58,7 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+//        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         User entity = (User) o;
@@ -62,5 +69,4 @@ public class User {
 
         return true;
     }
-
 }

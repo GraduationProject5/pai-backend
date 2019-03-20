@@ -30,22 +30,23 @@ public class DatabaseHelper {
     UserRepository userRepository;
 
     private String driver = "com.mysql.cj.jdbc.Driver";
-    //    @Value("${spring.datasource.url}")
-    private String url = "jdbc:mysql://47.102.152.224:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&verifyServerCertificate=false&serverTimezone=Asia/Shanghai";
-
-    //数据库连接账号密码
+//    @Value("${spring.datasource.url}")
+//    private String url = "jdbc:mysql://47.102.152.224:3306/GraduationProject5?characterEncoding=UTF-8&useSSL=true&verifyServerCertificate=false&serverTimezone=Asia/Shanghai";
+//    //数据库连接账号密码
 //    @Value("${spring.datasource.username}")
-    private String username = "root";
-    //    @Value("${spring.datasource.password}")
-    private String password = "1156489606cbB!";
+//    private String username = "root";
+//    @Value("${spring.datasource.password}")
+//    private String password = "1156489606cbB!";
 
     private Connection con = null;
 
-    public DatabaseHelper() {
-        init();
+    public DatabaseHelper(@Value("${spring.datasource.username}") String username,
+                          @Value("${spring.datasource.password}") String password,
+                          @Value("${spring.datasource.url}") String url) {
+        init(url, username, password);
     }
 
-    private void init() {
+    private void init(String url, String username, String password) {
         try {
             //Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
 //            Class.forName(driver);
@@ -55,7 +56,6 @@ public class DatabaseHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void destroy() {

@@ -39,6 +39,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
+			<scope>true</scope>
 		</dependency>
 
 		<dependency>
@@ -72,6 +73,19 @@
 			<version>1.4.7</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/springloaded -->
+		<!--<dependency>-->
+		<!--<groupId>org.springframework</groupId>-->
+		<!--<artifactId>springloaded</artifactId>-->
+		<!--<version>1.2.8.RELEASE</version>-->
+		<!--</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -88,12 +102,10 @@
 				<!--热部署添加-->
 				<configuration>
 					<fork>true</fork>
-					<executable>true</executable>
                     <!--支持静态文件热部署-->
                     <addResources>true</addResources>
 				</configuration>
 			</plugin>
-
 			<!-- 打包时跳过单元测试 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
