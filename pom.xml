@@ -45,11 +45,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-		<!-- Mysql支持 -->
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<!--mysql_native_password caching_sha2_password 验证方式报错-->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<version>8.0.15</version>
 		</dependency>
 		<!-- Spring-data-jpa依赖 -->
 		<dependency>
