@@ -1,4 +1,4 @@
-package backend.util;
+package backend.util.json;
 
 import net.sf.json.JSONObject;
 

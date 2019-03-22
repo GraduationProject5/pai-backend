@@ -3,11 +3,11 @@ jQuery接口
 1.用户登陆
 $.ajax({
 	url :  "/user/login",
-	type : "POST",
+	type : "GET",
 	data : 	{email:.. ,password:.. },
 	dataType : "json",
-	success :   //sessionAttribute设置userID,email两个参数
-           失败： //model.addAttribute("result","账号密码错误");
+	success :   //model里添加token,返回"Success"
+         失败：  //model.addAttribute("result","账号密码错误");
 })
 
 2. 发送邮件(到指定邮箱获取验证码)

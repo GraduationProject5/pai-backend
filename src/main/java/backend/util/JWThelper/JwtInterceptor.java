@@ -1,9 +1,8 @@
-package backend.util.jwthelper;
+package backend.util.JWThelper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,25 +24,28 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest,
                              HttpServletResponse httpServletResponse,
                              Object o) throws Exception {
+
         httpServletResponse.setCharacterEncoding("utf-8");
         String requestURI = httpServletRequest.getRequestURI();
         String param_token = httpServletRequest.getParameter("token");
-        String header_token="";
+        String header_token = httpServletRequest.getHeader("token");
+        if(header_token == null && param_token == null){
 
+//            if(requestURI.contains("/user/login")) {
+//                System.out.println(requestURI);
+//                return true;
+//            }
 
-//        if(requestURI.contains("/user")){
+            String str="{'result':'fail','message':'缺少token，无法验证','data':null}";
+            dealErrorReturn(httpServletRequest,httpServletResponse,str);
+            return false;
+        }
+        if(param_token!=null){
+            header_token=param_token;
+        }
 
-            header_token=httpServletRequest.getHeader("token");
-            if(header_token == null && param_token == null){
-                String str="{'result':'fail','message':'缺少token，无法验证','data':null}";
-                dealErrorReturn(httpServletRequest,httpServletResponse,str);
-                return false;
-            }
-            if(param_token!=null){
-                header_token=param_token;
-            }
-            header_token = jwtUtil.updateTokenBase64Code(header_token) ;
-//        }
+//        header_token =
+        jwtUtil.verify(header_token) ;
 
         httpServletResponse.setHeader("token",header_token);
         return true;

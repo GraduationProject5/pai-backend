@@ -1,9 +1,14 @@
-package backend.util.jwthelper;
+package backend.util.JWThelper;
 
+import backend.util.config.LoginProperties;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.jsonwebtoken.*;
-import org.springframework.context.annotation.Bean;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import sun.rmi.runtime.Log;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -14,13 +19,13 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    public static String    sercetKey   = "20190322Friday"  ;
+    public static String    sercetKey   = LoginProperties.sercetKey ;
 
-    public static long      keeptime    = 60000;
+//    public static long      keeptime    = LoginProperties.keeptime ;
 
     //Sample method to construct a JWT
     public static String generateToken(String id, String issuer, String subject){
-        long ttlMillis = keeptime ;
+//        long ttlMillis = keeptime ;
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -44,36 +49,35 @@ public class JwtUtil {
         }
 
         //if it has been specified, let's add the expiration
-        if (ttlMillis >= 0) {
-            long expMillis = nowMillis + ttlMillis;
-            Date exp = new Date(expMillis);
-            builder.setExpiration(exp);
-        }
+//        if (ttlMillis >= 0) {
+//            long expMillis = nowMillis + ttlMillis;
+//            Date exp = new Date(expMillis);
+//            builder.setExpiration(exp);
+//        }
 
         //Builds the JWT and serializes it to a compact, URL-safe string
+
         return builder.compact();
     }
 
-    public String updateTokenBase64Code(String token){
-        BASE64Encoder base64Encoder = new BASE64Encoder();
-        BASE64Decoder base64Decoder = new BASE64Decoder();
-        try {
-            token=new String(base64Decoder.decodeBuffer(token),"utf-8");
-            Claims claims=parseToken(token);
-            String id=claims.getId();
-            String subject=claims.getSubject();
-            String issuer=claims.getIssuer();
-            String newToken = generateToken(id, issuer, subject);
-            return base64Encoder.encode(newToken.getBytes());
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
+    //在拦截器中更新
+//    public String verifyAndUpdateToken(String token){
+//        try {
+//            Claims claims=verify(token);
+//
+//            String id=claims.getId();
+//            String subject=claims.getSubject();
+//            String issuer=claims.getIssuer();
+//
+//            return generateToken(id, issuer, subject);
+//        }catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//        return "0";
+//    }
 
-        return "0";
-    }
-
-
-    public static Claims parseToken(String token) throws Exception {
+    //在拦截器中更新
+    public static Claims verify(String token) throws Exception {
         Claims claims = Jwts.parser()
                 .setSigningKey(DatatypeConverter
                 .parseBase64Binary(sercetKey))
@@ -81,5 +85,10 @@ public class JwtUtil {
                 .getBody();
 
         return  claims;
+    }
+
+    public static String getUserID(String token) throws Exception {
+        Claims claims = verify(token);
+        return claims.getId();
     }
 }

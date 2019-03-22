@@ -2,7 +2,7 @@ package backend.controller;
 
 import backend.entity.User;
 import backend.service.UserService;
-import backend.util.jwthelper.JwtUtil;
+import backend.util.JWThelper.JwtUtil;
 import backend.util.register.email.EmailUtility;
 //import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +24,21 @@ public class UserController {
     @Autowired
     private UserService userService ;
 
-    //TODO 修改JSON格式
+    /**
+        Web端调用后端需要登录的接口时在请求头中携带Token
+     */
     @GetMapping(value = "/login")
     public String login(HttpSession session,
                         Model model,
                         @RequestParam("email") String email,
                         @RequestParam("password") String password) {
 
-        User user = userService.login(email,password) ;
-        if(user != null ) {
-            String token = JwtUtil.generateToken
-                    (user.getUserID()+"","PAI-back end","user");
+        String token = userService.login(email,password) ;
+        if(token != null ) {
             model.addAttribute("token", token);
-            return "Success" ;
+            return token ;
         }
-        if(user == null) {
+        if(token == null) {
             model.addAttribute("result","账号密码错误");
         }
 
@@ -47,9 +47,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String doManagerLogout(HttpSession session) {
-        session.removeAttribute("email");
-        return "user/login";
+    public void logout(@RequestHeader("token")String token ) {
+        userService.logout(token);
     }
 
     @PostMapping(value = "/sendEmail")

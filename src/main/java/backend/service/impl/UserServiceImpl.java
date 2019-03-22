@@ -3,8 +3,15 @@ package backend.service.impl;
 import backend.daorepository.UserRepository;
 import backend.entity.User;
 import backend.service.UserService;
+import backend.util.JWThelper.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.redis.core.RedisTemplate;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lienming on 2019/1/17.
@@ -15,13 +22,28 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User login(String email, String password) {
+//    @Autowired
+//    private RedisTemplate<String, String> redisTemplate;
+
+    private List<String> loginID_list = new ArrayList<>();
+
+    public String login(String email, String password) {
 
         User user = userRepository.findByEmailAndPassword(email,password) ;
 
-        if( null == user )  return null ;
+        if( null == user ) return null ;
 
-        return user;
+        String token = JwtUtil.generateToken
+                (user.getUserID()+"","PAI-back end","user");
+
+        this.loginID_list.add(token);
+
+        System.out.println(token);
+        return token;
+    }
+
+    public void logout(String token) {
+        this.loginID_list.remove(token);
     }
 
     //TODO
