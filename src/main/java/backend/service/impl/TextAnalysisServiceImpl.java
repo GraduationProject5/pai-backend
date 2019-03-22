@@ -8,4 +8,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TextAnalysisServiceImpl implements TextAnalysisService {
+
+    @Override
+    public void getParticiples() {
+    }
+
 }
