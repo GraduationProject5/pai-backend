@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.entity.User;
 import backend.service.UserService;
+import backend.util.loginhelper.JwtUtil;
 import backend.util.register.email.EmailUtility;
 //import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class UserController {
     private UserService userService ;
 
     //TODO 修改JSON格式
-    @PostMapping(value = "/login")
+    @GetMapping(value = "/login")
     public String login(HttpSession session,
                         Model model,
                         @RequestParam("email") String email,
@@ -32,17 +33,16 @@ public class UserController {
 
         User user = userService.login(email,password) ;
         if(user != null ) {
-            session.setAttribute("email",user.getEmail());
-            session.setAttribute("userID",user.getUserID());
-
-
-            return "redirect:/member/index" ;
+            String token = JwtUtil.generateToken
+                    (user.getUserID()+"","PAI-back end","user");
+            model.addAttribute("token", token);
+            return "Success" ;
         }
         if(user == null) {
             model.addAttribute("result","账号密码错误");
         }
 
-        return "user/error";
+        return "Fail";
 
     }
 
