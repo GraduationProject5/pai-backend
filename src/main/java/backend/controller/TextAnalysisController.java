@@ -15,7 +15,7 @@ public class TextAnalysisController {
 
     @RequestMapping(value = "/participles")
     public void getParticiples() {
-        
+
     }
 
 }
