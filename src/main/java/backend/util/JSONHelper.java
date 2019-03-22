@@ -1,4 +1,4 @@
-package backend.util.loginhelper;
+package backend.util;
 
 import net.sf.json.JSONObject;
 
