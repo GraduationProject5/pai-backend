@@ -67,8 +67,9 @@ public class DatabaseHelper {
     }
 
 
-    public String formatMysqlCreate(TableVO tableVO) {
-        String tableName = tableVO.tableName;
+    public String formatMysqlCreate(long userID,TableVO tableVO) {
+
+        String tableName = formatUserTableName(userID,tableVO.tableName);
         List<ColumnVO> clist = tableVO.columnVOList; //
 
         String createSql = "CREATE TABLE " + tableName + "(";
@@ -80,7 +81,7 @@ public class DatabaseHelper {
     }
 
     public boolean createTableByText(String mysqlText) {
-        Statement st = null;
+        Statement st =null;
         try {
             st = con.createStatement();
             st.execute(mysqlText);
@@ -94,7 +95,7 @@ public class DatabaseHelper {
 
     //return tableID
     public long executeCreateTableByVO(long userID, TableVO tableVO) {
-        String sql = formatMysqlCreate(tableVO);
+        String sql = formatMysqlCreate(userID,tableVO);
         if (createTableByText(sql))
             return createTableRelationship(userID, tableVO.tableName, tableVO.description);
         else
@@ -103,8 +104,10 @@ public class DatabaseHelper {
 
     //return tableID
     public long executeCreateTableByScript(long userID, String tableName, String sql) {
+
+        sql = sql.replaceFirst(tableName,formatUserTableName(userID,tableName));
         if (createTableByText(sql))
-            return createTableRelationship(userID, tableName, "");
+            return createTableRelationship(userID, tableName, "no description");
         else
             return -1;
     }
@@ -161,11 +164,13 @@ public class DatabaseHelper {
         return rue_getID;
     }
 
-    //返回列数
+    //返回列数 输入的tableName已经过添加前缀处理
     public int getTableColumns(String tableName) {
         DatabaseMetaData dbmd;
         int columnNum = 0;
         try {
+
+
             dbmd = con.getMetaData();
             ResultSet colRet = dbmd.getColumns(null, "%", tableName, "%");
 
@@ -196,11 +201,11 @@ public class DatabaseHelper {
         try {
             this.con.setAutoCommit(false);
 
-            String sql = formatInsertExpression(tableName);
+            String sql = formatInsertExpression(userID,tableName);
             PreparedStatement ps = con.prepareStatement
                     (sql);
 
-            int columnNum = getTableColumns(tableName);
+            int columnNum = getTableColumns(formatUserTableName(userID,tableName));
             for (int i = 0; i < lines.length; i++) {
 //                System.out.println(lines[i]);
                 String[] parts = lines[i].split(splitChar);
@@ -239,8 +244,9 @@ public class DatabaseHelper {
 
     //TODO 没有测试！获取用户表的所有行
     public List getFromUserTable(long userID, String tableName) {
+        tableName = formatUserTableName(userID,tableName);
         TablePO tablePO = tablePORepository.findByTableName(tableName);
-        long tableID = tablePO.getTableID();
+//        long tableID = tablePO.getTableID();
 
         String query_sql = "SELECT * FROM " + tableName + ";";
 
@@ -302,8 +308,10 @@ public class DatabaseHelper {
             return null;
     }
 
-    public String formatInsertExpression(String tableName) {
-        String prefix = "INSERT INTO " + tableName + " VALUES(";
+    public String formatInsertExpression(long userID,String tableName) {
+        String prefix = "INSERT INTO "
+                + formatUserTableName(userID,tableName) + " VALUES(";
+
         String postfix = ")";
         int columnNum = getTableColumns(tableName);
         for (int i = 0; i < columnNum - 1; i++) {
@@ -324,6 +332,11 @@ public class DatabaseHelper {
             return true;
         return false;
     }
+
+    private String formatUserTableName(long userID,String tableName){
+        return "user"+userID+"_"+tableName;
+    }
+
 
     //test
 //    public static void main(String[] args){
