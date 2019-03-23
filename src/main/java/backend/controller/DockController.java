@@ -14,7 +14,7 @@ public class DockController {
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
 
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/docker")
     public String test() {
         return name + " " + password + " " + driver + " 12000oooop00---000";
     }
