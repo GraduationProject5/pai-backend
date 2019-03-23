@@ -9,7 +9,7 @@ public interface UserService {
 
     /**
      * 成功，则返回 Token
-     * 失败，则返回 null
+     * 失败，则返回 错误码
      * login
      *
      * @param email

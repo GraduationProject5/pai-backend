@@ -45,7 +45,7 @@ public class DataServiceImpl implements DataService {
         databaseHelper.insertToUserTable(userID, tableName, lines, splitChar);
     }
 
-    //返回格式 List<Map>  一个Map是一条数据行的映射{"列1:(Object)值1","..."}
+    //返回格式 List<Map>  一个Map是一条数据行的映射.  {"列名1:(Object)值1","..."}
     public List getData(long userID,String tableName) {
         return databaseHelper.getFromUserTable(userID,tableName);
     }

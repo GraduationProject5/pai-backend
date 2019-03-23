@@ -4,6 +4,7 @@ import backend.daorepository.UserRepository;
 import backend.entity.User;
 import backend.service.UserService;
 import backend.util.JWThelper.JwtUtil;
+import backend.util.config.LoginProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,13 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByEmailAndPassword(email,password) ;
 
-        if( null == user ) return null ;
-
+        if( null == user ) {
+            if(checkExist(email)) {
+                return LoginProperties.Code_WrongPassword;  //-1
+            }
+            else
+                return LoginProperties.Code_EmailNotExists; //-2
+        }
         String token = JwtUtil.generateToken
                 (user.getUserID()+"","PAI-back end","user");
 
@@ -56,11 +62,10 @@ public class UserServiceImpl implements UserService {
         this.loginID_list.remove(token);
     }
 
-    //TODO
     public long register(String email, String password) {
         User tmp = userRepository.findByEmailAndPassword(email,password) ;
         if( null != tmp )
-            return -1; //
+            return LoginProperties.Code_EmailRegistered;
         User user = new User(email,password);
         return userRepository.save(user).getUserID();
     }

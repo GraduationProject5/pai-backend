@@ -33,15 +33,17 @@ public class DataController {
     public Map<String,Object> createTableByColumn(
             @SessionAttribute("userID")String userID,
             @RequestParam("tableName") String tableName,
-            @RequestParam("description")String description,
+            @RequestParam("description") String description,
             @RequestBody JSONObject json) {
 
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-        Map<String, ColumnVO> map = JSONHelper.convertToMap(json);
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
+
+        Map<String, Object> map = JSONHelper.convertToMap(json);
+        Map<String,ColumnVO> voMap = ( Map<String,ColumnVO>)map.get("voMap");
 
         List<ColumnVO> columnVOList = new ArrayList<>();
-        for(String key : map.keySet()){
-            ColumnVO cvo = map.get(key);
+        for(String key : voMap.keySet()){
+            ColumnVO cvo = voMap.get(key);
             columnVOList.add(cvo);
         }
 
@@ -64,10 +66,7 @@ public class DataController {
     public Map<String,Object> createTableByScript(
                                       @SessionAttribute("userID")String userID,
                                       @RequestParam("tableName") String tableName,
-                                      @RequestBody JSONObject json ) {
-
-        Map<String,String> map = JSONHelper.convertToMap(json);
-        String sqlScript = map.get("sql") ;
+                                      @RequestParam("sql") String sqlScript) {
 
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 
@@ -90,12 +89,7 @@ public class DataController {
     public void importData(@SessionAttribute("userID")String userID,
                              @RequestParam("tableName") String tableName,
                              @RequestParam(value = "splitChar",defaultValue = ";") String splitChar,
-                             @RequestBody JSONObject json) {
-        Map<String,String[]> map = JSONHelper.convertToMap(json);
-
-        //默认分隔符为 ;
-        String[] file = map.get("file");
-
+                             @RequestParam("file") String[] file) {
         dataService.insertData(Long.parseLong(userID),tableName,file,splitChar);
 
     }
@@ -106,19 +100,20 @@ public class DataController {
         List<TablePO> list = dataService.getDatabasesByUser(Long.parseLong(userID));
 
         Map<String,Object> result = HttpResponseHelper.newResultMap();
-        result.put("result",true);
+
         result.put("tables",list);
         return result;
     }
 
     //查看某张表的属性（有哪些列）
     @GetMapping(value = "/tableDetail")
-    public Map<String,Object> tableDetail(@SessionAttribute("userID")String userID ,
+    public Map<String,Object> tableDetail(
+                    @SessionAttribute("userID")String userID ,
                            @RequestParam("tableName") String tableName) {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 
         List list = dataService.getData(Long.parseLong(userID),tableName);
-        result.put("result",true);
+
         result.put("list",list);
         return result;
     }
@@ -150,7 +145,7 @@ public class DataController {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 
         List<Experiment> list = dataService.getExperimentsByUser(Long.parseLong(userID));
-        result.put("result",true);
+
         result.put("experiments",list);
         return result;
     }

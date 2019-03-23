@@ -53,6 +53,7 @@ public interface DataService {
 
     /**
      * 查看数据库的行
+     * //返回格式 List<Map>  一个Map是一条数据行的映射.  {"列名1:(Object)值1","..."}
      * @param userID
      * @param tableName
      * @return
