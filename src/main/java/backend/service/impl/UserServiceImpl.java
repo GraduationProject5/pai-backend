@@ -38,8 +38,18 @@ public class UserServiceImpl implements UserService {
 
         this.loginID_list.add(token);
 
-        System.out.println(token);
+//        System.out.println(token);
         return token;
+    }
+
+    public String getUserIDByToken(String token)  {
+        try {
+            return JwtUtil.getUserID(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "-1";
     }
 
     public void logout(String token) {

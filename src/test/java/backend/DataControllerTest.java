@@ -60,7 +60,7 @@ public class DataControllerTest {
                 .sessionAttr("userID",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONObject.toJSONString(map))
-                .param("tableName","user1_testCreateTableByColumn")
+                .param("tableName","testByColumn")
                 .param("description","testCreateTableByColumn"))
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful()
@@ -73,7 +73,7 @@ public class DataControllerTest {
     public void testCreateTableByScript() throws Exception{
 
         String sql =
-                "create table user1_testCreateTableByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
+                "create table testByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
 
         Map<String,String> map = new HashMap();
         map.put("sql",sql);
@@ -83,7 +83,7 @@ public class DataControllerTest {
                 .sessionAttr("userID",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONObject.toJSONString(map))
-                .param("tableName","user1_testCreateTableByScript")
+                .param("tableName","testByScript")
                 )
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful())

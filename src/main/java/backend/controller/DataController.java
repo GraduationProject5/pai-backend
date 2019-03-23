@@ -3,13 +3,17 @@ package backend.controller;
 import backend.entity.Experiment;
 import backend.entity.TablePO;
 import backend.service.DataService;
+import backend.util.json.HttpResponseHelper;
+import backend.util.json.JSONHelper;
 import backend.vo.ColumnVO;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,15 +28,16 @@ public class DataController {
     @Autowired
     private DataService dataService;
 
-
     //用户建表 （通过表格填写列属性）
     @PostMapping(value = "/createTableByColumn")
-    @ResponseBody
-    public String createTableByColumn(Model model,
-                        @SessionAttribute("userID")String userID,
-                        @RequestParam("tableName") String tableName,
-                        @RequestBody Map<String,ColumnVO> map,
-                        @RequestParam("description")String description) {
+    public Map<String,Object> createTableByColumn(
+            @SessionAttribute("userID")String userID,
+            @RequestParam("tableName") String tableName,
+            @RequestParam("description")String description,
+            @RequestBody JSONObject json) {
+
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        Map<String, ColumnVO> map = JSONHelper.convertToMap(json);
 
         List<ColumnVO> columnVOList = new ArrayList<>();
         for(String key : map.keySet()){
@@ -45,105 +50,109 @@ public class DataController {
 
         if(tableID<0)
         {
-            model.addAttribute("result",false);
+            result.put("result",false);
         }else {
-            model.addAttribute("result",true);
-            model.addAttribute("tableID",tableID);
+            result.put("result",true);
+            result.put("tableID",tableID);
         }
 
-        return "data/..1";
+        return result;
     }
 
     //用户建表 （通过MySql脚本）
     @PostMapping(value = "/createTableByScript")
-    @ResponseBody
-    public String createTableByScript(Model model,
+    public Map<String,Object> createTableByScript(
                                       @SessionAttribute("userID")String userID,
                                       @RequestParam("tableName") String tableName,
-                                      @RequestBody Map<String,String> map ) {
+                                      @RequestBody JSONObject json ) {
 
+        Map<String,String> map = JSONHelper.convertToMap(json);
         String sqlScript = map.get("sql") ;
+
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
 
         long tableID = dataService.createTableByScript
                 (Long.parseLong(userID),tableName,sqlScript);
 
         if(tableID<0)
         {
-            model.addAttribute("result",false);
+            result.put("result",false);
         }else {
-            model.addAttribute("result",true);
-            model.addAttribute("tableID",tableID);
+            result.put("result",true);
+            result.put("tableID",tableID);
         }
 
-        return "data/..2";
+        return result;
     }
 
     //用户导入数据到自建表中
     @PostMapping(value = "/importData")
-    @ResponseBody
-    public String importData(@SessionAttribute("userID")String userID,
+    public void importData(@SessionAttribute("userID")String userID,
                              @RequestParam("tableName") String tableName,
                              @RequestParam(value = "splitChar",defaultValue = ";") String splitChar,
-                             @RequestBody Map<String,String[]> map) {
+                             @RequestBody JSONObject json) {
+        Map<String,String[]> map = JSONHelper.convertToMap(json);
+
         //默认分隔符为 ;
         String[] file = map.get("file");
 
         dataService.insertData(Long.parseLong(userID),tableName,file,splitChar);
 
-        return "data/..3";
     }
 
     //查看用户自建表列表
-    @RequestMapping(value = "/allTable")
-    @ResponseBody
-    public String allTable(Model model,
-                            @SessionAttribute("userID")String userID) {
+    @GetMapping(value = "/allTable")
+    public Map<String,Object> allTable(@SessionAttribute("userID")String userID) {
         List<TablePO> list = dataService.getDatabasesByUser(Long.parseLong(userID));
-        model.addAttribute("result",true);
-        model.addAttribute("tables",list);
-        return "data/..4";
+
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        result.put("result",true);
+        result.put("tables",list);
+        return result;
     }
 
     //查看某张表的属性（有哪些列）
-    @PostMapping(value = "/tableDetail")
-    @ResponseBody
-    public String tableDetail(Model model,
-                           @SessionAttribute("userID")String userID ,
+    @GetMapping(value = "/tableDetail")
+    public Map<String,Object> tableDetail(@SessionAttribute("userID")String userID ,
                            @RequestParam("tableName") String tableName) {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+
         List list = dataService.getData(Long.parseLong(userID),tableName);
-        model.addAttribute("result",true);
-        model.addAttribute("list",list);
-        return "data/..5";
+        result.put("result",true);
+        result.put("list",list);
+        return result;
     }
 
     //创建实验
-    @PostMapping(value = "/createExperiment")
-    @ResponseBody
-    public String createExperiment(Model model,
-                              @SessionAttribute("userID")String userID ,
-                              @RequestParam("experimentName") String experimentName,
-                              @RequestParam("description") String description) {
+    @GetMapping(value = "/createExperiment")
+    public Map<String,Object> createExperiment(
+                                @SessionAttribute("userID")String userID ,
+                                @RequestParam("experimentName") String experimentName,
+                                @RequestParam("description") String description) {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+
         long experimentID = dataService.
                 createExperiment(Long.parseLong(userID),experimentName,description);
         if(experimentID>0) {
-            model.addAttribute("result", true);
-            model.addAttribute("experimentID", experimentID);
+            result.put("result",true);
+            result.put("experimentID", experimentID);
         } else {
-            model.addAttribute("result", false);
+            result.put("result", false);
         }
 
-        return "data/..6";
+        return result;
     }
 
     //查看实验
-    @PostMapping(value = "/allExperiment")
-    @ResponseBody
-    public String allExperiment(Model model,
+    @GetMapping(value = "/allExperiment")
+    public Map<String,Object> allExperiment(Model model,
                            @SessionAttribute("userID")String userID) {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+
         List<Experiment> list = dataService.getExperimentsByUser(Long.parseLong(userID));
-        model.addAttribute("result",true);
-        model.addAttribute("experiments",list);
-        return "data/..7";
+        result.put("result",true);
+        result.put("experiments",list);
+        return result;
     }
 
 

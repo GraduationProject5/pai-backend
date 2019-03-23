@@ -34,4 +34,6 @@ public interface UserService {
     boolean checkExist(String email);
 
     void logout(String token);
+
+    String getUserIDByToken(String token);
 }

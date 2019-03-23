@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class JwtUtil {
 
-    public static String    sercetKey   = LoginProperties.sercetKey ;
+    public static String    sercetKey   = LoginProperties.SercetKey ;
 
 //    public static long      keeptime    = LoginProperties.keeptime ;
 
