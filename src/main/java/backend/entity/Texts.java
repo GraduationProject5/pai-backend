@@ -15,7 +15,7 @@ public class Texts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private int textId;
 
     @Basic
     @Column(name = "content", nullable = false)

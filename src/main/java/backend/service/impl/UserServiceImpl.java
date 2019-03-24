@@ -7,9 +7,6 @@ import backend.util.JWThelper.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.redis.core.RedisTemplate;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 

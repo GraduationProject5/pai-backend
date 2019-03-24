@@ -1,6 +1,5 @@
 package backend.daorepository;
 
-import backend.entity.Experiment;
 import backend.entity.R_User_Experiment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
