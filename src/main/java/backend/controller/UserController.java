@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.service.UserService;
+import backend.util.config.LoginProperties;
 import backend.util.json.HttpResponseHelper;
 import backend.util.register.email.EmailUtility;
 //import net.sf.json.JSONObject;
@@ -29,20 +30,21 @@ public class UserController {
                         @RequestParam("password") String password) {
 
         String token = userService.login(email,password) ;
-        Map<String,Object> resultMap = HttpResponseHelper.newResultMap();
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
 
-        if(token != null ) {
 
+        if(token.charAt(0) != '-' ) {   //...不知道怎么判断了
             //TODO 需要前端把token加入HttpRequest Header吗?
             session.setAttribute("userID", userService.getUserIDByToken(token)  );
-            resultMap.put("token", token);
-
+            result.put("result",true);
+            result.put("token",token) ;
         }
-        if(token == null) {
-            resultMap.put("result","账号密码错误");
+        else {
+            result.put("result",false);
+            result.put("message",token);
         }
 
-        return resultMap;
+        return result;
     }
 
     @GetMapping(value = "/logout")
@@ -60,7 +62,7 @@ public class UserController {
         if(exist){
             //邮箱已注册
             result.put("result",false);
-            result.put("code", "-1");
+            result.put("code", LoginProperties.Code_EmailRegistered);
         } else {
             String code = EmailUtility.sendAccountActivateEmail(email);
             result.put("result",true) ;
@@ -80,23 +82,17 @@ public class UserController {
 
 //        System.out.println("register result: " +query_userid) ;
 
-        int query_int = (int)query_userid;
-        switch ( query_int ) {
-            case -1:
+        int queryID = (int)query_userid;
+        switch ( queryID ) {
+
+            case LoginProperties.Code_EmailRegistered:
                 result.put("result",false) ;
-                result.put("message", "email illegal");
+                result.put("message", LoginProperties.Code_EmailRegistered );
                 return result ;
-            case -2:
-                result.put("result",false) ;
-                result.put("message", "email exist");
-                return result ;
-            case -3:
-                result.put("result",false) ;
-                result.put("message", "password illegal");
-                return result ;
+
             default:
                 result.put("result",true) ;
-                result.put("message", "success");
+                result.put("userID", queryID );
                 return result;
         }
 
