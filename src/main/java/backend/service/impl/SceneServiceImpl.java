@@ -1,8 +1,8 @@
 package backend.service.impl;
 
-import backend.entity.Component;
-import backend.entity.Model;
-import backend.entity.Section;
+import backend.model.po.Component;
+import backend.model.po.Model;
+import backend.model.po.Section;
 import backend.service.SceneService;
 import org.springframework.stereotype.Service;
 

@@ -1,15 +1,15 @@
 package backend.service;
 
-import backend.entity.*;
+//import model.*;
 
 public interface SceneService {
 
-    Model createModel();
-
-    //Section>Component
-    Section createSection();
-
-    Component createComponent();
+//    Model createModel();
+//
+//    //Section>Component
+//    Section createSection();
+//
+//    Component createComponent();
 
 
 

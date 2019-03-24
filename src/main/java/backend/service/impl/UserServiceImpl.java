@@ -1,7 +1,7 @@
 package backend.service.impl;
 
 import backend.daorepository.UserRepository;
-import backend.entity.User;
+import backend.model.po.User;
 import backend.service.UserService;
 import backend.util.JWThelper.JwtUtil;
 import backend.util.config.LoginProperties;

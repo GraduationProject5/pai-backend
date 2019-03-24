@@ -1,9 +1,9 @@
 package backend.dao;
 
 import backend.daorepository.*;
-import backend.entity.*;
-import backend.vo.ColumnVO;
-import backend.vo.TableVO;
+import backend.model.po.*;
+import backend.model.vo.ColumnVO;
+import backend.model.vo.TableVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
