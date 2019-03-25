@@ -1,6 +1,6 @@
 package backend.daorepository;
 
-import backend.entity.R_User_Table;
+import backend.model.po.R_User_Table;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

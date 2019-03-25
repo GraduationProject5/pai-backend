@@ -1,4 +1,4 @@
-package backend.entity;
+package backend.model.po;
 
 
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class Texts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private int textId;
 
     @Basic
     @Column(name = "content", nullable = false)

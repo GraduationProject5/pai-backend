@@ -1,6 +1,8 @@
 package backend.service.impl;
 
+import backend.daorepository.TextsRepository;
 import backend.service.TextAnalysisService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class TextAnalysisServiceImpl implements TextAnalysisService {
-
+    @Autowired
+    TextsRepository textsRepository;
     @Override
     public void getParticiples() {
+//        textsRepository.getOne();
     }
 
 }

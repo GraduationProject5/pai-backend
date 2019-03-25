@@ -1,4 +1,4 @@
-package backend.vo;
+package backend.model.vo;
 
 import backend.enumclass.ColumnType;
 

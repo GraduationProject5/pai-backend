@@ -1,6 +1,6 @@
 package backend.util.file;
 
-import backend.vo.TableVO;
+import backend.model.vo.TableVO;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,8 +1,4 @@
-package backend.entity;
-
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+package backend.model.po;
 
 import javax.persistence.*;
 import javax.persistence.Table;

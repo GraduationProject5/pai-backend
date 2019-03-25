@@ -1,9 +1,8 @@
 package backend.service;
 
-import backend.entity.Experiment;
-import backend.entity.TablePO;
-import backend.vo.ColumnVO;
-import backend.vo.TableVO;
+import backend.model.po.Experiment;
+import backend.model.po.TablePO;
+import backend.model.vo.ColumnVO;
 
 import java.util.List;
 

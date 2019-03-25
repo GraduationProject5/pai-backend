@@ -1,11 +1,11 @@
 package backend.service.impl;
 
 import backend.dao.DatabaseHelper;
-import backend.entity.Experiment;
-import backend.entity.TablePO;
+import backend.model.po.Experiment;
+import backend.model.po.TablePO;
 import backend.service.DataService;
-import backend.vo.ColumnVO;
-import backend.vo.TableVO;
+import backend.model.vo.ColumnVO;
+import backend.model.vo.TableVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

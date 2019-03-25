@@ -1,6 +1,6 @@
 package backend.daorepository;
 
-import backend.entity.User;
+import backend.model.po.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

@@ -1,7 +1,5 @@
 package backend.service;
 
-import backend.entity.User;
-
 /**
  * Created by lienming on 2019/1/17.
  */

@@ -1,16 +1,13 @@
 package backend.service.impl;
 
 import backend.daorepository.UserRepository;
-import backend.entity.User;
+import backend.model.po.User;
 import backend.service.UserService;
 import backend.util.JWThelper.JwtUtil;
 import backend.util.config.LoginProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.data.redis.core.RedisTemplate;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
