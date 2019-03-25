@@ -3,6 +3,7 @@ package backend.service;
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
 import backend.model.vo.ColumnVO;
+import backend.model.vo.TableVO;
 
 import java.util.List;
 
@@ -49,6 +50,14 @@ public interface DataService {
      * @param splitChar
      */
     void insertData(long userID,String tableName,String[] lines,String splitChar);
+
+    /**
+     * 查看表的属性
+     * @param userID
+     * @param tableName
+     * @return
+     */
+    TableVO getTableAttr(long userID, String tableName);
 
     /**
      * 查看数据库的行

@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
+import backend.model.vo.TableVO;
 import backend.service.DataService;
 import backend.util.json.HttpResponseHelper;
 import backend.util.json.JSONHelper;
@@ -109,9 +110,20 @@ public class DataController {
 
     //查看某张表的属性（有哪些列）
     @GetMapping(value = "/tableDetail")
-    public Map<String,Object> tableDetail(
+    public TableVO tableDetail(
                     @SessionAttribute("userID")String userID ,
-                           @RequestParam("tableName") String tableName) {
+                    @RequestParam("tableName") String tableName) {
+
+        TableVO tableVO = dataService.getTableAttr(Long.parseLong(userID),tableName);
+
+        return tableVO;
+    }
+
+    //获取表的所有行
+    @GetMapping(value = "/tableData")
+    public Map<String,Object> tableData(
+            @SessionAttribute("userID")String userID ,
+            @RequestParam("tableName") String tableName) {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 
         List list = dataService.getData(Long.parseLong(userID),tableName);

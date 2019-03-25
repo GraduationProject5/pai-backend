@@ -1,6 +1,7 @@
 package backend.dao;
 
 import backend.daorepository.*;
+import backend.enumclass.ColumnType;
 import backend.model.po.*;
 import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
@@ -242,8 +243,47 @@ public class DatabaseHelper {
 
     }
 
+    public TableVO getColoumAttrFromTable(long userID, String tableName) {
+        //先find 再对手动查询作命名处理
+        TablePO tablePO = tablePORepository.findByTableName(tableName);
+
+        tableName = formatUserTableName(userID,tableName);
+
+        TableVO tableVO = new TableVO();
+        tableVO.tableName = tableName ;
+        tableVO.description = tablePO.getDescription() ;
+
+        DatabaseMetaData dbmd;
+        try {
+            dbmd = con.getMetaData();
+            ResultSet colRet = dbmd.getColumns(null, "%", tableName, "%");
+
+            String columnName;
+            String columnType;
+            String columnDescription;
+
+            while (colRet.next()) {
+                columnName = colRet.getString("COLUMN_NAME");
+                columnType = colRet.getString("TYPE_NAME");
+                columnDescription = colRet.getString("REMARKS");
+                ColumnVO columnVO = new ColumnVO();
+
+                columnVO.columnName = columnName;
+                columnVO.columnType = ColumnVO.getColumnType(columnType);
+                columnVO.description = columnDescription ;
+
+                tableVO.columnVOList.add(columnVO);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tableVO ;
+    }
+
     //TODO 没有测试！获取用户表的所有行
-    public List getFromUserTable(long userID, String tableName) {
+    public List getRecordFromUserTable(long userID, String tableName) {
         tableName = formatUserTableName(userID,tableName);
         TablePO tablePO = tablePORepository.findByTableName(tableName);
 //        long tableID = tablePO.getTableID();
