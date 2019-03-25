@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by lienming on 2019/1/17.
  */
 
-@Controller
+@RestController
 @RequestMapping(value = "/data")
 public class DataController {
 
@@ -33,16 +33,16 @@ public class DataController {
             @SessionAttribute("userID")String userID,
             @RequestParam("tableName") String tableName,
             @RequestParam("description") String description,
-            @RequestBody JSONObject json) {
+            @RequestBody  Map<String,ColumnVO> map ) {
 
         Map<String, Object> result = HttpResponseHelper.newResultMap();
 
-        Map<String, Object> map = JSONHelper.convertToMap(json);
-        Map<String,ColumnVO> voMap = ( Map<String,ColumnVO>)map.get("voMap");
+//        Map<String, Object> map = JSONHelper.convertToMap(json);
+//        Map<String,ColumnVO> voMap = (Map<String,ColumnVO>)map;
 
         List<ColumnVO> columnVOList = new ArrayList<>();
-        for(String key : voMap.keySet()){
-            ColumnVO cvo = voMap.get(key);
+        for(String key : map.keySet()){
+            ColumnVO cvo =   map.get(key);
             columnVOList.add(cvo);
         }
 
@@ -88,7 +88,10 @@ public class DataController {
     public void importData(@SessionAttribute("userID")String userID,
                              @RequestParam("tableName") String tableName,
                              @RequestParam(value = "splitChar",defaultValue = ";") String splitChar,
-                             @RequestParam("file") String[] file) {
+                           @RequestBody Map<String,String[]> map ){
+//                           @RequestParam("file") String[] file) {
+        //默认分隔符为 ;
+        String[] file = map.get("file");
         dataService.insertData(Long.parseLong(userID),tableName,file,splitChar);
 
     }
@@ -139,7 +142,7 @@ public class DataController {
 
     //查看实验
     @GetMapping(value = "/allExperiment")
-    public Map<String,Object> allExperiment(Model model,
+    public Map<String,Object> allExperiment(
                            @SessionAttribute("userID")String userID) {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 

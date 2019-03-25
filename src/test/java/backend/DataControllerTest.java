@@ -58,8 +58,8 @@ public class DataControllerTest {
                 .sessionAttr("userID",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONObject.toJSONString(map))
-                .param("tableName","testByColumn")
-                .param("description","testCreateTableByColumn"))
+                .param("tableName","test2ByColumn")
+                .param("description","test2CreateTableByColumn"))
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful()
                 )
@@ -71,17 +71,19 @@ public class DataControllerTest {
     public void testCreateTableByScript() throws Exception{
 
         String sql =
-                "create table testByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
+                "create table test2ByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
 
-        Map<String,String> map = new HashMap();
-        map.put("sql",sql);
+//        Map<String,String> map = new HashMap();
+//        map.put("sql",sql);
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/data/createTableByScript")
                 .sessionAttr("userID",1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JSONObject.toJSONString(map))
-                .param("tableName","testByScript")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(JSONObject.toJSONString(map))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tableName","test2ByScript")
+                .param("sql",sql)
                 )
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful())
@@ -107,7 +109,7 @@ public class DataControllerTest {
                 .sessionAttr("userID",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONObject.toJSONString(map))
-                .param("tableName","user1_testCreateTableByScript")
+                .param("tableName","test2ByScript")
         )
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful())
@@ -133,7 +135,7 @@ public class DataControllerTest {
                 .sessionAttr("userID",1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSONObject.toJSONString(map))
-                .param("tableName","user1_testCreateTableByColumn")
+                .param("tableName","test2ByColumn")
         )
                 .andExpect(status().isOk())
                 .andExpect(status().is2xxSuccessful())
@@ -142,16 +144,13 @@ public class DataControllerTest {
 
     }
 
-    //TODO 未完成
+
     @Test
     public void testAllTable() throws Exception{
-
-        Map<String,String[]> map = new HashMap();
-
 //        map.put("file",file);
 
         mvc.perform(MockMvcRequestBuilders
-                .post("/data/allTable")
+                .get("/data/allTable")
                 .sessionAttr("userID",1)
                     )
                 .andExpect(status().isOk())

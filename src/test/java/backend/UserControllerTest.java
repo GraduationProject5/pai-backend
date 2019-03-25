@@ -32,18 +32,18 @@ public class UserControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
-    @Test
-    public void testTest() throws Exception{
-        mvc.perform(MockMvcRequestBuilders.get("/test"))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn();
-    }
+//    @Test
+//    public void testTest() throws Exception{
+//        mvc.perform(MockMvcRequestBuilders.get("/test"))
+//                .andExpect(status().isOk())
+//                .andDo(print())
+//                .andReturn();
+//    }
 
     @Test
     public void testLogin() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                        .post("/user/login")
+                        .get("/user/login")
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("email","javalem@163.com")
                         .param("password","asdasd"))
@@ -57,9 +57,9 @@ public class UserControllerTest {
     @Test
     public void testSendEmail() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                .post("/user/sendEmail")
+                .get("/user/sendEmail")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("email","javalem@163.com")
+                .param("email","hhlienming@163.com")
                 )
                 .andExpect(status().isOk())
 //                .andExpect(status().is4xxClientError())
@@ -70,9 +70,9 @@ public class UserControllerTest {
     @Test
     public void testRegister() throws Exception{
         mvc.perform(MockMvcRequestBuilders
-                .post("/user/register")
+                .get("/user/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("email", "tredd121re@rere.com")
+                .param("email", "monday121re@rere.com")
                 .param("password","asdasdasd")
         )
                 .andExpect(status().isOk())
