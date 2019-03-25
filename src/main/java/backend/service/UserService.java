@@ -1,8 +1,12 @@
 package backend.service;
 
+import org.springframework.stereotype.Service;
+
 /**
  * Created by lienming on 2019/1/17.
  */
+
+//@Service
 public interface UserService {
 
     /**

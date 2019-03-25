@@ -1,8 +1,13 @@
 package backend.service;
 
-import java.util.List;
-import java.util.Map;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 /**
  * 评估组件
@@ -12,17 +17,96 @@ import java.util.Map;
  * - 多分类
  * - 混淆评估
  */
+
+@Service
+@FeignClient(url = "${ml.feign.url}", name = "algorithm")
 public interface EvaluationService {
 
-    /**
-     * 聚类组件
-     *
-     * @param labels_true
-     * @param labels_pred
-     * @return
+    /** 聚类组件
+     * @param map
+     * @return   "adjusted_Rand_index",
+     *           "mutual_information_based_scores",
+     *           "homogeneity_score",
+     *           "completeness_score",
+     *           "v_measure_score"
+     *           "fowlkes_mallows_score"
+     *           均为double
      */
-    Map<String, List<String>> getCluster(List labels_true, List labels_pred);
+    @PostMapping(value = "/ce/")
+    Map<String, Object> cluster_evaluation(
+            @RequestBody Map<String, Object> map
+    );
+
+    /** 回归评估
+     *
+     * @param y_true
+     * @param y_pred
+     * @return  "explained_variance_score"
+     *          "mean_absolute_error"
+     *          "mean_squared_error"
+     *          "median_absolute_error"
+     *          "r2_score"
+     *          均为double
+     */
+    @PostMapping(value = "/re/")
+    Map<String, Object> regression_evaluation(
+            @RequestParam("y_true") int[] y_true,
+            @RequestParam("y_pred") int[] y_pred
+    );
+
+    /** 二分类评估
+     *
+     * @param y_true
+     * @param y_pred
+     * @return "accuracy_score": double,
+     *         "classification_report": String
+     *        eg.
+     *
+     *                  precision  recall   f1-score    support
+     *      0             0.67      0.67      0.67         3
+     *      2             0.67      0.67      0.67         3
+     *      micro avg     0.67      0.67      0.67         6
+     *      macro avg     0.67      0.67      0.67         6
+     *      weighted avg  0.67      0.67      0.67         6
+     */
+    @PostMapping(value = "/tcd/")
+    Map<String, Object> tcd(
+            @RequestParam("y_true") int[] y_true,
+            @RequestParam("y_pred") int[] y_pred
+    );
+
+    /** 多分类评估
+     *
+     * @param y_true
+     * @param y_pred
+     * @return "accuracy_score": double,
+     *         "classification_report": String
+     *         eg.
+     *                  precision  recall   f1-score    support
+     *      0             0.67      1.00      0.80         2
+     *      1             0.00      0.00      0.00         1
+     *      2             0.67      0.67      0.67         3
+     *      micro avg     0.67      0.67      0.67         6
+     *      macro avg     0.44      0.56      0.49         6
+     *      weighted avg  0.56      0.67      0.60         6
+     */
+    @PostMapping(value = "/mcd/")
+    Map<String, Object> mcd(
+            @RequestParam("y_true") int[] y_true,
+            @RequestParam("y_pred") int[] y_pred
+    );
 
 
+    /** 混淆矩阵
+     *
+     * @param y_true
+     * @param y_pred
+     * @return "confusion_matrix": int[][]
+     */
+    @PostMapping(value = "/cm/")
+    Map<String, Object> confusionMatrix(
+            @RequestParam("y_true") int[] y_true,
+            @RequestParam("y_pred") int[] y_pred
+    );
 
 }
