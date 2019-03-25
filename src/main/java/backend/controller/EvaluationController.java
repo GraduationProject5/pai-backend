@@ -1,7 +1,7 @@
 package backend.controller;
 
 import backend.service.DataService;
-import backend.service.EvaluationService;
+import backend.algoservice.EvaluationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

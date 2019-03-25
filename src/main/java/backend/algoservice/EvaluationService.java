@@ -1,4 +1,4 @@
-package backend.service;
+package backend.algoservice;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
