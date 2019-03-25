@@ -23,12 +23,4 @@ public enum ColumnType {
     public String toMySqlString(){
         return this.sqltype;
     }
-
-
-
-    public static void main(String[] args){
-
-    }
-
-
 }

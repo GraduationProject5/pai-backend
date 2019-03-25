@@ -5,7 +5,6 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import java.util.Map;
 public interface EvaluationService {
 
     /** 聚类组件
-     * @param map
+     * @param map  int[] labels_true,  int[] labels_pred
      * @return   "adjusted_Rand_index",
      *           "mutual_information_based_scores",
      *           "homogeneity_score",
@@ -39,8 +38,7 @@ public interface EvaluationService {
 
     /** 回归评估
      *
-     * @param y_true
-     * @param y_pred
+     * @param map   int[] y_true,  int[] y_pred
      * @return  "explained_variance_score"
      *          "mean_absolute_error"
      *          "mean_squared_error"
@@ -50,14 +48,12 @@ public interface EvaluationService {
      */
     @PostMapping(value = "/re/")
     Map<String, Object> regression_evaluation(
-            @RequestParam("y_true") int[] y_true,
-            @RequestParam("y_pred") int[] y_pred
+            @RequestBody Map<String, Object> map
     );
 
     /** 二分类评估
      *
-     * @param y_true
-     * @param y_pred
+     * @param map int[] y_true,int[] y_pred
      * @return "accuracy_score": double,
      *         "classification_report": String
      *        eg.
@@ -71,14 +67,12 @@ public interface EvaluationService {
      */
     @PostMapping(value = "/tcd/")
     Map<String, Object> tcd(
-            @RequestParam("y_true") int[] y_true,
-            @RequestParam("y_pred") int[] y_pred
+            @RequestBody Map<String, Object> map
     );
 
     /** 多分类评估
      *
-     * @param y_true
-     * @param y_pred
+     * @param  map int[] y_true, int[] y_pred
      * @return "accuracy_score": double,
      *         "classification_report": String
      *         eg.
@@ -92,21 +86,18 @@ public interface EvaluationService {
      */
     @PostMapping(value = "/mcd/")
     Map<String, Object> mcd(
-            @RequestParam("y_true") int[] y_true,
-            @RequestParam("y_pred") int[] y_pred
+            @RequestBody Map<String, Object> map
     );
 
 
     /** 混淆矩阵
      *
-     * @param y_true
-     * @param y_pred
+     * @param map  int[] y_true, int[] y_pred
      * @return "confusion_matrix": int[][]
      */
     @PostMapping(value = "/cm/")
-    Map<String, Object> confusionMatrix(
-            @RequestParam("y_true") int[] y_true,
-            @RequestParam("y_pred") int[] y_pred
+    Map<String, Object> confusion_matrix(
+            @RequestBody Map<String, Object> map
     );
 
 }

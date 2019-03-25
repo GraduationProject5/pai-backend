@@ -17,30 +17,28 @@ public class EvaluationController {
     DataService dataService;
 
     @GetMapping(value = "/cluster_evaluation")
-    public Map cluster(
-            @RequestBody Map<String, Object> map
-    ) {
+    public Map cluster(@RequestBody Map<String, Object> map) {
         return evaluationService.cluster_evaluation(map);
     }
 
-    @GetMapping(value = "/re")
-    public void re(){
-
+    @GetMapping(value = "/regression_evaluation ")
+    public Map regression_evaluation(@RequestBody Map<String, Object> map){
+        return evaluationService.regression_evaluation(map);
     }
 
     @GetMapping(value = "/tcd")
-    public void tcd(){
-
+    public Map tcd(@RequestBody Map<String, Object> map){
+        return evaluationService.tcd(map);
     }
 
     @GetMapping(value = "/mcd")
-    public void mcd(){
-
+    public Map mcd(@RequestBody Map<String, Object> map){
+        return evaluationService.mcd(map);
     }
 
     @GetMapping(value = "/confusion_matrix")
-    public void confusionMatrix(){
-
+    public Map confusion_matrix(@RequestBody Map<String, Object> map){
+        return evaluationService.confusionMatrix(map);
     }
 
 
