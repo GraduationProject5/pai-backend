@@ -3,6 +3,7 @@ package backend.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,9 +19,16 @@ import java.util.Map;
  * - LDA
  */
 @Service
+@CrossOrigin
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
 public interface TextAnalysisService {
 
+    /**
+     * 分词
+     *
+     * @param text
+     * @return
+     */
     @RequestMapping(value = "/par", method = RequestMethod.POST)
     Map getParticiples(@RequestParam("text") Map text);
 
