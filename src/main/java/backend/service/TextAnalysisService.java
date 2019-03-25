@@ -3,10 +3,7 @@ package backend.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -29,8 +26,8 @@ public interface TextAnalysisService {
      * @param text
      * @return
      */
-    @RequestMapping(value = "/par", method = RequestMethod.POST)
-    Map getParticiples(@RequestParam("text") Map text);
+    @RequestMapping(value = "/par/", method = RequestMethod.POST)
+    Map getParticiples(@RequestBody Map text);
 
 //    @RequestMapping(value = "/sw", method = RequestMethod.POST)
 //    void getStopwordsFilter();
