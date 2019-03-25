@@ -25,4 +25,14 @@ public class ColumnVO {
         return this.columnName + " " +
                 this.columnType.toMySqlString() + " " +description;
     }
+
+    public static ColumnType getColumnType(String sqltype){
+        System.out.println("sql type :  " + sqltype) ;
+        for(ColumnType ct : ColumnType.values()) {
+            if( ct.sqltype.equals( sqltype.toLowerCase())) {
+                return ct;
+            }
+        }
+        return null;
+    }
 }

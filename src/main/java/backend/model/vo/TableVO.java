@@ -1,5 +1,6 @@
 package backend.model.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,10 @@ public class TableVO {
 
 
     private static String lineSeperator = System.getProperty("line.separator");
+
+    public TableVO(){
+        this.columnVOList = new ArrayList<>();
+    }
 
     public String toString(){
         String str = "";

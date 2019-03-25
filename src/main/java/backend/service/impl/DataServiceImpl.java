@@ -45,15 +45,17 @@ public class DataServiceImpl implements DataService {
         databaseHelper.insertToUserTable(userID, tableName, lines, splitChar);
     }
 
+    public TableVO getTableAttr(long userID,String tableName){
+        return databaseHelper.getColoumAttrFromTable(userID,tableName) ;
+    }
+
     //返回格式 List<Map>  一个Map是一条数据行的映射.  {"列名1:(Object)值1","..."}
     public List getData(long userID,String tableName) {
-        return databaseHelper.getFromUserTable(userID,tableName);
+        return databaseHelper.getRecordFromUserTable(userID,tableName);
     }
 
 
     public List<TablePO> getDatabasesByUser(long userID) {
-
-
 
         return databaseHelper.getDatabasesByUser(userID);
     }

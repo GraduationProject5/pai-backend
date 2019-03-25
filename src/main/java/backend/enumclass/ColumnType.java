@@ -4,17 +4,31 @@ package backend.enumclass;
  * Created by lienming on 2019/1/17.
  */
 public enum ColumnType {
-    INT,BIGINT,DOUBLE,DECIMAL,STRING,BOOLEAN,DATETIME;
+    INT("int"),
+    BIGINT("bigint"),
+    DOUBLE("double"),
+    DECIMAL("decimal"),
+    STRING("mediumtext"),
+    BOOLEAN("boolean"),
+    DATETIME("datetime"),
+    VARCHAR("varchar")
+    ;
 
-    public String toMySqlString(){
-        if("STRING".equals(this.name()))
-            return "VARCHAR(100)";
-        else
-            return this.name();
+    public String sqltype;
+
+    ColumnType(String sqltype) {
+        this.sqltype = sqltype;
     }
 
-//    public static void main(String[] args){
-//        ColumnType a = ColumnType.STRING ;
-//        System.out.println(a.toMySqlString());
-//    }
+    public String toMySqlString(){
+        return this.sqltype;
+    }
+
+
+
+    public static void main(String[] args){
+
+    }
+
+
 }

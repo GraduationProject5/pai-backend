@@ -89,9 +89,16 @@ data: {
 }
 	返回: {"list": List<TablePO> }
 
-
 9.查看某张表的属性（有哪些列）
 url: "/data/tableDetail"
+data: {
+[   SessionAttribute] userID  ,
+	tableName :
+}
+返回： {tableVO}
+
+10.获取表的所有行记录
+url: "/data/tableData"
 data: {
 [   SessionAttribute] userID  ,
 	tableName :
@@ -101,7 +108,7 @@ data: {
 //返回格式 List<Map<String,Object>>   是数据行集合的List，List的每一项Map表示一个数据行
 // Map =  {"列名1:(Object)值1","..."}
 
-10.创建实验
+11.创建实验
 url: "/experiment/createExperiment"
 data: {
 	[SessionAttribute] userID  ,
@@ -112,7 +119,7 @@ data: {
 失败: {"result":false }
 
 
-11.查看实验
+12.查看实验
 url: "/experiment/allExperiment"
 data: {
 	[SessionAttribute] userID
