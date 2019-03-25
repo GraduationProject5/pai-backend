@@ -70,9 +70,16 @@ public class DataControllerTest {
     @Test
     public void testCreateTableByScript() throws Exception{
 
-        String sql =
-                "create table test2ByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
+//        String sql =
+//                "create table test2ByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
 
+        String sql = "create table texts\n" +
+                "(\n" +
+                "\tid int auto_increment,\n" +
+                "\tcontent MEDIUMTEXT not null,\n" +
+                "\tconstraint texts_pk\n" +
+                "\t\tprimary key (id)\n" +
+                ");";
 //        Map<String,String> map = new HashMap();
 //        map.put("sql",sql);
 
@@ -82,7 +89,7 @@ public class DataControllerTest {
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .content(JSONObject.toJSONString(map))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("tableName","test2ByScript")
+                        .param("tableName", "texts")
                 .param("sql",sql)
                 )
                 .andExpect(status().isOk())

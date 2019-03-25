@@ -88,6 +88,7 @@ pipeline{
             steps {
                 echo "start deploy"
                 sh "ls -l"
+                sh "docker-compose down -v"
                 sh "docker-compose up -d"
             }
        }

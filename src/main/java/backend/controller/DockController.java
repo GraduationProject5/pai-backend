@@ -16,6 +16,7 @@ public class DockController {
 
     @RequestMapping(value = "/docker")
     public String test() {
-        return name + " " + password + " " + driver + " 12000oooop00---000";
+
+        return "${algorithm.feign.url}";
     }
 }

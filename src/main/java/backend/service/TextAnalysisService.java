@@ -1,5 +1,6 @@
 package backend.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * - LDA
  */
 @Service
-@FeignClient(url = "${algorithm.url}", name = "algorithm")
+@FeignClient(url = "${ml.feign.url}", name = "algorithm")
 public interface TextAnalysisService {
 
     @RequestMapping(value = "/par", method = RequestMethod.POST)
@@ -24,5 +25,4 @@ public interface TextAnalysisService {
 //    void getFrequencyStatistics();
 //
 //    void getLDA();
-
 }
