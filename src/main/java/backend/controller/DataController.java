@@ -146,7 +146,7 @@ public class DataController {
 
         List<Experiment> list = dataService.getExperimentsByUser(Long.parseLong(userID));
 
-        result.put("experiments",list);
+        result.put("experiments",list );
         return result;
     }
 
