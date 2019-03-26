@@ -16,7 +16,6 @@ public interface ScenarioService {
 
 
 
-//    Model createModel();
 //
 //    //Section>Component
 //    Section createSection();

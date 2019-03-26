@@ -103,7 +103,7 @@ public interface MLFeign {
      * @param map  int[][] X_train, int[] y_train, double[][] X_test
      * @return "prediction_result":double[]
      */
-    @PostMapping(value = "/.../")
+    @PostMapping(value = "/linear/")
     Map<String, Object> linear_regression(
             @RequestBody Map<String, Object> map
     );
@@ -117,7 +117,7 @@ public interface MLFeign {
                     int[][] X_train, int[] y_train, double[][] X_test
      * @return "prediction_result":double[]
      */
-    @PostMapping(value = "/.../")
+    @PostMapping(value = "/GBDT_regression/")
     Map<String, Object> gbdt_regression(
             @RequestBody Map<String, Object> map
     );
@@ -127,7 +127,7 @@ public interface MLFeign {
      * @param  map int k, int[][] X_train
      * @return   "prediction_result":int[]
      */
-    @PostMapping(value = "/.../")
+    @PostMapping(value = "/KMeans/")
     Map<String, Object> k_means_cluster(
             @RequestBody Map<String, Object> map
     );
