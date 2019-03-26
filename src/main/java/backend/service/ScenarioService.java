@@ -2,7 +2,7 @@ package backend.service;
 
 //import model.*;
 
-import backend.model.po.Edge;
+import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface ScenarioService {
      * @param experimentID
      * @return
      */
-    List<Edge> findEdgesByExperimentID(Long experimentID) ;
+    List<EdgePO> findEdgesByExperimentID(Long experimentID) ;
 
     /**
      *

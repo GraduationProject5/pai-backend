@@ -1,8 +1,11 @@
 package backend.service.impl;
 
-import backend.daorepository.EdgeRepository;
+import backend.daorepository.EdgePORepository;
 import backend.daorepository.NodePORepository;
-import backend.model.po.Edge;
+import backend.feign.EvaluationService;
+import backend.feign.MLService;
+import backend.feign.TextAnalysisService;
+import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
 import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     DataService dataService;
 
     @Autowired
-    EdgeRepository edgeRepository;
+    EdgePORepository edgePORepository;
     @Autowired
     NodePORepository nodePORepository;
 
@@ -34,7 +37,7 @@ public class ScenarioServiceImpl implements ScenarioService {
      * @param input
      * @return
      */
-    public Map<String,Object> callAlgorithm(String algorithmName,Map<String,Object> input) {
+    public Map callAlgorithm(String algorithmName,Map<String,Object> input) {
 
         Map result = null ;
 
@@ -111,8 +114,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<Edge> findEdgesByExperimentID(Long experimentID) {
-        return edgeRepository.findByExperimentID(experimentID);
+    public List<EdgePO> findEdgesByExperimentID(Long experimentID) {
+        return edgePORepository.findByExperimentID(experimentID);
     }
 
     @Override
@@ -122,6 +125,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     @Override
     public String findAlgorithmNameByNode(NodePO nodePO) {
+
         return null;
     }
 

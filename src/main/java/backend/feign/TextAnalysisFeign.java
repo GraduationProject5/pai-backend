@@ -23,14 +23,73 @@ public interface TextAnalysisFeign {
      *
      * @param text
      * @return
+     *   {
+     *     "seg_list": [
+     *         "我",
+     *         "来说",
+     *         "两句",
+     *         "广州",
+     *       ]
+     *   }
      */
-    @RequestMapping(value = "/par/", method = RequestMethod.POST)
-    Map getParticiples(@RequestBody Map text);
+    @PostMapping(value = "/par/")
+    Map participles(@RequestBody Map text);
 
-//    @RequestMapping(value = "/sw", method = RequestMethod.POST)
-//    void getStopwordsFilter();
-//
-//    void getFrequencyStatistics();
-//
-//    void getLDA();
+
+    /**
+     * 停词过滤
+     *
+     * @param input
+     * @return {
+     * "stopped_tokens": [
+     * "我",
+     * "来说",
+     * "两句",
+     * "广州",
+     * ]
+     * }
+     */
+    @PostMapping(value = "/sw/")
+    Map stopwords_filter(@RequestBody Map input);
+
+    /**
+     * 词频统计
+     *
+     * @param input
+     * @return {
+     * "kvs": {
+     * "0": {
+     * "0": 1,
+     * },
+     * "1": {
+     * "0": 1,
+     * "1": 1,
+     * "2": 1,
+     * },
+     * "2": {
+     * "0": 1,
+     * "1": 1,
+     * }
+     * }
+     */
+    @PostMapping(value = "kv")
+    Map frequency_statistics(@RequestBody Map input);
+
+
+    /**
+     * LDA
+     *
+     * @param input
+     * @return {
+     * "docres": [
+     * [
+     * 0.013218699896100949,
+     * 0.013218699896421975,
+     * 0.013218699896285793,
+     * 0.9603439003111912
+     * ]
+     * }
+     */
+    @PostMapping(value = "lda")
+    Map LDA(@RequestBody Map input);
 }

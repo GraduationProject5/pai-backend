@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Edge   {
+public class EdgePO {
 
     @Id
     @Column(name = "edge_id")
