@@ -3,12 +3,15 @@ package backend.feign;
 import backend.service.DataService;
 import backend.feign.EvaluationFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/evaluation")
+//暂时保留 RequestMapping 用来测试算法能否调用
+@Service
 public class EvaluationService {
 
     @Autowired

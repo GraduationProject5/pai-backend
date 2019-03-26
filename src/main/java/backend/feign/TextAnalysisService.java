@@ -3,6 +3,7 @@ package backend.feign;
 import backend.service.DataService;
 import backend.feign.TextAnalysisFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/text-analysis")
+//暂时保留 RequestMapping 用来测试算法能否调用
+@Service
 public class TextAnalysisService {
 
     @Autowired
