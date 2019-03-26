@@ -1,4 +1,4 @@
-package backend.algoservice;
+package backend.feign;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Service
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
-public interface EvaluationService {
+public interface EvaluationFeign {
 
     /** 聚类组件
      * @param map  int[] labels_true,  int[] labels_pred

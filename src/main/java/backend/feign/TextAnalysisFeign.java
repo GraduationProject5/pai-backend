@@ -1,11 +1,9 @@
-package backend.algoservice;
+package backend.feign;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +16,7 @@ import java.util.Map;
 @Service
 @CrossOrigin
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
-public interface TextAnalysisService {
+public interface TextAnalysisFeign {
 
     /**
      * 分词

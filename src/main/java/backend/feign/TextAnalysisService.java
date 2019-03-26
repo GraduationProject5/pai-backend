@@ -1,7 +1,7 @@
-package backend.controller;
+package backend.feign;
 
 import backend.service.DataService;
-import backend.algoservice.TextAnalysisService;
+import backend.feign.TextAnalysisFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,10 +11,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/text-analysis")
-public class TextAnalysisController {
+public class TextAnalysisService {
 
     @Autowired
-    private TextAnalysisService textAnalysisService;
+    private TextAnalysisFeign textAnalysisFeign;
     @Autowired
     private DataService dataService;
 
@@ -25,6 +25,6 @@ public class TextAnalysisController {
         List tableList = dataService.getData(Long.parseLong(userID), tableName);
         Map mapText = new HashMap<>();
         mapText.put("text", ((Map) tableList.get(0)).get("text"));
-        return textAnalysisService.getParticiples(mapText);
+        return textAnalysisFeign.getParticiples(mapText);
     }
 }

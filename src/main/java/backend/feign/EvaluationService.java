@@ -1,7 +1,7 @@
-package backend.controller;
+package backend.feign;
 
 import backend.service.DataService;
-import backend.algoservice.EvaluationService;
+import backend.feign.EvaluationFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,36 +9,36 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/evaluation")
-public class EvaluationController {
+public class EvaluationService {
 
     @Autowired
-    EvaluationService evaluationService;
+    EvaluationFeign evaluationFeign;
     @Autowired
     DataService dataService;
 
     @GetMapping(value = "/cluster_evaluation")
     public Map cluster(@RequestBody Map<String, Object> map) {
-        return evaluationService.cluster_evaluation(map);
+        return evaluationFeign.cluster_evaluation(map);
     }
 
     @GetMapping(value = "/regression_evaluation ")
     public Map regression_evaluation(@RequestBody Map<String, Object> map){
-        return evaluationService.regression_evaluation(map);
+        return evaluationFeign.regression_evaluation(map);
     }
 
     @GetMapping(value = "/tcd")
     public Map tcd(@RequestBody Map<String, Object> map){
-        return evaluationService.tcd(map);
+        return evaluationFeign.tcd(map);
     }
 
     @GetMapping(value = "/mcd")
     public Map mcd(@RequestBody Map<String, Object> map){
-        return evaluationService.mcd(map);
+        return evaluationFeign.mcd(map);
     }
 
     @GetMapping(value = "/confusion_matrix")
     public Map confusion_matrix(@RequestBody Map<String, Object> map){
-        return evaluationService.confusionMatrix(map);
+        return evaluationFeign.confusion_matrix(map);
     }
 
 
