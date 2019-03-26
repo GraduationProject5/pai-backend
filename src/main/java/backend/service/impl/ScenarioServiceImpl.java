@@ -6,6 +6,7 @@ import backend.algoservice.TextAnalysisService;
 import backend.model.po.Component;
 import backend.model.po.Model;
 import backend.model.po.Section;
+import backend.service.DataService;
 import backend.service.ScenarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     MLService mlService ;
     @Autowired
     TextAnalysisService textAnalysisService ;
+    @Autowired
+    DataService dataService;
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -87,7 +90,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         }
 
-        return null;
+        return result;
     }
 
 

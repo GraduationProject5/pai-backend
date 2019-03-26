@@ -135,23 +135,6 @@ public interface MLService {
             @RequestBody Map<String, Object> map
     );
 
-    //todo 是不是跟EvaluationService里的重复了?
-    /** 混淆矩阵
-     *
-     * @param map  int[] y_true, int[] y_pred
-     * @return "confusion_matrix": int[][]
-     */
-    @PostMapping(value = "/cm/")
-    Map<String, Object> confusionMatrix(
-            @RequestBody Map<String, Object> map
-    );
-
-
-
-
-
-
-
 
 
 }

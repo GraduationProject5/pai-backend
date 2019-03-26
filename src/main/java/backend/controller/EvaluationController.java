@@ -38,7 +38,7 @@ public class EvaluationController {
 
     @GetMapping(value = "/confusion_matrix")
     public Map confusion_matrix(@RequestBody Map<String, Object> map){
-        return evaluationService.confusionMatrix(map);
+        return evaluationService.confusion_matrix(map);
     }
 
 
