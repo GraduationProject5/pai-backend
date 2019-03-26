@@ -1,8 +1,12 @@
 package backend.service.impl;
 
+import backend.daorepository.EdgeRepository;
+import backend.daorepository.NodeRepository;
 import backend.feign.EvaluationService;
 import backend.feign.MLService;
 import backend.feign.TextAnalysisService;
+import backend.model.po.Edge;
+import backend.model.po.Node;
 import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
