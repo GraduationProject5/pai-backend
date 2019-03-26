@@ -1,26 +1,8 @@
-package backend.algoservice;
-
-
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+package backend.service;
 
 import java.util.Map;
 
-/**
- * 评估组件
- * - 聚类
- * - 回归
- * - 二分类
- * - 多分类
- * - 混淆评估
- */
-
-@Service
-@FeignClient(url = "${ml.feign.url}", name = "algorithm")
 public interface EvaluationService {
-
     /** 聚类组件
      * @param map  int[] labels_true,  int[] labels_pred
      * @return   "adjusted_Rand_index",
@@ -31,9 +13,8 @@ public interface EvaluationService {
      *           "fowlkes_mallows_score"
      *           均为double
      */
-    @PostMapping(value = "/ce/")
     Map<String, Object> cluster_evaluation(
-            @RequestBody Map<String, Object> map
+            Map<String, Object> map
     );
 
     /** 回归评估
@@ -46,9 +27,8 @@ public interface EvaluationService {
      *          "r2_score"
      *          均为double
      */
-    @PostMapping(value = "/re/")
     Map<String, Object> regression_evaluation(
-            @RequestBody Map<String, Object> map
+            Map<String, Object> map
     );
 
     /** 二分类评估
@@ -65,9 +45,8 @@ public interface EvaluationService {
      *      macro avg     0.67      0.67      0.67         6
      *      weighted avg  0.67      0.67      0.67         6
      */
-    @PostMapping(value = "/tcd/")
     Map<String, Object> tcd(
-            @RequestBody Map<String, Object> map
+           Map<String, Object> map
     );
 
     /** 多分类评估
@@ -84,9 +63,8 @@ public interface EvaluationService {
      *      macro avg     0.44      0.56      0.49         6
      *      weighted avg  0.56      0.67      0.60         6
      */
-    @PostMapping(value = "/mcd/")
     Map<String, Object> mcd(
-            @RequestBody Map<String, Object> map
+             Map<String, Object> map
     );
 
 
@@ -95,9 +73,7 @@ public interface EvaluationService {
      * @param map  int[] y_true, int[] y_pred
      * @return "confusion_matrix": int[][]
      */
-    @PostMapping(value = "/cm/")
     Map<String, Object> confusion_matrix(
-            @RequestBody Map<String, Object> map
+          Map<String, Object> map
     );
-
 }
