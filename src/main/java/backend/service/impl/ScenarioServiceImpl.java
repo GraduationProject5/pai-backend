@@ -7,6 +7,7 @@ import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -20,6 +21,11 @@ public class ScenarioServiceImpl implements ScenarioService {
     TextAnalysisService textAnalysisService;
     @Autowired
     DataService dataService;
+
+    @Autowired
+    EdgeRepository edgeRepository;
+    @Autowired
+    NodeRepository nodeRepository;
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -103,16 +109,21 @@ public class ScenarioServiceImpl implements ScenarioService {
         return result;
     }
 
+    @Override
+    public List<Edge> findEdgesByExperimentID(Long experimentID) {
+        return edgeRepository.findByExperimentID(experimentID);
+    }
+
+    @Override
+    public List<Node> findNodesByExperimentID(Long experimentID) {
+        return nodeRepository.findByExperimentID(experimentID);
+    }
+
+    @Override
+    public String findAlgorithNameByNode(Node node) {
 
 
-//    //Section>Component
-//    public Section createSection(){
-//        return null;
-//    }
-//
-//    public Component createComponent(){
-//        return null;
-//    }
-
+        return null;
+    }
 
 }

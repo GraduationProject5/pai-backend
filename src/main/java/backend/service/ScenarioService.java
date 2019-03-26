@@ -2,6 +2,10 @@ package backend.service;
 
 //import model.*;
 
+import backend.model.po.Edge;
+import backend.model.po.Node;
+
+import java.util.List;
 import java.util.Map;
 
 public interface ScenarioService {
@@ -12,18 +16,28 @@ public interface ScenarioService {
      * @param input
      * @return
      */
-     Map callAlgorithm(String algorithmName, Map<String,Object> input);
+    Map callAlgorithm(String algorithmName, Map<String,Object> input);
 
+    /**
+     * @param experimentID
+     * @return
+     */
+    List<Edge> findEdgesByExperimentID(Long experimentID) ;
 
+    /**
+     *
+     * @param experimentID
+     * @return
+     */
+    List<Node> findNodesByExperimentID(Long experimentID) ;
 
-//
-//    //Section>Component
-//    Section createSection();
-//
-//    Component createComponent();
+    /**
+     *
+     * @param node
+     * @return
+     */
+    String findAlgorithNameByNode(Node node) ;
 
-
-
-
+//    Map<String,Object> formatInputForAlgorithm(Node node) ;
 
 }

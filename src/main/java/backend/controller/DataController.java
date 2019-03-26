@@ -119,6 +119,17 @@ public class DataController {
         return tableVO;
     }
 
+    //获取表的所有行
+    @GetMapping(value = "/tableData")
+    public Map<String,Object> tableData(
+            @SessionAttribute("userID")String userID ,
+            @RequestParam("tableName") String tableName) {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
 
+        List list = dataService.getData(Long.parseLong(userID),tableName);
+
+        result.put("list",list);
+        return result;
+    }
 
 }

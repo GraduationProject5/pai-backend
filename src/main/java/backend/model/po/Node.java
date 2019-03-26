@@ -10,17 +10,16 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "nodes", schema = "GraduationProject5")
-@Getter
-@Setter
-//@Builder
+
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Getter
+@Setter
 public class Node implements Serializable {
 
     @Id
-    @Column(name = "node_id", nullable = false, length = 10)
-    private String nodeID;
+    @Column(name = "node_id")
+    private Long nodeID;
 
     @Basic
     @Column(name = "index")
@@ -35,8 +34,8 @@ public class Node implements Serializable {
     private String name;
 
     @Basic
-    @Column(name = "nodeid")
-    private int node_id ; //??????????
+    @Column(name = "node_no" , length = 10 )
+    private int node_no ; //??????????
 
     @Basic
     @Column(name = "shape")
