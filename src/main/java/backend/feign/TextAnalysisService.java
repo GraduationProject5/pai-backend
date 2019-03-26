@@ -1,5 +1,6 @@
 package backend.feign;
 
+import backend.feign.TextAnalysisFeign;
 import backend.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

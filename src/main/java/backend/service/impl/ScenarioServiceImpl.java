@@ -1,5 +1,8 @@
 package backend.service.impl;
 
+import backend.feign.EvaluationService;
+import backend.feign.MLService;
+import backend.feign.TextAnalysisService;
 import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

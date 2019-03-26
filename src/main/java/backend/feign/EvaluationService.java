@@ -1,8 +1,19 @@
-package backend.service;
+package backend.feign;
+
+import backend.feign.EvaluationFeign;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-public interface EvaluationService {
+@Service
+@RequestMapping(value = "/evaluation")
+public class EvaluationService {
+
+    @Autowired
+    EvaluationFeign evaluationFeign;
+
     /** 聚类组件
      * @param map  int[] labels_true,  int[] labels_pred
      * @return   "adjusted_Rand_index",
@@ -13,9 +24,9 @@ public interface EvaluationService {
      *           "fowlkes_mallows_score"
      *           均为double
      */
-    Map<String, Object> cluster_evaluation(
-            Map<String, Object> map
-    );
+    public Map cluster_evaluation(Map<String, Object> map) {
+        return evaluationFeign.cluster_evaluation(map);
+    }
 
     /** 回归评估
      *
@@ -27,9 +38,9 @@ public interface EvaluationService {
      *          "r2_score"
      *          均为double
      */
-    Map<String, Object> regression_evaluation(
-            Map<String, Object> map
-    );
+    public Map regression_evaluation(Map<String, Object> map) {
+        return evaluationFeign.regression_evaluation(map);
+    }
 
     /** 二分类评估
      *
@@ -45,9 +56,9 @@ public interface EvaluationService {
      *      macro avg     0.67      0.67      0.67         6
      *      weighted avg  0.67      0.67      0.67         6
      */
-    Map<String, Object> tcd(
-           Map<String, Object> map
-    );
+    public Map tcd(Map<String, Object> map) {
+        return evaluationFeign.tcd(map);
+    }
 
     /** 多分类评估
      *
@@ -63,17 +74,20 @@ public interface EvaluationService {
      *      macro avg     0.44      0.56      0.49         6
      *      weighted avg  0.56      0.67      0.60         6
      */
-    Map<String, Object> mcd(
-             Map<String, Object> map
-    );
-
+    @GetMapping(value = "/mcd")
+    public Map mcd(Map<String, Object> map) {
+        return evaluationFeign.mcd(map);
+    }
 
     /** 混淆矩阵
      *
      * @param map  int[] y_true, int[] y_pred
      * @return "confusion_matrix": int[][]
      */
-    Map<String, Object> confusion_matrix(
-          Map<String, Object> map
-    );
+    @GetMapping(value = "/confusion_matrix")
+    public Map confusion_matrix(Map<String, Object> map) {
+        return evaluationFeign.confusion_matrix(map);
+    }
+
+
 }
