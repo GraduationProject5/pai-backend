@@ -5,7 +5,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 
 @Entity
@@ -15,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Node implements Serializable {
+public class NodePO {
 
     @Id
     @Column(name = "node_id")
