@@ -1,9 +1,6 @@
 package backend.service.impl;
 
-import backend.feign.EvaluationFeign;
-import backend.feign.MLFeign;
-import backend.feign.TextAnalysisFeign;
-import backend.service.ScenarioService;
+import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +10,13 @@ import java.util.Map;
 public class ScenarioServiceImpl implements ScenarioService {
 
     @Autowired
-    EvaluationFeign evaluationFeign;
+    EvaluationService evaluationService;
     @Autowired
-    MLFeign mlFeign;
+    MLService mlService;
     @Autowired
-    TextAnalysisFeign textAnalysisFeign;
+    TextAnalysisService textAnalysisService;
+    @Autowired
+    DataService dataService;
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -33,61 +32,61 @@ public class ScenarioServiceImpl implements ScenarioService {
 
             //case in EvaluationService
             case "ce":{
-                result = evaluationFeign.cluster_evaluation(input);
+                result = evaluationService.cluster_evaluation(input);
                 break;
             }
             case "re":{
-                result = evaluationFeign.regression_evaluation(input);
+                result = evaluationService.regression_evaluation(input);
                 break;
             }
             case "tcd":{
-                result = evaluationFeign.tcd(input);
+                result = evaluationService.tcd(input);
                 break;
             }
             case "mcd":{
-                result = evaluationFeign.mcd(input);
+                result = evaluationService.mcd(input);
                 break;
             }
             case "cm":{
-                result = evaluationFeign.confusion_matrix(input);
+                result = evaluationService.confusion_matrix(input);
                 break;
             }
 
-            //case in MLService
+            //case in MLServiceImpl
             case "svm":{
-                result = mlFeign.support_vector_machine(input);
+                result = mlService.support_vector_machine(input);
                 break;
             }
             case "lr":{
-                result = mlFeign.logic_regression(input);
+                result = mlService.logic_regression(input);
                 break;
             }
             case "GBDT":{
-                result = mlFeign.gbdt_binary_classification(input);
+                result = mlService.gbdt_binary_classification(input);
                 break;
             }
             case "knn":{
-                result = mlFeign.k_nearest_neighbors(input);
+                result = mlService.k_nearest_neighbors(input);
                 break;
             }
             case "rf":{
-                result = mlFeign.random_forest(input);
+                result = mlService.random_forest(input);
                 break;
             }
             case "nb":{
-                result = mlFeign.naive_bayes(input);
+                result = mlService.naive_bayes(input);
                 break;
             }
             case "...":{
-                result = mlFeign.linear_regression(input);
+                result = mlService.linear_regression(input);
                 break;
             }
-            case "....":{
-                result = mlFeign.gbdt_regression(input);
+            case "GBDT_regression":{
+                result = mlService.gbdt_regression(input);
                 break;
             }
-            case ".....":{
-                result = mlFeign.k_means_cluster(input);
+            case "KMeans":{
+                result = mlService.k_means_cluster(input);
                 break;
             }
 
@@ -98,14 +97,11 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         }
 
-        return null;
+        return result;
     }
 
 
-//    public Model createModel() {
-//        return null;
-//    }
-//
+
 //    //Section>Component
 //    public Section createSection(){
 //        return null;
