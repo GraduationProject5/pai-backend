@@ -1,10 +1,12 @@
 package backend.service.impl;
 
+import backend.daorepository.ComponentRepository;
 import backend.daorepository.EdgePORepository;
 import backend.daorepository.NodePORepository;
 import backend.feign.EvaluationService;
 import backend.feign.MLService;
 import backend.feign.TextAnalysisService;
+import backend.model.po.Component;
 import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
 import backend.service.*;
@@ -30,6 +32,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     EdgePORepository edgePORepository;
     @Autowired
     NodePORepository nodePORepository;
+    @Autowired
+    ComponentRepository componentRepository;
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -124,9 +128,16 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public String findAlgorithmNameByNode(NodePO nodePO) {
-
-        return null;
+    public String findAlgorithmNameByNodeID(Long nodeID) {
+        NodePO nodePO = nodePORepository.findByNodeID(nodeID) ;
+        int componentID = nodePO.getComponentID();
+        Component component = componentRepository.findByComponentID(componentID);
+        String algorithmName = component.getFuncName();
+        return algorithmName;
     }
+
+
+
+
 
 }

@@ -6,14 +6,13 @@ import lombok.*;
 import javax.persistence.*;
 import javax.persistence.Table;
 
-
-@Entity
-@Table(name = "nodes", schema = "GraduationProject5")
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "nodes", schema = "GraduationProject5")
 public class NodePO {
 
     @Id
@@ -34,7 +33,7 @@ public class NodePO {
 
     @Basic
     @Column(name = "node_no" , length = 10 )
-    private int node_no ; //??????????
+    private int nodeNo ; //??????????
 
     @Basic
     @Column(name = "shape")
@@ -55,6 +54,10 @@ public class NodePO {
     @Basic
     @Column(name = "y")
     private double y;
+
+    @Basic
+    @Column(name = "component_id")
+    private int componentID;
 
     @Basic
     @Column(name = "experiment_id")

@@ -7,13 +7,13 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 
-@Entity
-@Table(name = "edges", schema = "GraduationProject5")
 @Getter
 @Setter
-//@Builder
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "edges", schema = "GraduationProject5")
 
 public class EdgePO {
 
@@ -31,7 +31,11 @@ public class EdgePO {
 
     @Basic
     @Column(name = "source_id")
-    private String sourceID;
+    private Long sourceID;
+
+    @Basic
+    @Column(name = "source_no")
+    private String sourceNo;
 
     @Basic
     @Column(name = "source_anchor")
@@ -39,7 +43,11 @@ public class EdgePO {
 
     @Basic
     @Column(name = "target_id")
-    private String targetID;
+    private Long targetID;
+
+    @Basic
+    @Column(name = "target_no")
+    private String targetNo;
 
     @Basic
     @Column(name = "target_anchor")

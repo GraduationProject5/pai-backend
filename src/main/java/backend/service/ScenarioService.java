@@ -33,10 +33,10 @@ public interface ScenarioService {
 
     /**
      *
-     * @param nodePO
+     * @param nodeID
      * @return
      */
-    String findAlgorithmNameByNode(NodePO nodePO) ;
+    String findAlgorithmNameByNodeID(Long nodeID) ;
 
 //    Map<String,Object> formatInputForAlgorithm(NodePO node) ;
 
