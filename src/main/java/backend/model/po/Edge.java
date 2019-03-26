@@ -17,13 +17,37 @@ import java.io.Serializable;
 
 public class Edge implements Serializable {
 
-    private String edgeID ;
+    @Id
+    @Column(name = "edge_id")
+    private Long edgeID ;
+
+    @Basic
+    @Column(name = "edge_no")
+    private String edge_no;
+
+    @Basic
+    @Column(name = "index")
     private int index ;
+
+    @Basic
+    @Column(name = "source_id")
     private String sourceID;
+
+    @Basic
+    @Column(name = "source_anchor")
     private int sourceAnchor;
+
+    @Basic
+    @Column(name = "target_id")
     private String targetID;
+
+    @Basic
+    @Column(name = "target_anchor")
     private int targetAnchor;
-    private long experimentID;
+
+    @Basic
+    @Column(name = "experiment_id")
+    private Long experimentID;
 
 
 }
