@@ -1,6 +1,6 @@
-package backend.feign;
+package backend.feign.feignservice;
 
-import backend.feign.EvaluationFeign;
+import backend.feign.feignclient.EvaluationFeign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;

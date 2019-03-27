@@ -1,4 +1,4 @@
-package backend.feign;
+package backend.feign.feignclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
@@ -72,7 +72,7 @@ public interface TextAnalysisFeign {
      * }
      * }
      */
-    @PostMapping(value = "kv")
+    @PostMapping(value = "/kv/")
     Map frequency_statistics(@RequestBody Map input);
 
 
@@ -90,6 +90,6 @@ public interface TextAnalysisFeign {
      * ]
      * }
      */
-    @PostMapping(value = "lda")
+    @PostMapping(value = "/lda/")
     Map LDA(@RequestBody Map input);
 }
