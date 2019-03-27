@@ -37,7 +37,12 @@ public class MainExec {
         }
     }
 
-    public static void main(String[] args) {
+    /**
+     * main
+     *
+     * @param args
+     */
+    public static void test(String[] args) {
 //        Part1 part1 = new Part1();
 //        Part2 part2 = new Part2();
 //        Part3 part3 = new Part3();
