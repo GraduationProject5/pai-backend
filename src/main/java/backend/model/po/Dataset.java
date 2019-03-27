@@ -24,6 +24,18 @@ public class Dataset {
     @Column(name = "dataset_id")
     private Long datasetID;
 
+    //展示类型：表格/其他
+    @Basic
+    @Column(name = "type")
+    private String type;
+
+    //存储参数类型
+    @Basic
+    @Type( type = "json" )
+    @Column(name = "param_json",columnDefinition = "json")
+    private Map<String,Object> paramStr ;
+
+    //存储组件的结果
     @Basic
     @Type( type = "json" )
     @Column(name = "data_json",columnDefinition = "json")

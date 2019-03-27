@@ -41,20 +41,6 @@ public interface ScenarioService {
      */
     String findAlgorithmNameByNodeID(Long nodeID) ;
 
-    /** 检查算法的输入参数的类型是否正确
-     *
-     * @param algorithmName
-     * @return
-     */
-    boolean checkInputForAlgorithm(String algorithmName,Map<String,Object> input);
-
-    /** 检查调用算法的返回数据的类型是否正确
-     *
-     * @param algorithmName
-     * @param input
-     * @return
-     */
-    boolean checkOutputForAlgorithm(String algorithmName,Map<String,Object> input);
 
     /** 为输入数据进行封装
      *
