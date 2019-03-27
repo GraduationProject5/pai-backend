@@ -72,7 +72,7 @@ public interface TextAnalysisFeign {
      * }
      * }
      */
-    @PostMapping(value = "kv")
+    @PostMapping(value = "/kv/")
     Map frequency_statistics(@RequestBody Map input);
 
 
@@ -90,6 +90,6 @@ public interface TextAnalysisFeign {
      * ]
      * }
      */
-    @PostMapping(value = "lda")
+    @PostMapping(value = "/lda/")
     Map LDA(@RequestBody Map input);
 }
