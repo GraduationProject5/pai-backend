@@ -1,4 +1,4 @@
-package backend.feign;
+package backend.feign.feignclient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;

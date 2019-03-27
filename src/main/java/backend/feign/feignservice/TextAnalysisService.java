@@ -1,6 +1,6 @@
-package backend.feign;
+package backend.feign.feignservice;
 
-import backend.feign.TextAnalysisFeign;
+import backend.feign.feignclient.TextAnalysisFeign;
 import backend.service.DataService;
 import backend.util.config.StaticVariable;
 import org.springframework.beans.factory.annotation.Autowired;
