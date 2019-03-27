@@ -1,5 +1,6 @@
 package backend.controller;
 
+import backend.model.po.Dataset;
 import backend.model.po.Experiment;
 import backend.service.DataService;
 import backend.service.ScenarioService;
@@ -69,6 +70,15 @@ public class ScenarioController {
         return result;
     }
 
+    @GetMapping(value = "/getDataset")
+    public Map<String,Object> getDataset(
+            @RequestParam("userID") Long userID
+    ) {
+        List<Dataset> list = scenarioService.findDatasetByUserID(userID);
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        result.put("list",list);
+        return result;
+    }
 
 
 

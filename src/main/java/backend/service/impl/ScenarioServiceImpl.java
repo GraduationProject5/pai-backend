@@ -1,12 +1,14 @@
 package backend.service.impl;
 
 import backend.daorepository.ComponentRepository;
+import backend.daorepository.DatasetRepository;
 import backend.daorepository.EdgePORepository;
 import backend.daorepository.NodePORepository;
 import backend.feign.feignservice.EvaluationService;
 import backend.feign.feignservice.MLService;
 import backend.feign.feignservice.TextAnalysisService;
 import backend.model.po.Component;
+import backend.model.po.Dataset;
 import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
 import backend.service.*;
@@ -34,6 +36,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     NodePORepository nodePORepository;
     @Autowired
     ComponentRepository componentRepository;
+    @Autowired
+    DatasetRepository datasetRepository;
 
     @Override
     public List<EdgePO> findEdgesByExperimentID(Long experimentID) {
@@ -457,6 +461,11 @@ public class ScenarioServiceImpl implements ScenarioService {
         return null;
     }
 
+    @Override
+    public List<Dataset> findDatasetByUserID(Long userID) {
+        return datasetRepository.findByUserID(userID);
+    }
+
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -464,6 +473,7 @@ public class ScenarioServiceImpl implements ScenarioService {
      * @param input
      * @return
      */
+    @Override
     public Map callAlgorithm(String algorithmName,Map<String,Object> input) {
 
         Map result = null ;

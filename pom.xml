@@ -132,6 +132,12 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <!--mysql存储json, 适用于hibernate 5.1和5.0-->
+        <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-5</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.xmlunit</groupId>

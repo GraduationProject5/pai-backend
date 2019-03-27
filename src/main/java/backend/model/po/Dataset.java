@@ -1,8 +1,13 @@
 package backend.model.po;
 
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Map;
 
 
 @Getter
@@ -11,6 +16,7 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 @Table(name = "dataset", schema = "GraduationProject5")
 public class Dataset {
 
@@ -19,8 +25,9 @@ public class Dataset {
     private Long datasetID;
 
     @Basic
-    @Column(name = "data_str")
-    private String dataStr ;
+    @Type( type = "json" )
+    @Column(name = "data_json",columnDefinition = "json")
+    private Map<String,Object> dataStr ;
 
     @Basic
     @Column(name = "user_id")

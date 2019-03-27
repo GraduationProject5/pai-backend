@@ -2,6 +2,7 @@ package backend.service;
 
 //import model.*;
 
+import backend.model.po.Dataset;
 import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
 
@@ -62,4 +63,5 @@ public interface ScenarioService {
      */
     Map<String,Object> formatInputForAlgorithm(NodePO node) ;
 
+    List<Dataset> findDatasetByUserID(Long userID);
 }
