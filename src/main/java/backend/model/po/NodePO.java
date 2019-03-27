@@ -5,17 +5,15 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.persistence.Table;
-import java.io.Serializable;
 
-
-@Entity
-@Table(name = "nodes", schema = "GraduationProject5")
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class Node implements Serializable {
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "nodes", schema = "GraduationProject5")
+public class NodePO {
 
     @Id
     @Column(name = "node_id")
@@ -35,7 +33,7 @@ public class Node implements Serializable {
 
     @Basic
     @Column(name = "node_no" , length = 10 )
-    private int node_no ; //??????????
+    private int nodeNo ; //??????????
 
     @Basic
     @Column(name = "shape")
@@ -56,6 +54,10 @@ public class Node implements Serializable {
     @Basic
     @Column(name = "y")
     private double y;
+
+    @Basic
+    @Column(name = "component_id")
+    private int componentID;
 
     @Basic
     @Column(name = "experiment_id")

@@ -2,8 +2,8 @@ package backend.service;
 
 //import model.*;
 
-import backend.model.po.Edge;
-import backend.model.po.Node;
+import backend.model.po.EdgePO;
+import backend.model.po.NodePO;
 
 import java.util.List;
 import java.util.Map;
@@ -22,22 +22,22 @@ public interface ScenarioService {
      * @param experimentID
      * @return
      */
-    List<Edge> findEdgesByExperimentID(Long experimentID) ;
+    List<EdgePO> findEdgesByExperimentID(Long experimentID) ;
 
     /**
      *
      * @param experimentID
      * @return
      */
-    List<Node> findNodesByExperimentID(Long experimentID) ;
+    List<NodePO> findNodesByExperimentID(Long experimentID) ;
 
     /**
      *
-     * @param node
+     * @param nodeID
      * @return
      */
-    String findAlgorithNameByNode(Node node) ;
+    String findAlgorithmNameByNodeID(Long nodeID) ;
 
-//    Map<String,Object> formatInputForAlgorithm(Node node) ;
+//    Map<String,Object> formatInputForAlgorithm(NodePO node) ;
 
 }

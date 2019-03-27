@@ -1,12 +1,14 @@
 package backend.service.impl;
 
-import backend.daorepository.EdgeRepository;
-import backend.daorepository.NodeRepository;
+import backend.daorepository.ComponentRepository;
+import backend.daorepository.EdgePORepository;
+import backend.daorepository.NodePORepository;
 import backend.feign.EvaluationService;
 import backend.feign.MLService;
 import backend.feign.TextAnalysisService;
-import backend.model.po.Edge;
-import backend.model.po.Node;
+import backend.model.po.Component;
+import backend.model.po.EdgePO;
+import backend.model.po.NodePO;
 import backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +29,11 @@ public class ScenarioServiceImpl implements ScenarioService {
     DataService dataService;
 
     @Autowired
-    EdgeRepository edgeRepository;
+    EdgePORepository edgePORepository;
     @Autowired
-    NodeRepository nodeRepository;
+    NodePORepository nodePORepository;
+    @Autowired
+    ComponentRepository componentRepository;
 
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
@@ -114,20 +118,26 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<Edge> findEdgesByExperimentID(Long experimentID) {
-        return edgeRepository.findByExperimentID(experimentID);
+    public List<EdgePO> findEdgesByExperimentID(Long experimentID) {
+        return edgePORepository.findByExperimentID(experimentID);
     }
 
     @Override
-    public List<Node> findNodesByExperimentID(Long experimentID) {
-        return nodeRepository.findByExperimentID(experimentID);
+    public List<NodePO> findNodesByExperimentID(Long experimentID) {
+        return nodePORepository.findByExperimentID(experimentID);
     }
 
     @Override
-    public String findAlgorithNameByNode(Node node) {
-
-
-        return null;
+    public String findAlgorithmNameByNodeID(Long nodeID) {
+        NodePO nodePO = nodePORepository.findByNodeID(nodeID) ;
+        int componentID = nodePO.getComponentID();
+        Component component = componentRepository.findByComponentID(componentID);
+        String algorithmName = component.getFuncName();
+        return algorithmName;
     }
+
+
+
+
 
 }

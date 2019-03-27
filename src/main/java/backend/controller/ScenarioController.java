@@ -19,12 +19,20 @@ public class ScenarioController {
     @Autowired
     DataService dataService;
 
+
     @PostMapping(value = "/callAlgorithm")
     public Map callAlgorithm(
             @RequestParam("algorithmName")String algorithmName,
             @RequestBody Map<String,Object> input
     ){
         return scenarioService.callAlgorithm(algorithmName,input);
+    }
+
+    //为组件设置参数
+    //TODO 为组件存储参数和运行结果数据
+    @PostMapping(value = "/setParams")
+    public void setParams(@RequestBody Map<String,Object> params) {
+
     }
 
 

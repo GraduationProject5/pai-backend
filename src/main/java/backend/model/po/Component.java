@@ -8,12 +8,14 @@ import javax.persistence.Table;
 public class Component {
     private int componentID ;
     private String componentName ;
+    private String funcName;
 
     public Component(){
     }
 
-    public Component(String componentName){
+    public Component(String componentName,String funcName){
         this.componentName = componentName ;
+        this.funcName = funcName;
     }
 
     @GeneratedValue
@@ -33,5 +35,15 @@ public class Component {
     public void setComponentName(String componentName) {
         this.componentName = componentName ;
     }
+
+    @Basic
+    @Column(name="func_name", nullable = false)
+    public String getFuncName(){
+        return this.funcName ;
+    }
+    public void setFuncName(String funcName) {
+        this.funcName = funcName ;
+    }
+
 
 }
