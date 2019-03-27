@@ -36,15 +36,15 @@ public class TextAnalysisService {
      *       ]
      *   }
      */
-    @GetMapping(value = "getParticiples")
-    public Map getParticiples(@SessionAttribute("userID") String userID,
-                              @RequestParam("tableName") String tableName) {
-        //获取表中的row
-        List tableList = dataService.getData(Long.parseLong(userID), tableName);
-        Map<String, Object> mapText = new HashMap<>();
-        mapText.put("text", ((Map) tableList.get(0)).get("text"));
-        return textAnalysisFeign.participles(mapText);
-    }
+//    @GetMapping(value = "getParticiples")
+//    public Map getParticiples(@SessionAttribute("userID") String userID,
+//                              @RequestParam("tableName") String tableName) {
+//        //获取表中的row
+//        List tableList = dataService.getData(Long.parseLong(userID), tableName);
+//        Map<String, Object> mapText = new HashMap<>();
+//        mapText.put("text", ((Map) tableList.get(0)).get("text"));
+//        return textAnalysisFeign.participles(mapText);
+//    }
 
     /**
      * 已测试
@@ -60,19 +60,19 @@ public class TextAnalysisService {
      * ]
      * }
      */
-    @GetMapping(value = "getStopwordsFilter")
-    public Map getStopwordsFilter(@RequestBody Map<String, Object> map) {
-        Map<String, Object> swMap = new LinkedHashMap<>();
-//        List<String> swList = new ArrayList<>();
-//        swList.add("；");
-//        swList.add("、");
-//        swList.add("的");
-//        swList.add("。");
-        swMap.put("stop_list", StaticVariable.stop_words);
-        swMap.put("seg_list", map.get("seg_list"));
-//        return swMap;
-        return textAnalysisFeign.stopwords_filter(map);
-    }
+//    @GetMapping(value = "getStopwordsFilter")
+//    public Map getStopwordsFilter(@RequestBody Map<String, Object> map) {
+//        Map<String, Object> swMap = new LinkedHashMap<>();
+////        List<String> swList = new ArrayList<>();
+////        swList.add("；");
+////        swList.add("、");
+////        swList.add("的");
+////        swList.add("。");
+//        swMap.put("stop_list", StaticVariable.stop_words);
+//        swMap.put("seg_list", map.get("seg_list"));
+////        return swMap;
+//        return textAnalysisFeign.stopwords_filter(map);
+//    }
 
     /**
      * 词频

@@ -33,7 +33,7 @@ public interface TextAnalysisFeign {
      *   }
      */
     @PostMapping(value = "/par/")
-    Map participles(@RequestBody Map text);
+    Map<String, Object> participles(@RequestBody Map text);
 
 
     /**
@@ -50,7 +50,7 @@ public interface TextAnalysisFeign {
      * }
      */
     @PostMapping(value = "/sw/")
-    Map stopwords_filter(@RequestBody Map input);
+    Map<String, Object> stopwords_filter(@RequestBody Map input);
 
     /**
      * 词频统计
@@ -73,7 +73,7 @@ public interface TextAnalysisFeign {
      * }
      */
     @PostMapping(value = "/kv/")
-    Map frequency_statistics(@RequestBody Map input);
+    Map<String, Object> frequency_statistics(@RequestBody Map input);
 
 
     /**
@@ -91,5 +91,5 @@ public interface TextAnalysisFeign {
      * }
      */
     @PostMapping(value = "/lda/")
-    Map LDA(@RequestBody Map input);
+    Map<String, Object> LDA(@RequestBody Map input);
 }
