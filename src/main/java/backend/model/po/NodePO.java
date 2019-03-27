@@ -1,10 +1,14 @@
 package backend.model.po;
 
 
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -12,6 +16,8 @@ import javax.persistence.Table;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 @Table(name = "nodes", schema = "GraduationProject5")
 public class NodePO {
 
@@ -33,7 +39,7 @@ public class NodePO {
 
     @Basic
     @Column(name = "node_no" , length = 10 )
-    private int nodeNo ; //??????????
+    private int nodeNo ;
 
     @Basic
     @Column(name = "shape")
@@ -63,5 +69,9 @@ public class NodePO {
     @Column(name = "experiment_id")
     private Long experimentID;      //long Long??
 
+    @Basic
+    @Type( type = "json" )
+    @Column(name = "anchor_json",columnDefinition = "json")
+    private Map<String,Object> anchorJson ;
 
 }
