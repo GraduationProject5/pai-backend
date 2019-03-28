@@ -24,22 +24,25 @@ import java.util.Map;
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
 public interface MLFeign {
 
-    /** svm
+    /**
+     * svm
      *
      * @param map double tol, int c, int[][] practice_x, int[]   practice_y, double[][] test_x, int[] test_y
-     * @return  "result_y": int[]
+     * @return "result_y": int[]
      */
     @PostMapping(value = "/svm/")
     Map<String, Object> support_vector_machine(
             @RequestBody Map<String, Object> map
-            );
+    );
 
     //TODO 结果需要后端整理组合数据
-    /** 逻辑回归
+
+    /**
+     * 逻辑回归
      *
-     * @param map  double tol, int c, String penalty, int[][] X_train, int[] y_train, double[][] X_test
-     * @return   "prediction_result":int[]
-     *           "prediction_detail":double[]
+     * @param map double tol, int c, String penalty, int[][] X_train, int[] y_train, double[][] X_test
+     * @return "prediction_result":int[]
+     * "prediction_detail":double[]
      */
     @PostMapping(value = "/lr/")
     Map<String, Object> logic_regression(
@@ -47,12 +50,14 @@ public interface MLFeign {
     );
 
     //TODO 结果需要后端整理组合数据
-    /** GBDT二分类
+
+    /**
+     * GBDT二分类
      *
-     * @param map  String loss, double learning_rate, int n_estimators, int subsample,
-                    int min_samples_split, int min_samples_leaf, int max_depth, double alpha,
-                    int verbose,    //double?
-                    int[][] X_train, int[] y_train, double[][] X_test
+     * @param map String loss, double learning_rate, int n_estimators, int subsample,
+     *            int min_samples_split, int min_samples_leaf, int max_depth, double alpha,
+     *            int verbose,    //double?
+     *            int[][] X_train, int[] y_train, double[][] X_test
      * @return "prediction_result" :double[]
      */
     @PostMapping(value = "/GBDT/")
@@ -61,11 +66,13 @@ public interface MLFeign {
     );
 
     //todo 结果需要后端整理组合数据
-    /** K近邻
+
+    /**
+     * K近邻
      *
-     * @param map  int k, int[][] X_train, int[] y_train, double[][] X_test
-     * @return    "prediction_result": int[],
-     *             "prediction_detail": double[][]
+     * @param map int k, int[][] X_train, int[] y_train, double[][] X_test
+     * @return "prediction_result": int[],
+     * "prediction_detail": double[][]
      */
     @PostMapping(value = "/knn/")
     Map<String, Object> k_nearest_neighbors(
@@ -74,11 +81,13 @@ public interface MLFeign {
     );
 
     //todo 结果需要后端整理组合数据
-    /** 随机森林
+
+    /**
+     * 随机森林
      *
-     * @param map  int n_estimators, int[][] X_train, int[] y_train, double[][] X_test
-     * @return    "prediction_result": int[],
-     *             "prediction_detail": int[][]
+     * @param map int n_estimators, int[][] X_train, int[] y_train, double[][] X_test
+     * @return "prediction_result": int[],
+     * "prediction_detail": int[][]
      */
     @PostMapping(value = "/rf/")
     Map<String, Object> random_forest(
@@ -86,11 +95,13 @@ public interface MLFeign {
     );
 
     //todo 结果需要后端整理组合数据
-    /** 朴素贝叶斯
+
+    /**
+     * 朴素贝叶斯
      *
      * @param map int[][] X_train, int[] y_train, double[][] X_test
-     * @return   "prediction_result": int[],
-     *            "prediction_detail": int[][]
+     * @return "prediction_result": int[],
+     * "prediction_detail": int[][]
      */
     @PostMapping(value = "/nb/")
     Map<String, Object> naive_bayes(
@@ -98,9 +109,11 @@ public interface MLFeign {
     );
 
     //todo 结果需要后端整理组合数据
-    /** 线性回归
+
+    /**
+     * 线性回归
      *
-     * @param map  int[][] X_train, int[] y_train, double[][] X_test
+     * @param map int[][] X_train, int[] y_train, double[][] X_test
      * @return "prediction_result":double[]
      */
     @PostMapping(value = "/linear/")
@@ -109,12 +122,13 @@ public interface MLFeign {
     );
 
 
-    /** GBDT二分类
+    /**
+     * GBDT二分类
      *
-     * @param map  String loss, double learning_rate, int n_estimators, int subsample,
-                    int min_samples_split, int min_samples_leaf, int max_depth, double alpha,
-                    int verbose,    //double?
-                    int[][] X_train, int[] y_train, double[][] X_test
+     * @param map String loss, double learning_rate, int n_estimators, int subsample,
+     *            int min_samples_split, int min_samples_leaf, int max_depth, double alpha,
+     *            int verbose,    //double?
+     *            int[][] X_train, int[] y_train, double[][] X_test
      * @return "prediction_result":double[]
      */
     @PostMapping(value = "/GBDT_regression/")
@@ -122,16 +136,16 @@ public interface MLFeign {
             @RequestBody Map<String, Object> map
     );
 
-    /** KMeans聚类
+    /**
+     * KMeans聚类
      *
-     * @param  map int k, int[][] X_train
-     * @return   "prediction_result":int[]
+     * @param map int k, int[][] X_train
+     * @return "prediction_result":int[]
      */
     @PostMapping(value = "/KMeans/")
     Map<String, Object> k_means_cluster(
             @RequestBody Map<String, Object> map
     );
-
 
 
 }
