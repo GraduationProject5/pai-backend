@@ -1,17 +1,12 @@
 package backend.service.impl;
 
-import backend.daorepository.ComponentRepository;
-import backend.daorepository.DatasetRepository;
-import backend.daorepository.EdgePORepository;
-import backend.daorepository.NodePORepository;
+import backend.daorepository.*;
 import backend.feign.feignservice.EvaluationService;
 import backend.feign.feignservice.MLService;
 import backend.feign.feignservice.TextAnalysisService;
-import backend.model.po.Component;
-import backend.model.po.Dataset;
-import backend.model.po.EdgePO;
-import backend.model.po.NodePO;
+import backend.model.po.*;
 import backend.service.*;
+import backend.util.json.HttpResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +32,11 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Autowired
     ComponentRepository componentRepository;
     @Autowired
-    DatasetRepository datasetRepository;
+    DataSetRepository dataSetRepository;
+    @Autowired
+    DataParamRepository dataParamRepository;
+    @Autowired
+    DataResultRepository dataResultRepository ;
 
     @Override
     public List<EdgePO> findEdgesByExperimentID(Long experimentID) {
@@ -66,8 +65,16 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<Dataset> findDatasetByUserID(Long userID) {
-        return datasetRepository.findByUserID(userID);
+    public Map<String, Object> findDatasetByUserIDAndExperimentIDAndNodeID(Long userID,Long experimentID,Long nodeID) {
+        DataSet dataSet =  dataSetRepository.findByUserIDAndExperimentIDAndNodeID(userID,experimentID,nodeID);
+        long dataSetID = dataSet.getDataSetID();
+        List<DataParam> dataParamList = dataParamRepository.findByDataSetID(dataSetID);
+        List<DataResult> dataResultList = dataResultRepository.findByDataSetID(dataSetID);
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
+        result.put("dataSet",dataSet);
+        result.put("dataParams",dataParamList);
+        result.put("dataResults",dataResultList);
+        return result;
     }
 
 
