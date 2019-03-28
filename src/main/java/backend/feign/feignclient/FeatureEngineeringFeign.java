@@ -29,13 +29,13 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/PCA/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  PCA需要使用的列名（多个，以逗号隔开）
-     * feature_num： 保留的特征个数
+     *      csv_file： csv格式的数据文件
+     *      target：  PCA需要使用的列名（多个，以逗号隔开）
+     *      feature_num： 保留的特征个数
      * 返回：
-     * json数据:
-     * pca_result：降维后的数据列表（列名自己加上吧，直接col_0,col_1这样)
-     * explained_variance_ratio_: 降维后各个特征在总方差中占比，也就可以理解为信息包含的比例
+     *      json数据:
+     *           pca_result：降维后的数据列表（列名自己加上吧，直接col_0,col_1这样)
+     *           explained_variance_ratio_: 降维后各个特征在总方差中占比，也就可以理解为信息包含的比例
      */
     @PostMapping(value = "/PCA/")
     Map<String, Object> getPCA(
@@ -48,12 +48,12 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/discrete/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  离散化目标列名
-     * discrete_method： 离散方法，等频 frequency 、等距 metric、聚类 cluster
-     * num： 离散区间个数
+     *      csv_file： csv格式的数据文件
+     *      target：  离散化目标列名
+     *      discrete_method： 离散方法，等频 frequency 、等距 metric、聚类 cluster
+     *      num： 离散区间个数
      * 返回：
-     * csv数据文件
+     *      csv数据文件
      */
     @PostMapping(value = "/discrete/")
     Map<String, Object> getDiscretization(
@@ -67,11 +67,11 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/scale/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  尺度变换目标列名（多个，以逗号隔开）
-     * scale： 尺度变换方法，log2、log10、ln、abs、sqrt
+     *      csv_file： csv格式的数据文件
+     *      target：  尺度变换目标列名（多个，以逗号隔开）
+     *      scale： 尺度变换方法，log2、log10、ln、abs、sqrt
      * 返回：
-     * csv数据文件
+     *      csv数据文件
      */
     @PostMapping(value = "/scale/")
     Map<String, Object> getScale(
@@ -84,13 +84,13 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/soften/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  目标列名
-     * soften_method：平滑方法:百分位 per 、阈值 thresh
-     * min:  下百分位或最小阈值
-     * max:  上百分位或最大阈值
+     *      csv_file： csv格式的数据文件
+     *      target：  目标列名
+     *      soften_method：平滑方法:百分位 per 、阈值 thresh
+     *      min:  下百分位或最小阈值
+     *      max:  上百分位或最大阈值
      * 返回：
-     * csv数据文件
+     *      csv数据文件
      */
     @PostMapping(value = "/soften/")
     Map<String, Object> getSoften(
@@ -102,12 +102,12 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/importance/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  评估重要性目标列名（多个，以逗号隔开）
-     * label：    	标签列名
+     *      csv_file： csv格式的数据文件
+     *      target：  评估重要性目标列名（多个，以逗号隔开）
+     *      label：    	标签列名
      * 返回：
-     * json数据：
-     * importances: 重要性列表，顺序和输入的target一致
+     *      json数据：
+     *          importances: 重要性列表，顺序和输入的target一致
      */
     @PostMapping(value = "/importance/")
     Map<String, Object> getRFImportance(
@@ -120,12 +120,12 @@ public interface FeatureEngineeringFeign {
      * <p>
      * 接口：http://127.0.0.1:8000/GDBT_importance/
      * 参数：
-     * csv_file： csv格式的数据文件
-     * target：  评估重要性目标列名（多个，以逗号隔开）
-     * label：    	标签列名
+     *      csv_file： csv格式的数据文件
+     *      target：  评估重要性目标列名（多个，以逗号隔开）
+     *      label：    	标签列名
      * 返回：
-     * json数据：
-     * importances: 重要性列表，顺序和输入的target一致
+     *      json数据：
+     *          importances: 重要性列表，顺序和输入的target一致
      */
     @PostMapping(value = "/GDBT_importance/")
     Map<String, Object> getGDBTImportance(
