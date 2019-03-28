@@ -10,6 +10,8 @@ import backend.util.json.HttpResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,10 +73,33 @@ public class ScenarioServiceImpl implements ScenarioService {
         List<DataParam> dataParamList = dataParamRepository.findByDataSetID(dataSetID);
         List<DataResult> dataResultList = dataResultRepository.findByDataSetID(dataSetID);
         Map<String, Object> result = HttpResponseHelper.newResultMap();
-        result.put("dataSet",dataSet);
-        result.put("dataParams",dataParamList);
-        result.put("dataResults",dataResultList);
+
+        result.put("id",dataSetID) ; //实验结果ID
+        result.put("experimentId",experimentID) ;
+
+
+        Map<String, Object> results = HttpResponseHelper.newResultMap();
+        results.put("id",nodeID);
+        results.put("type",dataSet.getType());
+        List<Map<String,Object>> dataParamsMapList = new ArrayList<>();
+        for(DataParam dp:dataParamList){
+            dataParamsMapList.add(dp.getParam());
+        }
+        results.put("paras",dataParamsMapList);
+
+        Map<String, Object> data = HttpResponseHelper.newResultMap();
+        List<Map<String,Object>> dataResultsMapList = new ArrayList<>();
+        for(DataResult dr:dataResultList){
+            dataResultsMapList.add(dr.getData());
+        }
+        results.put("data",dataParamsMapList);
+
+        result.put("results",results);
         return result;
+//        result.put("dataSet",dataSet);
+//        result.put("dataParams",dataParamList);
+//        result.put("dataResults",dataResultList);
+
     }
 
 

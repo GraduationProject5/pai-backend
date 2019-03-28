@@ -27,7 +27,7 @@ public class DataResult {
     @Basic
     @Type( type = "json" )
     @Column(name = "data_json",columnDefinition = "json")
-    private Map<String,Object> dataStr ;
+    private Map<String,Object> data ;
 
     @Basic
     @Column(name = "dataset_id")

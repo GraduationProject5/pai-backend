@@ -26,7 +26,7 @@ public class DataParam {
     @Basic
     @Type( type = "json" )
     @Column(name = "param_json",columnDefinition = "json")
-    private Map<String,Object> paramStr ;
+    private Map<String,Object> param ;
 
     @Basic
     @Column(name = "dataset_id")
