@@ -47,12 +47,12 @@ public class UserController {
         return result;
     }
 
-    @GetMapping(value = "/logout")
+    @PostMapping(value = "/logout")
     public void logout(@RequestHeader("token")String token ) {
         userService.logout(token);
     }
 
-    @GetMapping(value = "/sendEmail")
+    @PostMapping(value = "/sendEmail")
     public Map<String,Object> sendEmail(@RequestParam(value = "email") String email) {
 
         Map<String,Object> result = HttpResponseHelper.newResultMap();

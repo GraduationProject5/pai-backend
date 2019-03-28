@@ -25,7 +25,7 @@ public class ScenarioController {
     @Autowired
     DataService dataService;
     //创建实验
-    @GetMapping(value = "/createExperiment")
+    @PostMapping(value = "/createExperiment")
     public Map<String,Object> createExperiment(
             @SessionAttribute("userID")String userID ,
             @RequestParam("experimentName") String experimentName,
