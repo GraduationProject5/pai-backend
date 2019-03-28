@@ -24,7 +24,7 @@ public class UserController {
     /**
         Web端调用后端需要登录的接口时在请求头中携带Token
      */
-    @GetMapping(value = "/login")
+    @PostMapping(value = "/login")
     public Map<String,Object> login(HttpSession session,
                         @RequestParam("email") String email,
                         @RequestParam("password") String password) {
@@ -72,7 +72,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping(value = "/register")
+    @PostMapping (value = "/register")
     public Map<String,Object> register(@RequestParam(value = "email") String email,
                                         @RequestParam(value = "password") String password) {
 

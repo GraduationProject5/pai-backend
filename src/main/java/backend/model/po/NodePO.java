@@ -74,4 +74,8 @@ public class NodePO {
     @Column(name = "anchor_json",columnDefinition = "json")
     private Map<String,Object> anchorJson ;
 
+    @Basic
+    @Type( type = "json" )
+    @Column(name = "settings_json",columnDefinition = "json")
+    private Map<String,Object> settings ;
 }

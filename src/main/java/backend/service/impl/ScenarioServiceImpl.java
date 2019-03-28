@@ -59,7 +59,12 @@ public class ScenarioServiceImpl implements ScenarioService {
         return algorithmName;
     }
 
+    @Override
+    public boolean saveScenario(Long userID, Long experimentID, List<NodePO> nodePOList, List<EdgePO> edgePOList) {
 
+
+        return false;
+    }
 
     @Override
     public Map<String, Object> formatInputForAlgorithm(NodePO node) {
@@ -92,7 +97,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         for(DataResult dr:dataResultList){
             dataResultsMapList.add(dr.getData());
         }
-        results.put("data",dataParamsMapList);
+        results.put("data",dataResultsMapList);
 
         result.put("results",results);
         return result;
@@ -110,7 +115,7 @@ public class ScenarioServiceImpl implements ScenarioService {
      * @return
      */
     @Override
-    public Map callAlgorithm(String algorithmName,Map<String,Object> input) {
+    public Map<String,Object> callAlgorithm(String algorithmName,Map<String,Object> input) {
 
         Map result = null ;
 

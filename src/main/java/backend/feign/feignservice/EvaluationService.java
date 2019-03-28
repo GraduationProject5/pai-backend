@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Service
-@RequestMapping(value = "/evaluation")
 public class EvaluationService {
 
     @Autowired

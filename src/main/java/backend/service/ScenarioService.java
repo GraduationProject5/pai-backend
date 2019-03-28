@@ -16,7 +16,7 @@ public interface ScenarioService {
      * @param input
      * @return
      */
-    Map callAlgorithm(String algorithmName, Map<String,Object> input);
+    Map<String,Object> callAlgorithm(String algorithmName, Map<String,Object> input);
 
 
     /** 查找实验下连接组件的边
@@ -40,6 +40,10 @@ public interface ScenarioService {
      */
     String findAlgorithmNameByNodeID(Long nodeID) ;
 
+    /** 保存场景
+     *
+     */
+    boolean saveScenario(Long userID,Long experimentID, List<NodePO> nodePOList,List<EdgePO> edgePOList);
 
     /** 为输入数据进行封装
      *

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@RestController
-@RequestMapping(value = "/text-analysis")
+//@RestController
+//@RequestMapping(value = "/text-analysis")
 //暂时保留 RequestMapping 用来测试算法能否调用
 @Service
 public class TextAnalysisService {

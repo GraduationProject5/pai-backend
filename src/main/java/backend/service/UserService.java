@@ -35,5 +35,5 @@ public interface UserService {
 
     void logout(String token);
 
-    String getUserIDByToken(String token);
+    Long getUserIDByToken(String token);
 }

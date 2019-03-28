@@ -50,14 +50,14 @@ public class UserServiceImpl implements UserService {
         return token;
     }
 
-    public String getUserIDByToken(String token)  {
+    public Long getUserIDByToken(String token)  {
         try {
-            return JwtUtil.getUserID(token);
+            return Long.parseLong(JwtUtil.getUserID(token));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "-1";
+        return -1L;
     }
 
     public void logout(String token) {
