@@ -22,15 +22,14 @@ public interface TextAnalysisFeign {
      * 分词
      *
      * @param text
-     * @return
-     *   {
-     *     "seg_list": [
-     *         "我",
-     *         "来说",
-     *         "两句",
-     *         "广州",
-     *       ]
-     *   }
+     * @return {
+     * "seg_list": [
+     * "我",
+     * "来说",
+     * "两句",
+     * "广州",
+     * ]
+     * }
      */
     @PostMapping(value = "/par/")
     Map<String, Object> participles(@RequestBody Map text);

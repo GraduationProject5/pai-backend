@@ -30,12 +30,12 @@ public class MainExec {
         }
     }
 
-    public static class Part4 extends Handler2 {
-        @Override
-        protected void handle() {
-            System.out.println("Part4的handle");
-        }
-    }
+//    public static class Part4 extends Handler2 {
+//        @Override
+//        protected void handle() {
+//            System.out.println("Part4的handle");
+//        }
+//    }
 
     /**
      * main
