@@ -9,4 +9,10 @@ public interface DataSetRepository extends JpaRepository<DataSet,Long> {
     List<DataSet> findByUserID(Long userID);
 
     DataSet findByUserIDAndExperimentIDAndNodeID(Long userID,Long experimentID,Long nodeID);
+
+    List<DataSet> findByExperimentID(Long experimentID);
+
+    void deleteByExperimentID(Long experimentID) ;
+
+
 }

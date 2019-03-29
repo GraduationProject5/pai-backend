@@ -5,8 +5,11 @@ import backend.feign.feignservice.EvaluationService;
 import backend.feign.feignservice.MLService;
 import backend.feign.feignservice.TextAnalysisService;
 import backend.model.po.*;
+import backend.model.vo.EdgeVO;
+import backend.model.vo.NodeVO;
 import backend.service.*;
 import backend.util.json.HttpResponseHelper;
+import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,10 +63,56 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public boolean saveScenario(Long userID, Long experimentID, List<NodePO> nodePOList, List<EdgePO> edgePOList) {
+    public boolean saveScenario(Long experimentID,
+                                List<NodeVO> nodeVOList,
+                                List<EdgeVO> edgeVOList) {
+        nodeVOList = JSONHelper.toNodeVOList(nodeVOList);
+        edgeVOList = JSONHelper.toEdgeVOList(edgeVOList);
 
+        //转换没问题，清空场景
+        clearScenario(experimentID);
 
-        return false;
+        for(NodeVO nodeVO:nodeVOList) {
+            NodePO nodePO = new NodePO
+                    (nodeVO,getComponentIDByFuncName(nodeVO.label),experimentID);
+//            nodePO =
+            nodePORepository.save(nodePO); //返回带有id的nodePO
+            //在第一次运行时才初始化对应的DataSet
+//            Long nodeID = nodePO.getNodeID();
+        }
+        for(EdgeVO edgeVO:edgeVOList){
+            EdgePO edgePO = new EdgePO
+                    (edgeVO,experimentID);
+            edgePORepository.save(edgePO);
+        }
+
+        return true;
+    }
+
+    @Override
+    public Map<String,Object> getScenario(Long experimentID) {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        List<NodePO> nodePOList = nodePORepository.findByExperimentID(experimentID);
+        List<EdgePO> edgePOList = edgePORepository.findByExperimentID(experimentID);
+        List<DataSet> dataSetList = dataSetRepository.findByExperimentID(experimentID);
+        List<DataParam> dataParamList = dataParamRepository.findByExperimentID(experimentID);
+        List<DataResult> dataResultList = dataResultRepository.findByExperimentID(experimentID);
+
+        result.put("nodes",nodePOList);
+        result.put("edges",edgePOList);
+        result.put("dataset",dataSetList);
+        result.put("dataparams",dataParamList);
+        result.put("dataresults",dataResultList);
+        return result;
+    }
+
+    @Override
+    public void clearScenario(Long experimentID) {
+        nodePORepository.deleteByExperimentID(experimentID);
+        edgePORepository.deleteByExperimentID(experimentID);
+        dataSetRepository.deleteByExperimentID(experimentID);
+        dataParamRepository.deleteByExperimentID(experimentID);
+        dataResultRepository.deleteByExperimentID(experimentID);
     }
 
     @Override
@@ -207,7 +256,19 @@ public class ScenarioServiceImpl implements ScenarioService {
         return result;
     }
 
+    public int getComponentIDByFuncName(String funcName){
+        Component component = componentRepository.findByFuncName(funcName);
+        if(component==null)
+            return -1;
+        return component.getComponentID();
+    }
 
+    public int getComponentIDByComponentName(String componentName){
+        Component component = componentRepository.findByComponentName(componentName);
+        if(component==null)
+            return -1;
+        return component.getComponentID();
+    }
 
 
 

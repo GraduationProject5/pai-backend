@@ -31,4 +31,8 @@ public class DataParam {
     @Basic
     @Column(name = "dataset_id")
     private Long dataSetID;
+
+    @Basic
+    @Column(name = "experiment_id")
+    private Long experimentID;
 }

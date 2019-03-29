@@ -4,6 +4,8 @@ package backend.service;
 
 import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
+import backend.model.vo.EdgeVO;
+import backend.model.vo.NodeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,18 @@ public interface ScenarioService {
     /** 保存场景
      *
      */
-    boolean saveScenario(Long userID,Long experimentID, List<NodePO> nodePOList,List<EdgePO> edgePOList);
+    boolean saveScenario(Long experimentID, List<NodeVO> nodeVOList, List<EdgeVO> edgeVOList);
+
+    /**
+     * 获取场景
+     */
+    Map<String,Object> getScenario( Long experimentID);
+
+    /**
+     * 清空场景
+     * @param experimentID
+     */
+    void clearScenario(Long experimentID);
 
     /** 为输入数据进行封装
      *
