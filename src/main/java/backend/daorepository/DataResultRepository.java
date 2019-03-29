@@ -11,4 +11,6 @@ public interface DataResultRepository extends JpaRepository<DataResult,Long> {
     List<DataResult> findByExperimentID(Long experimentID);
 
     void deleteByExperimentID(Long experimentID) ;
+
+    void deleteAllByDataSetID(Long dataSetID) ;
 }

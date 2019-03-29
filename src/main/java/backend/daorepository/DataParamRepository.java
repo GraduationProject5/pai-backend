@@ -11,4 +11,6 @@ public interface DataParamRepository extends JpaRepository<DataParam,Long> {
     List<DataParam> findByExperimentID(Long experimentID);
 
     void deleteByExperimentID(Long experimentID) ;
+
+    void deleteAllByDataSetID(Long dataSetID) ;
 }

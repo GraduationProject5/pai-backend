@@ -66,6 +66,12 @@ public interface ScenarioService {
     boolean saveSettingsForNode(Long nodeID,Map<String,Object> settings);
 
     /**
+     * 清除节点的中间运算结果
+     * @param nodeID
+     */
+     void clearNodeDataByNodeID(Long nodeID);
+
+    /**
      * 获取所有Section
      */
     List<Section> getAllSections();

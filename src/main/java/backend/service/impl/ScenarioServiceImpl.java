@@ -138,6 +138,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Override
     public void saveComputingResult(Long userID, Long experimentID, Long nodeID, String type,
                                     Map<String,Object> params,Map<String,Object> data) {
+        clearNodeDataByNodeID(nodeID);
+
         DataSet dataSet = new DataSet();
         dataSet.setUserID(userID);
         dataSet.setExperimentID(experimentID);
@@ -156,8 +158,17 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataResult.setExperimentID(experimentID);
         dataResult.setData(data);
         dataSet = dataSetRepository.save(dataSet);
+    }
 
-        return ;
+    @Override
+    public void clearNodeDataByNodeID(Long nodeID) {
+        List<DataSet> dataSetList = dataSetRepository.findByNodeID(nodeID);
+        for(DataSet dataSet : dataSetList){
+            Long dataSetID = dataSet.getDataSetID();
+            dataParamRepository.deleteAllByDataSetID(dataSetID);
+            dataResultRepository.deleteAllByDataSetID(dataSetID);
+        }
+        dataSetRepository.deleteAllByNodeID(nodeID);
     }
 
     @Override
