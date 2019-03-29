@@ -8,7 +8,11 @@ import backend.model.vo.TableVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,9 +72,9 @@ public class DatabaseHelper {
     }
 
 
-    public String formatMysqlCreate(long userID,TableVO tableVO) {
+    public String formatMysqlCreate(long userID, TableVO tableVO) {
 
-        String tableName = formatUserTableName(userID,tableVO.tableName);
+        String tableName = formatUserTableName(userID, tableVO.tableName);
         List<ColumnVO> clist = tableVO.columnVOList; //
 
         String createSql = "CREATE TABLE " + tableName + "(";
@@ -82,7 +86,7 @@ public class DatabaseHelper {
     }
 
     public boolean createTableByText(String mysqlText) {
-        Statement st =null;
+        Statement st = null;
         try {
             st = con.createStatement();
             st.execute(mysqlText);
@@ -96,7 +100,7 @@ public class DatabaseHelper {
 
     //return tableID
     public long executeCreateTableByVO(long userID, TableVO tableVO) {
-        String sql = formatMysqlCreate(userID,tableVO);
+        String sql = formatMysqlCreate(userID, tableVO);
         if (createTableByText(sql))
             return createTableRelationship(userID, tableVO.tableName, tableVO.description);
         else
@@ -106,7 +110,7 @@ public class DatabaseHelper {
     //return tableID
     public long executeCreateTableByScript(long userID, String tableName, String sql) {
 
-        sql = sql.replaceFirst(tableName,formatUserTableName(userID,tableName));
+        sql = sql.replaceFirst(tableName, formatUserTableName(userID, tableName));
         if (createTableByText(sql))
             return createTableRelationship(userID, tableName, "no description");
         else
@@ -192,7 +196,39 @@ public class DatabaseHelper {
         return columnNum;
     }
 
+    // 把csv数据插入数据库
+    public Map<Boolean, Integer> insertCsv(String userID, String tableName, File tmpFile) {
 
+        HashMap<Boolean, Integer> resultMap = new HashMap<>();
+
+        String path = tmpFile.getPath();
+
+        try {
+
+//            String insertSql = "load data infile \'" + path + "\'\n" +
+//                    "into table " + "user"+userID+"_"+tableName + " character set gb2312\n" +
+//                    "fields terminated by ',' optionally enclosed by '\"' escaped by '\"' \n" +
+//                    "lines terminated by '\\r\\n';";
+
+//            String insertSql = "load data local infile \'" + path + "\'\n" +
+//                    "into table " + "user"+userID+"_"+tableName + "\n" +
+//                    "fields terminated by ',' optionally enclosed by '\"' escaped by '\"' \n" +
+//                    "lines terminated by '\\r\\n';";
+
+            String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'";
+
+            System.out.println(insertSql);
+            Statement stmt = con.createStatement();
+            int resultSet = stmt.executeUpdate(insertSql);
+            stmt.close();
+            resultMap.put(true, resultSet);
+            return resultMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultMap.put(false, 0);
+            return resultMap;
+        }
+    }
     //lines:每行  splitChar 列分隔符
 
     public void insertToUserTable(long userID, String tableName, String[] lines, String splitChar) {
@@ -200,11 +236,11 @@ public class DatabaseHelper {
         try {
             this.con.setAutoCommit(false);
 
-            String sql = formatInsertExpression(userID,tableName);
+            String sql = formatInsertExpression(userID, tableName);
             PreparedStatement ps = con.prepareStatement
                     (sql);
 
-            int columnNum = getTableColumns(formatUserTableName(userID,tableName));
+            int columnNum = getTableColumns(formatUserTableName(userID, tableName));
             for (int i = 0; i < lines.length; i++) {
 //                System.out.println(lines[i]);
                 String[] parts = lines[i].split(splitChar);
@@ -245,11 +281,11 @@ public class DatabaseHelper {
         //先find 再对手动查询作命名处理
         TablePO tablePO = tablePORepository.findByTableName(tableName);
 
-        tableName = formatUserTableName(userID,tableName);
+        tableName = formatUserTableName(userID, tableName);
 
         TableVO tableVO = new TableVO();
-        tableVO.tableName = tableName ;
-        tableVO.description = tablePO.getDescription() ;
+        tableVO.tableName = tableName;
+        tableVO.description = tablePO.getDescription();
 
         DatabaseMetaData dbmd;
         try {
@@ -268,7 +304,7 @@ public class DatabaseHelper {
 
                 columnVO.columnName = columnName;
                 columnVO.columnType = ColumnVO.getColumnType(columnType);
-                columnVO.description = columnDescription ;
+                columnVO.description = columnDescription;
 
                 tableVO.columnVOList.add(columnVO);
             }
@@ -277,12 +313,12 @@ public class DatabaseHelper {
             e.printStackTrace();
         }
 
-        return tableVO ;
+        return tableVO;
     }
 
     //TODO 没有测试！获取用户表的所有行
     public List getRecordFromUserTable(long userID, String tableName) {
-        tableName = formatUserTableName(userID,tableName);
+        tableName = formatUserTableName(userID, tableName);
         TablePO tablePO = tablePORepository.findByTableName(tableName);
 //        long tableID = tablePO.getTableID();
 
@@ -346,9 +382,9 @@ public class DatabaseHelper {
             return null;
     }
 
-    public String formatInsertExpression(long userID,String tableName) {
+    public String formatInsertExpression(long userID, String tableName) {
         String prefix = "INSERT INTO "
-                + formatUserTableName(userID,tableName) + " VALUES(";
+                + formatUserTableName(userID, tableName) + " VALUES(";
 
         String postfix = ")";
         int columnNum = getTableColumns(tableName);
@@ -371,8 +407,8 @@ public class DatabaseHelper {
         return false;
     }
 
-    private String formatUserTableName(long userID,String tableName){
-        return "user"+userID+"_"+tableName;
+    private String formatUserTableName(long userID, String tableName) {
+        return "user" + userID + "_" + tableName;
     }
 
 
