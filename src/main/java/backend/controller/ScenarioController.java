@@ -10,6 +10,7 @@ import backend.service.DataService;
 import backend.service.ScenarioService;
 import backend.service.UserService;
 import backend.util.json.HttpResponseHelper;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -127,15 +128,24 @@ public class ScenarioController {
     }
 
     //保存组件参数到NodePO
-    //TODO 为组件存储参数和运行结果数据
-    @PostMapping(value = "/saveParamsForNode")
-    public void saveParamsForNode(
+    @PostMapping(value = "/saveSettingsForNode")
+    public boolean saveParamsForNode(
             @RequestBody Map<String,Object> params) {
-
-
+        Long nodeID = (Long) params.get("nodeID");
+        Map<String,Object> settings = (Map<String, Object>)params.get("settings");
+        return scenarioService.saveSettingsForNode(nodeID,settings);
     }
 
 
+
+    //获取Section和Component关系
+    @GetMapping(value = "/getSectionsAndComponents")
+    public Map<String,Object> getSectionsAndComponents(){
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        result.put("sections",scenarioService.getAllSections());
+        result.put("components",scenarioService.getAllComponents());
+        return result;
+    }
 
     //调用算法
     @PostMapping(value = "/callAlgorithm")

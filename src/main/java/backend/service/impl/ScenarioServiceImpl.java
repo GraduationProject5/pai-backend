@@ -31,11 +31,13 @@ public class ScenarioServiceImpl implements ScenarioService {
     DataService dataService;
 
     @Autowired
+    SectionRepository sectionRepository;
+    @Autowired
+    ComponentRepository componentRepository;
+    @Autowired
     EdgePORepository edgePORepository;
     @Autowired
     NodePORepository nodePORepository;
-    @Autowired
-    ComponentRepository componentRepository;
     @Autowired
     DataSetRepository dataSetRepository;
     @Autowired
@@ -113,6 +115,49 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataSetRepository.deleteByExperimentID(experimentID);
         dataParamRepository.deleteByExperimentID(experimentID);
         dataResultRepository.deleteByExperimentID(experimentID);
+    }
+
+    @Override
+    public boolean saveSettingsForNode(Long nodeID, Map<String, Object> settings) {
+        NodePO nodePO = nodePORepository.findByNodeID(nodeID);
+        nodePO.setSettings(settings);
+        nodePORepository.save(nodePO);
+        return true;
+    }
+
+    @Override
+    public List<Section> getAllSections() {
+        return sectionRepository.findAll();
+    }
+
+    @Override
+    public List<Component> getAllComponents() {
+        return componentRepository.findAll();
+    }
+
+    @Override
+    public void saveComputingResult(Long userID, Long experimentID, Long nodeID, String type,
+                                    Map<String,Object> params,Map<String,Object> data) {
+        DataSet dataSet = new DataSet();
+        dataSet.setUserID(userID);
+        dataSet.setExperimentID(experimentID);
+        dataSet.setNodeID(nodeID);
+        dataSet.setType(type);
+        dataSet = dataSetRepository.save(dataSet);  //get ID
+        Long dataSetID = dataSet.getDataSetID();
+        DataParam dataParam = new DataParam();
+        dataParam.setDataSetID(dataSetID);
+        dataParam.setExperimentID(experimentID);
+        dataParam.setParam(params);
+        dataParam = dataParamRepository.save(dataParam);
+
+        DataResult dataResult = new DataResult();
+        dataResult.setDataSetID(dataSetID);
+        dataResult.setExperimentID(experimentID);
+        dataResult.setData(data);
+        dataSet = dataSetRepository.save(dataSet);
+
+        return ;
     }
 
     @Override

@@ -2,8 +2,10 @@ package backend.service;
 
 //import model.*;
 
+import backend.model.po.Component;
 import backend.model.po.EdgePO;
 import backend.model.po.NodePO;
+import backend.model.po.Section;
 import backend.model.vo.EdgeVO;
 import backend.model.vo.NodeVO;
 
@@ -57,6 +59,27 @@ public interface ScenarioService {
      * @param experimentID
      */
     void clearScenario(Long experimentID);
+
+    /**
+     * 保存组件参数
+     */
+    boolean saveSettingsForNode(Long nodeID,Map<String,Object> settings);
+
+    /**
+     * 获取所有Section
+     */
+    List<Section> getAllSections();
+
+    /**
+     * 获取所有Component
+     */
+    List<Component> getAllComponents();
+
+    /**
+     * 提供给算法调用后，保存运算中间结果的数据 DataSet
+     */
+    void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
+                             Map<String,Object> params,Map<String,Object> data);
 
     /** 为输入数据进行封装
      *
