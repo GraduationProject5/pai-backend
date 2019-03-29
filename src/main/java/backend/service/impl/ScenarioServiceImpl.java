@@ -31,6 +31,10 @@ public class ScenarioServiceImpl implements ScenarioService {
     DataService dataService;
 
     @Autowired
+    ExperimentRepository experimentRepository;
+    @Autowired
+    RUserExperimentRepository rUserExperimentRepository;
+    @Autowired
     SectionRepository sectionRepository;
     @Autowired
     ComponentRepository componentRepository;
@@ -110,11 +114,11 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     @Override
     public void clearScenario(Long experimentID) {
-        nodePORepository.deleteByExperimentID(experimentID);
-        edgePORepository.deleteByExperimentID(experimentID);
-        dataSetRepository.deleteByExperimentID(experimentID);
-        dataParamRepository.deleteByExperimentID(experimentID);
         dataResultRepository.deleteByExperimentID(experimentID);
+        dataParamRepository.deleteByExperimentID(experimentID);
+        dataSetRepository.deleteByExperimentID(experimentID);
+        edgePORepository.deleteByExperimentID(experimentID);
+        nodePORepository.deleteByExperimentID(experimentID);
     }
 
     @Override
@@ -161,6 +165,14 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
+    public void deleteExperiment(Long experimentID) {
+        //dataParams, dataResults, dataSet, edges, experiment, nodes, r_user_experiment
+        clearScenario(experimentID);
+        experimentRepository.deleteByExperimentID(experimentID);
+        rUserExperimentRepository.deleteByExperimentID(experimentID);
+    }
+
+    @Override
     public void clearNodeDataByNodeID(Long nodeID) {
         List<DataSet> dataSetList = dataSetRepository.findByNodeID(nodeID);
         for(DataSet dataSet : dataSetList){
@@ -171,6 +183,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataSetRepository.deleteAllByNodeID(nodeID);
     }
 
+    //todo
     @Override
     public Map<String, Object> formatInputForAlgorithm(NodePO node) {
         return null;

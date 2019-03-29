@@ -87,6 +87,11 @@ public interface ScenarioService {
     void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
                              Map<String,Object> params,Map<String,Object> data);
 
+    /**
+     * 删除实验以及相关的数据
+     */
+    void deleteExperiment(Long experimentID);
+
     /** 为输入数据进行封装
      *
      * @param node

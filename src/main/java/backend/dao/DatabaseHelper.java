@@ -170,8 +170,6 @@ public class DatabaseHelper {
         DatabaseMetaData dbmd;
         int columnNum = 0;
         try {
-
-
             dbmd = con.getMetaData();
             ResultSet colRet = dbmd.getColumns(null, "%", tableName, "%");
 
