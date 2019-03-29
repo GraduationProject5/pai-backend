@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ public class DataServiceImpl implements DataService {
 
         //String rootPath = ClassUtils.getDefaultClassLoader().getResource("PaiBackendApplication").getPath();
 
+        Map<Boolean, Integer> map = null;
 
         File uploadDir = new File(newPath);
         //如果不存在，則新建文件夹
@@ -69,7 +71,7 @@ public class DataServiceImpl implements DataService {
         try {
             //将上传的文件写入新建的文件中
             csvFile.transferTo(tempFile);
-            Map map = databaseHelper.insertCsv(userID, tableName, tempFile);
+            map = databaseHelper.insertCsv(userID, tableName, tempFile);
             //删除临时文件
 //            tempFile.delete();
             return map;
@@ -85,7 +87,8 @@ public class DataServiceImpl implements DataService {
                 }
             }
         }
-        return null;
+        map.put(false, 0);
+        return map;
     }
 
     public void insertData(long userID, String tableName, String[] lines, String splitChar) {
