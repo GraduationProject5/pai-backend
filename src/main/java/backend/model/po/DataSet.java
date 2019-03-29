@@ -25,9 +25,7 @@ public class DataSet {
     private Long dataSetID;
 
     //展示类型：表格"table"/其他
-    @Basic
-    @Column(name = "type")
-    private String type;
+
 
     @Basic
     @Column(name = "user_id")
@@ -40,6 +38,10 @@ public class DataSet {
     @Basic
     @Column(name = "node_id")
     private Long nodeID;
+
+    @Basic
+    @Column(name = "type")
+    private String type;
 
 
 }

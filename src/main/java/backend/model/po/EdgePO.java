@@ -1,5 +1,6 @@
 package backend.model.po;
 
+import backend.model.vo.EdgeVO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 public class EdgePO {
 
     @Id
+    @GeneratedValue
     @Column(name = "edge_id")
     private Long edgeID ;
 
@@ -26,7 +28,7 @@ public class EdgePO {
     private String edge_no;
 
     @Basic
-    @Column(name = "index")
+    @Column(name = "render_index")
     private int index ;
 
     @Basic
@@ -57,5 +59,17 @@ public class EdgePO {
     @Column(name = "experiment_id")
     private Long experimentID;
 
-
+    /**
+     * 从VO构造
+     * @param
+     */
+    public EdgePO(EdgeVO edgeVO,Long experimentID){
+        setIndex(edgeVO.index);
+        setEdge_no(edgeVO.edgeNo);
+        setSourceNo(edgeVO.sourceNo);
+        setSourceAnchor(edgeVO.sourceAnchor);
+        setTargetNo(edgeVO.targetNo);
+        setTargetAnchor(edgeVO.targetAnchor);
+        setExperimentID(experimentID);
+    }
 }

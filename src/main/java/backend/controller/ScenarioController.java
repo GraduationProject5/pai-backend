@@ -4,10 +4,13 @@ import backend.model.po.DataSet;
 import backend.model.po.EdgePO;
 import backend.model.po.Experiment;
 import backend.model.po.NodePO;
+import backend.model.vo.EdgeVO;
+import backend.model.vo.NodeVO;
 import backend.service.DataService;
 import backend.service.ScenarioService;
 import backend.service.UserService;
 import backend.util.json.HttpResponseHelper;
+import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,30 +69,83 @@ public class ScenarioController {
     }
 
 
-    //输入参数:用户token，实验id，nodes，edges
-    //TODO
-    @PostMapping(value = "saveScenario")
-    public void saveScenario(
+    /** 保存实验的场景
+     *
+     * @param params
+     *      用户token，
+     *      实验id，
+     *      List<nodeVO>，
+     *      List<edgeVO>
+     * @return  {"result":success} / {"result":false,"message":"..."}
+     */
+    @PostMapping(value = "/saveScenario")
+    public Map<String,Object> saveScenario(
             @RequestBody Map<String,Object> params
     ){
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
         String token = (String) params.get("token");
         Long userID = userService.getUserIDByToken(token);
+        if(userID>0) {  //认证user
+            int experimentID = (int) params.get("experimentID");
+            List<NodeVO> nodeVOList;
+            List<EdgeVO> edgeVOList;
+            try {
+                nodeVOList = (List<NodeVO>) params.get("nodes");
+                edgeVOList = (List<EdgeVO>) params.get("edges");
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.put("result", false);
+                result.put("message", e.getMessage());
+                return result;
+            }
 
-        Long experimentID = (Long) params.get("experimentID");
-        List<NodePO> nodePOList = (List<NodePO>)params.get("nodes");
-        List<EdgePO> edgePOList = (List<EdgePO>)params.get("edges");
-        scenarioService.saveScenario(userID,experimentID,nodePOList,edgePOList);
+
+            boolean isSuccess = scenarioService.saveScenario(Integer.toUnsignedLong(experimentID), nodeVOList, edgeVOList);
+            result.put("result", isSuccess);
+            return result;
+        } else {
+            result.put("result", false);
+            result.put("message", "not authorized");
+            return result;
+        }
+    }
+
+    @GetMapping(value = "/getScenario")
+    public Map<String,Object> getScenario(
+            @RequestParam("token")String token,
+            @RequestParam("experimentID")Long experimentID
+    ) {
+        Long userID = userService.getUserIDByToken(token);
+        if(userID>0) {  //认证user
+            return scenarioService.getScenario(experimentID);
+        } else {
+            Map<String,Object> result = HttpResponseHelper.newResultMap();
+            result.put("result", false);
+            result.put("message", "not authorized");
+            return result;
+        }
+
     }
 
     //保存组件参数到NodePO
-    //TODO 为组件存储参数和运行结果数据
-    @PostMapping(value = "/saveParamsForNode")
-    public void saveParamsForNode(
+    @PostMapping(value = "/saveSettingsForNode")
+    public boolean saveParamsForNode(
             @RequestBody Map<String,Object> params) {
-
+        Long nodeID = (Long) params.get("nodeID");
+        Map<String,Object> settings = (Map<String, Object>)params.get("settings");
+        return scenarioService.saveSettingsForNode(nodeID,settings);
     }
 
 
+
+    //获取Section和Component关系
+    @GetMapping(value = "/getSectionsAndComponents")
+    public Map<String,Object> getSectionsAndComponents(){
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        result.put("sections",scenarioService.getAllSections());
+        result.put("components",scenarioService.getAllComponents());
+        return result;
+    }
 
     //调用算法
     @PostMapping(value = "/callAlgorithm")
