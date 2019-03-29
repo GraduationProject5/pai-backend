@@ -5,6 +5,6 @@ import java.util.Map;
 
 public class HttpResponseHelper {
     public static Map<String,Object> newResultMap(){
-        return new HashMap<String,Object>();
+        return new HashMap<>();
     }
 }
