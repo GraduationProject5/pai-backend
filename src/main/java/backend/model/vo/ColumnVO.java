@@ -14,16 +14,13 @@ public class ColumnVO {
 
 //    private char splitChar = ';';
 
-    //弃用
-    public String toString(){
-        return this.columnName + " " +
-                this.columnType.toMySqlString() + " " +description;
-//        return columnName+splitChar+columnType.toString()+splitChar+description;
-    }
-
+    /**
+     *    输出为字符串时 描述中不带主键信息！！！！
+     * @return
+     */
     public String toMySqlString() {
         return this.columnName + " " +
-                this.columnType.toMySqlString() + " " +description;
+                this.columnType.toMySqlString() + " " +description.replace("PRIMARY KEY","");
     }
 
     public static ColumnType getColumnType(String sqltype){

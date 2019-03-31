@@ -76,12 +76,22 @@ public class DatabaseHelper {
 
         String tableName = formatUserTableName(userID, tableVO.tableName);
         List<ColumnVO> clist = tableVO.columnVOList; //
+        List<String> primaryKeyList = tableVO.getPrimaryKey();
 
         String createSql = "CREATE TABLE " + tableName + "(";
         for (int i = 0; i < clist.size() - 1; i++) {
             createSql += clist.get(i).toMySqlString() + ",";
         }
-        createSql += clist.get(clist.size() - 1).toMySqlString() + ");";
+        createSql += clist.get(clist.size() - 1).toMySqlString() ;
+        if(primaryKeyList.size()>0){
+            createSql += ",PRIMARY KEY(" ;
+            for(int i=0; i<primaryKeyList.size()-1;i++) {
+                createSql += primaryKeyList.get(i)+",";
+            }
+            createSql += primaryKeyList.get(primaryKeyList.size()-1);
+            createSql += ")";
+        }
+        createSql += ");";
         return createSql;
     }
 
