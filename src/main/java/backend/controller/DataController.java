@@ -1,6 +1,5 @@
 package backend.controller;
 
-import backend.model.po.Experiment;
 import backend.model.po.TablePO;
 import backend.model.vo.TableVO;
 import backend.service.DataService;
@@ -8,22 +7,11 @@ import backend.util.file.CsvImportUtils;
 import backend.util.json.HttpResponseHelper;
 import backend.util.json.JSONHelper;
 import backend.model.vo.ColumnVO;
-import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileInputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by lienming on 2019/1/17.
@@ -52,11 +40,11 @@ public class DataController {
 //        Map<String, Object> map = JSONHelper.convertToMap(json);
 //        Map<String,ColumnVO> voMap = (Map<String,ColumnVO>)map;
 
-        List<ColumnVO> columnVOList = new ArrayList<>();
-        for (String key : map.keySet()) {
-            ColumnVO cvo = map.get(key);
-            columnVOList.add(cvo);
-        }
+        List<ColumnVO> columnVOList = JSONHelper.toColumnVOList(map);
+//        for (String key : map.keySet()) {
+//            ColumnVO cvo = map.get(key);
+//            columnVOList.add(cvo);
+//        }
 
         long tableID = dataService.createTableByVO
                 (Long.parseLong(userID), tableName, columnVOList, description);
