@@ -36,13 +36,13 @@ public class Section {
         this.sectionName = sectionName ;
     }
 
-    @Basic
-    @Column(name = "father_section_id", nullable = false)
-    public int getFatherSectionID(){
-        return this.fatherSectionID ;
-    }
-    public void setFatherSectionID(int fatherSectionID){
-        this.fatherSectionID = fatherSectionID ;
-    }
+//    @Basic
+//    @Column(name = "father_section_id")
+//    public int getFatherSectionID(){
+//        return this.fatherSectionID ;
+//    }
+//    public void setFatherSectionID(int fatherSectionID){
+//        this.fatherSectionID = fatherSectionID ;
+//    }
 
 }
