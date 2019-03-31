@@ -212,10 +212,12 @@ public class DatabaseHelper {
 
         HashMap<Boolean, Integer> resultMap = new HashMap<>();
 
-//        String path = tmpFile.getAbsolutePath();
+        String tmpPath = tmpFile.getAbsolutePath();
 
         String path = tmpFile.getCanonicalPath();
 
+        System.out.println(tmpPath);
+        System.out.println(path);
         try {
 
 //            String insertSql = "load data infile \'" + path + "\'\n" +
