@@ -73,7 +73,7 @@ public class DataServiceImpl implements DataService {
             csvFile.transferTo(tempFile);
             map = databaseHelper.insertCsv(userID, tableName, tempFile);
             //删除临时文件
-//            tempFile.delete();
+            tempFile.delete();
             return map;
         } catch (Exception e) {
             e.printStackTrace();

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
@@ -197,11 +198,13 @@ public class DatabaseHelper {
     }
 
     // 把csv数据插入数据库
-    public Map<Boolean, Integer> insertCsv(String userID, String tableName, File tmpFile) {
+    public Map<Boolean, Integer> insertCsv(String userID, String tableName, File tmpFile) throws IOException {
 
         HashMap<Boolean, Integer> resultMap = new HashMap<>();
 
-        String path = tmpFile.getPath();
+//        String path = tmpFile.getAbsolutePath();
+
+        String path = tmpFile.getCanonicalPath();
 
         try {
 
