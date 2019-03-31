@@ -2,7 +2,7 @@
 
 FROM java:8
 
-VOLUME /tmp
+VOLUME tmp
 
 ADD **/*.jar app.jar
 
