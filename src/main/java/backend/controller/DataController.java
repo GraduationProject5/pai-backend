@@ -52,11 +52,11 @@ public class DataController {
 //        Map<String, Object> map = JSONHelper.convertToMap(json);
 //        Map<String,ColumnVO> voMap = (Map<String,ColumnVO>)map;
 
-        List<ColumnVO> columnVOList = new ArrayList<>();
-        for (String key : map.keySet()) {
-            ColumnVO cvo = map.get(key);
-            columnVOList.add(cvo);
-        }
+        List<ColumnVO> columnVOList = JSONHelper.toColumnVOList(map);
+//        for (String key : map.keySet()) {
+//            ColumnVO cvo = map.get(key);
+//            columnVOList.add(cvo);
+//        }
 
         long tableID = dataService.createTableByVO
                 (Long.parseLong(userID), tableName, columnVOList, description);

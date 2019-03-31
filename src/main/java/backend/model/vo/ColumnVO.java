@@ -12,7 +12,7 @@ public class ColumnVO {
     public String description ;
     // NOT NULL / PRIMARY KEY...
 
-    private char splitChar = ';';
+//    private char splitChar = ';';
 
     //弃用
     public String toString(){
