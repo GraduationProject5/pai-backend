@@ -38,11 +38,12 @@ public class UserServiceImpl implements UserService {
         }
         String token = JwtUtil.generateToken
                 (user.getUserID()+"","PAI-back end","user");
+        //每次都不一样.!
 
         //已经登录
-        if(this.loginID_list.contains(token)) {
-            return token;
-        }
+//        if(this.loginID_list.contains(token)) {
+//            return token;
+//        }
 
         this.loginID_list.add(token);
 

@@ -5,6 +5,7 @@ import backend.model.po.EdgePO;
 import backend.model.po.Experiment;
 import backend.model.po.NodePO;
 import backend.model.vo.EdgeVO;
+import backend.model.vo.ExperimentVO;
 import backend.model.vo.NodeVO;
 import backend.service.DataService;
 import backend.service.ScenarioService;
@@ -43,8 +44,27 @@ public class ScenarioController {
         } else {
             result.put("result", false);
         }
-
         return result;
+    }
+
+    /**
+     * 更新实验信息
+     * @param userID
+     * @param experimentID
+     * @param params
+     * @return
+     */
+    @PostMapping(value = "/updateExperimentInfo")
+    public Map<String,Object> updateExperimentInfo(
+            @SessionAttribute("userID")String userID,
+            @RequestParam("experimentID")Long experimentID,
+            @RequestBody Map<String,Object> params
+    ){
+        ExperimentVO experimentVO = new ExperimentVO();
+        experimentVO.experimentID =  experimentID ;
+        experimentVO.experimentName=(String)params.get("experimentName");
+        experimentVO.description=(String)params.get("description");
+        return dataService.updateExperimentInfo(experimentVO);
     }
 
     //查看实验
@@ -61,18 +81,18 @@ public class ScenarioController {
 
     @GetMapping(value = "/getDataSet")
     public Map<String,Object> getDataSet(
-            @RequestParam("userID") Long userID,
+            @SessionAttribute("userID") String userID,
             @RequestParam("experimentID") Long experimentID,
             @RequestParam("nodeID") Long nodeID
     ) {
-        return scenarioService.findDatasetByUserIDAndExperimentIDAndNodeID(userID,experimentID,nodeID);
+        return scenarioService.findDataset(Long.parseLong(userID),experimentID,nodeID);
     }
 
 
     /** 保存实验的场景
      *
      * @param params
-     *      用户token，
+     *      [SessionAttribute] userID  ,
      *      实验id，
      *      List<nodeVO>，
      *      List<edgeVO>
@@ -80,12 +100,14 @@ public class ScenarioController {
      */
     @PostMapping(value = "/saveScenario")
     public Map<String,Object> saveScenario(
+            @SessionAttribute("userID") String userID,
             @RequestBody Map<String,Object> params
     ){
         Map<String,Object> result = HttpResponseHelper.newResultMap();
-        String token = (String) params.get("token");
-        Long userID = userService.getUserIDByToken(token);
-        if(userID>0) {  //认证user
+//        String token = (String) params.get("token");
+//        Long userID = userService.getUserIDByToken(token);
+
+        if(Long.parseLong(userID)>0 ) {  //认证user
             int experimentID = (int) params.get("experimentID");
             List<NodeVO> nodeVOList;
             List<EdgeVO> edgeVOList;
@@ -112,11 +134,11 @@ public class ScenarioController {
 
     @GetMapping(value = "/getScenario")
     public Map<String,Object> getScenario(
-            @RequestParam("token")String token,
+            @SessionAttribute("userID")String userID,
             @RequestParam("experimentID")Long experimentID
     ) {
-        Long userID = userService.getUserIDByToken(token);
-        if(userID>0) {  //认证user
+//        Long userID = userService.getUserIDByToken(token);
+        if(Long.parseLong(userID)>0) {  //认证user
             return scenarioService.getScenario(experimentID);
         } else {
             Map<String,Object> result = HttpResponseHelper.newResultMap();
@@ -140,12 +162,8 @@ public class ScenarioController {
 
     //获取Section和Component关系
     @GetMapping(value = "/getSectionsAndComponents")
-    public Map<String,Object> getSectionsAndComponents(){
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-        result.put("sections",scenarioService.getAllSections());
-        result.put("components",scenarioService.getAllComponents());
-        result.put("relation",scenarioService.getRelationForSectionsAndComponents());
-        return result;
+    public List<Map<String,Object>> getSectionsAndComponents(){
+        return scenarioService.getSectionsAndComponents();
     }
 
     //调用算法

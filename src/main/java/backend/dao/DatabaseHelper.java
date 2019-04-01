@@ -5,6 +5,7 @@ import backend.enumclass.ColumnType;
 import backend.model.po.*;
 import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
+import backend.util.config.DatabaseProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -115,7 +116,7 @@ public class DatabaseHelper {
         if (createTableByText(sql))
             return createTableRelationship(userID, tableVO.tableName, tableVO.description);
         else
-            return -1;
+            return DatabaseProperties.Code_ExecuteSqlFail;
     }
 
     //return tableID
@@ -125,7 +126,7 @@ public class DatabaseHelper {
         if (createTableByText(sql))
             return createTableRelationship(userID, tableName, "no description");
         else
-            return -1;
+            return DatabaseProperties.Code_ExecuteSqlFail;
     }
 
     public long createTableRelationship(long userID, String tableName, String description) {

@@ -3,6 +3,7 @@ package backend.service;
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
 import backend.model.vo.ColumnVO;
+import backend.model.vo.ExperimentVO;
 import backend.model.vo.TableVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,8 @@ public interface DataService {
      * @return
      */
     long createExperiment(long userID, String experimentName, String description);
+
+    public Map<String,Object> updateExperimentInfo(ExperimentVO experimentVO);
 
     /**
      * 表的列属性存在VO

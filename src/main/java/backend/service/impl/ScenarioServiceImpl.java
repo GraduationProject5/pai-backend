@@ -100,12 +100,16 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Override
     public Map<String,Object> getScenario(Long experimentID) {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
+        Experiment experiment = experimentRepository.findByExperimentID(experimentID);
         List<NodePO> nodePOList = nodePORepository.findByExperimentID(experimentID);
         List<EdgePO> edgePOList = edgePORepository.findByExperimentID(experimentID);
         List<DataSet> dataSetList = dataSetRepository.findByExperimentID(experimentID);
         List<DataParam> dataParamList = dataParamRepository.findByExperimentID(experimentID);
         List<DataResult> dataResultList = dataResultRepository.findByExperimentID(experimentID);
 
+        result.put("experimentID",experimentID);
+        result.put("experimentName",experiment.getExperimentName());
+        result.put("experimentDescription",experiment.getDescription());
         result.put("nodes",nodePOList);
         result.put("edges",edgePOList);
         result.put("dataset",dataSetList);
@@ -144,6 +148,47 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Override
     public List<R_Section_Component> getRelationForSectionsAndComponents() {
         return rSectionComponentRepository.findAll();
+    }
+
+    @Override
+    public List<Map<String,Object>> getSectionsAndComponents() {
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+//        List<Section> sectionList =  getAllSections();
+//        List<Component> componentList = getAllComponents();
+        List<R_Section_Component> r_section_componentList = getRelationForSectionsAndComponents();
+        List<Map<String,Object>> sectionList = new ArrayList<>();
+
+        List<Integer> sectionContained = new ArrayList<>(); //用来存储已经添加过的SectionID
+
+        for(R_Section_Component r_section_component:r_section_componentList) {
+            int sectionID = r_section_component.getSectionID();
+            int componentID = r_section_component.getComponentID();
+            Section section = sectionRepository.findBySectionID(sectionID);
+            Component component = componentRepository.findByComponentID(componentID);
+
+            if(!sectionContained.contains(sectionID)){
+                //创建新的节点
+                Map<String,Object> subNode = HttpResponseHelper.newResultMap();
+                subNode.put("sectionID",sectionID);
+                subNode.put("sectionName",section.getSectionName());
+                subNode.put("components",new ArrayList<Component>());
+                sectionContained.add(sectionID);
+                sectionList.add(subNode);
+            } else {
+                //找到节点
+                for(Map<String,Object> node : sectionList) {
+                    if( (int)node.get("sectionID")==sectionID ) {
+                        //添加子组件
+                         List<Component> componentList = (List<Component>) node.get("components");
+                         componentList.add(component);
+                         node.put("components",componentList);
+                    } else {
+                        continue;
+                    }
+                }
+            }
+        }
+       return sectionList;
     }
 
     @Override
@@ -197,7 +242,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public Map<String, Object> findDatasetByUserIDAndExperimentIDAndNodeID(Long userID,Long experimentID,Long nodeID) {
+    public Map<String, Object> findDataset(Long userID,Long experimentID,Long nodeID) {
         DataSet dataSet =  dataSetRepository.findByUserIDAndExperimentIDAndNodeID(userID,experimentID,nodeID);
         long dataSetID = dataSet.getDataSetID();
         List<DataParam> dataParamList = dataParamRepository.findByDataSetID(dataSetID);

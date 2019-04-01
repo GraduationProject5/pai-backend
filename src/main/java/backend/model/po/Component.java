@@ -1,49 +1,41 @@
 package backend.model.po;
 
 
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import lombok.*;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.*;
 import javax.persistence.Table;
+import java.util.Map;
+
+@Getter
+@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "component", schema = "GraduationProject5")
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Component {
-    private int componentID ;
-    private String componentName ;
-    private String funcName;
-
-    public Component(){
-    }
-
-    public Component(String componentName,String funcName){
-        this.componentName = componentName ;
-        this.funcName = funcName;
-    }
 
     @GeneratedValue
     @Id
-    @Column(name= "component_id",nullable = false)
-    public int getComponentID(){
-        return this.componentID ;
-    }
-    public void setComponentID(int newID) { this.componentID = newID ; }
-
+    @Column(name= "component_id")
+    private int componentID;
 
     @Basic
     @Column(name="component_name", nullable = false)
-    public String getComponentName(){
-        return this.componentName ;
-    }
-    public void setComponentName(String componentName) {
-        this.componentName = componentName ;
-    }
-
+    private String componentName ;
     @Basic
     @Column(name="func_name", nullable = false)
-    public String getFuncName(){
-        return this.funcName ;
-    }
-    public void setFuncName(String funcName) {
-        this.funcName = funcName ;
-    }
+    private String funcName;
+    //存储组件的结果
+    @Basic
+    @Type( type = "json" )
+    @Column(name = "setting",columnDefinition = "json")
+    private Map<String,Object> setting ;
 
 
 }

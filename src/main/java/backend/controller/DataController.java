@@ -3,6 +3,7 @@ package backend.controller;
 import backend.model.po.TablePO;
 import backend.model.vo.TableVO;
 import backend.service.DataService;
+import backend.util.config.DatabaseProperties;
 import backend.util.file.CsvImportUtils;
 import backend.util.json.HttpResponseHelper;
 import backend.util.json.JSONHelper;
@@ -36,24 +37,14 @@ public class DataController {
             @RequestBody Map<String, ColumnVO> map) {
 
         Map<String, Object> result = HttpResponseHelper.newResultMap();
-
-//        Map<String, Object> map = JSONHelper.convertToMap(json);
-//        Map<String,ColumnVO> voMap = (Map<String,ColumnVO>)map;
-
         List<ColumnVO> columnVOList = JSONHelper.toColumnVOList(map);
-//        for (String key : map.keySet()) {
-//            ColumnVO cvo = map.get(key);
-//            columnVOList.add(cvo);
-//        }
-
         long tableID = dataService.createTableByVO
                 (Long.parseLong(userID), tableName, columnVOList, description);
 
         if (tableID < 0) {
-            result.put("result", false);
+            handleErrorResult(result,tableID);
         } else {
-            result.put("result", true);
-            result.put("tableID", tableID);
+            handleSuccessResult(result,tableID);
         }
 
         return result;
@@ -72,14 +63,28 @@ public class DataController {
                 (Long.parseLong(userID), tableName, sqlScript);
 
         if (tableID < 0) {
-            result.put("result", false);
+            handleErrorResult(result,tableID);
         } else {
-            result.put("result", true);
-            result.put("tableID", tableID);
+           handleSuccessResult(result,tableID);
         }
 
         return result;
     }
+
+    void handleErrorResult(Map<String, Object> result,Long result_code) {
+        if (result_code < 0) {
+            result.put("result", false);
+            if(result_code==DatabaseProperties.Code_ExecuteSqlFail)
+                result.put("message", "execute sql fail");
+        }
+    }
+
+
+    void handleSuccessResult(Map<String, Object> result,Long result_code){
+        result.put("result", true);
+        result.put("tableID", result_code);
+    }
+
 
     // 将用户上传的 csv数据表 插入到自建的数据库
     @PostMapping(value = "/insertCsv")

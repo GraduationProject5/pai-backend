@@ -5,6 +5,7 @@ import backend.util.config.LoginProperties;
 import backend.util.json.HttpResponseHelper;
 import backend.util.register.email.EmailUtility;
 //import net.sf.json.JSONObject;
+import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,16 +27,14 @@ public class UserController {
      */
     @PostMapping(value = "/login")
     public Map<String,Object> login(HttpSession session,
-                        @RequestParam("email") String email,
-                        @RequestParam("password") String password) {
+                                    @RequestParam("email") String email,
+                                    @RequestParam("password") String password) {
 
         String token = userService.login(email,password) ;
         Map<String,Object> result = HttpResponseHelper.newResultMap();
 
-
-        if(token.charAt(0) != '-' ) {   //...不知道怎么判断了
-            //TODO 需要前端把token加入HttpRequest Header吗?
-            session.setAttribute("userID", userService.getUserIDByToken(token)  );
+        if(token.charAt(0) != '-' ) {   //...
+            session.setAttribute("userID", userService.getUserIDByToken(token));
             result.put("result",true);
             result.put("token",token) ;
         }
@@ -47,6 +46,7 @@ public class UserController {
         return result;
     }
 
+    //todo 使用存疑
     @PostMapping(value = "/logout")
     public void logout(@RequestHeader("token")String token ) {
         userService.logout(token);

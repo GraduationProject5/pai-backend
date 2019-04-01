@@ -46,6 +46,8 @@ public interface ScenarioService {
      */
     boolean saveScenario(Long experimentID, List<NodeVO> nodeVOList, List<EdgeVO> edgeVOList);
 
+
+
     /**
      * 获取场景
      */
@@ -84,6 +86,11 @@ public interface ScenarioService {
     List<R_Section_Component> getRelationForSectionsAndComponents();
 
     /**
+     * 返回前端要求的Section和Component的嵌套关系格式
+     */
+    List<Map<String,Object>> getSectionsAndComponents();
+
+    /**
      * 提供给算法调用后，保存运算中间结果的数据 DataSet
      */
     void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
@@ -101,6 +108,6 @@ public interface ScenarioService {
      */
     Map<String,Object> formatInputForAlgorithm(NodePO node) ;
 
-    Map<String,Object> findDatasetByUserIDAndExperimentIDAndNodeID(Long userID,Long experimentID,Long nodeID);
+    Map<String,Object> findDataset(Long userID,Long experimentID,Long nodeID);
 
 }

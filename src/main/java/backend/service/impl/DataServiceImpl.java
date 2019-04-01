@@ -1,11 +1,14 @@
 package backend.service.impl;
 
 import backend.dao.DatabaseHelper;
+import backend.daorepository.ExperimentRepository;
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
+import backend.model.vo.ExperimentVO;
 import backend.service.DataService;
 import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
+import backend.util.json.HttpResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,13 +30,38 @@ import java.util.Map;
 @Service
 public class DataServiceImpl implements DataService {
 
+
+    @Autowired
+    ExperimentRepository experimentRepository;
     @Autowired
     private DatabaseHelper databaseHelper;
     @Value(value = "${spring.resources.static-locations}")
     String newPath;
 
+
     public long createExperiment(long userID, String experimentName, String description) {
         return databaseHelper.executeCreateExperiment(userID, experimentName, description);
+    }
+
+    @Override
+    public Map<String, Object> updateExperimentInfo(ExperimentVO experimentVO) {
+        Long experimentID = experimentVO.experimentID;
+        Experiment experiment = experimentRepository.findByExperimentID(experimentID);
+        Map<String,Object> result = HttpResponseHelper.newResultMap();
+        if(experiment==null) {
+            result.put("result",false);
+            result.put("message","No such ExperimentID");
+            return result;
+        }
+        else {
+            if(experimentVO.experimentName!=null)
+                experiment.setExperimentName(experimentVO.experimentName);
+            if(experimentVO.description!=null)
+                experiment.setDescription(experimentVO.description);
+            experimentRepository.save(experiment);
+            result.put("result",true);
+            return result;
+        }
     }
 
     /*
