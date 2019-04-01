@@ -26,7 +26,6 @@ public interface ScenarioService {
     void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
                              Map<String,Object> params,Map<String,Object> data);
 
-
     /** 为输入数据进行封装
      *
      * @param node
@@ -80,15 +79,15 @@ public interface ScenarioService {
     boolean saveSettingsForNode(Long nodeID,Map<String,Object> settings);
 
     /**
+     *  获取单一节点的数据集
+     */
+    Map<String,Object> findDataset(Long userID,Long experimentID,Long nodeID);
+
+    /**
      * 清除节点的中间运算结果
      * @param nodeID
      */
      void clearNodeDataByNodeID(Long nodeID);
-
-    /**
-     *  获取单一节点的数据集
-     */
-    Map<String,Object> findDataset(Long userID,Long experimentID,Long nodeID);
 
     /////////////////////////////////// 场景相关 end //////////////////////////////////////
 
@@ -111,7 +110,9 @@ public interface ScenarioService {
     /**
      * 返回前端要求的Section和Component的嵌套关系格式
      */
+    //todo 各种组件的参数设置需要人为规定！
     List<Map<String,Object>> getSectionsAndComponents();
+
 /////////////////////////////////// Section和Component相关 end  //////////////////////////////////////
 
 
