@@ -127,7 +127,7 @@ public class DataController {
 
     }
 
-    //用户导入数据到自建表中
+    //用户导入数据到自建表中,弃用(改用csv)
     @PostMapping(value = "/importData")
     public void importData(@SessionAttribute("userID") String userID,
                            @RequestParam("tableName") String tableName,

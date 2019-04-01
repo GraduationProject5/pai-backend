@@ -2,12 +2,14 @@ package backend.service.impl;
 
 import backend.dao.DatabaseHelper;
 import backend.daorepository.ExperimentRepository;
+import backend.daorepository.RUserExperimentRepository;
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
 import backend.model.vo.ExperimentVO;
 import backend.service.DataService;
 import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
+import backend.service.ScenarioService;
 import backend.util.json.HttpResponseHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +32,14 @@ import java.util.Map;
 @Service
 public class DataServiceImpl implements DataService {
 
+    @Autowired
+    ScenarioService scenarioService;
 
     @Autowired
     ExperimentRepository experimentRepository;
+    @Autowired
+    RUserExperimentRepository rUserExperimentRepository;
+
     @Autowired
     private DatabaseHelper databaseHelper;
     @Value(value = "${spring.resources.static-locations}")
@@ -41,6 +48,14 @@ public class DataServiceImpl implements DataService {
 
     public long createExperiment(long userID, String experimentName, String description) {
         return databaseHelper.executeCreateExperiment(userID, experimentName, description);
+    }
+
+    @Override
+    public void deleteExperiment(Long experimentID) {
+        //dataParams, dataResults, dataSet, edges, experiment, nodes, r_user_experiment
+        scenarioService.clearScenario(experimentID);
+        experimentRepository.deleteByExperimentID(experimentID);
+        rUserExperimentRepository.deleteByExperimentID(experimentID);
     }
 
     @Override
@@ -136,6 +151,11 @@ public class DataServiceImpl implements DataService {
     public List<TablePO> getDatabasesByUser(long userID) {
 
         return databaseHelper.getDatabasesByUser(userID);
+    }
+
+    @Override
+    public void dropUserTable(Long userID, String tableName) {
+        databaseHelper.dropUserTable(userID,tableName);
     }
 
     public List<Experiment> getExperimentsByUser(long userID) {

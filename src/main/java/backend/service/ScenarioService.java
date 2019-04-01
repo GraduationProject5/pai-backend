@@ -11,6 +11,7 @@ import java.util.Map;
 
 public interface ScenarioService {
 
+    /////////////////////////////////// 算法相关 begin //////////////////////////////////////
     /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
      * @param algorithmName
@@ -19,7 +20,23 @@ public interface ScenarioService {
      */
     Map<String,Object> callAlgorithm(String algorithmName, Map<String,Object> input);
 
+    /**
+     * 提供给算法调用后，保存运算中间结果的数据 DataSet
+     */
+    void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
+                             Map<String,Object> params,Map<String,Object> data);
 
+
+    /** 为输入数据进行封装
+     *
+     * @param node
+     * @return
+     */
+    Map<String,Object> formatInputForAlgorithm(NodePO node) ;
+
+    /////////////////////////////////// 算法相关 end //////////////////////////////////////
+
+    /////////////////////////////////// 场景相关 begin //////////////////////////////////////
     /** 查找实验下连接组件的边
      * @param experimentID
      * @return
@@ -46,8 +63,6 @@ public interface ScenarioService {
      */
     boolean saveScenario(Long experimentID, List<NodeVO> nodeVOList, List<EdgeVO> edgeVOList);
 
-
-
     /**
      * 获取场景
      */
@@ -71,6 +86,14 @@ public interface ScenarioService {
      void clearNodeDataByNodeID(Long nodeID);
 
     /**
+     *  获取单一节点的数据集
+     */
+    Map<String,Object> findDataset(Long userID,Long experimentID,Long nodeID);
+
+    /////////////////////////////////// 场景相关 end //////////////////////////////////////
+
+    /////////////////////////////////// Section和Component相关 begin //////////////////////////////////////
+    /**
      * 获取所有Section
      */
     List<Section> getAllSections();
@@ -89,25 +112,9 @@ public interface ScenarioService {
      * 返回前端要求的Section和Component的嵌套关系格式
      */
     List<Map<String,Object>> getSectionsAndComponents();
+/////////////////////////////////// Section和Component相关 end  //////////////////////////////////////
 
-    /**
-     * 提供给算法调用后，保存运算中间结果的数据 DataSet
-     */
-    void saveComputingResult(Long userID,Long experimentID,Long nodeID,String type,
-                             Map<String,Object> params,Map<String,Object> data);
 
-    /**
-     * 删除实验以及相关的数据
-     */
-    void deleteExperiment(Long experimentID);
 
-    /** 为输入数据进行封装
-     *
-     * @param node
-     * @return
-     */
-    Map<String,Object> formatInputForAlgorithm(NodePO node) ;
-
-    Map<String,Object> findDataset(Long userID,Long experimentID,Long nodeID);
 
 }

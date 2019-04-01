@@ -216,13 +216,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataSet = dataSetRepository.save(dataSet);
     }
 
-    @Override
-    public void deleteExperiment(Long experimentID) {
-        //dataParams, dataResults, dataSet, edges, experiment, nodes, r_user_experiment
-        clearScenario(experimentID);
-        experimentRepository.deleteByExperimentID(experimentID);
-        rUserExperimentRepository.deleteByExperimentID(experimentID);
-    }
+
 
     @Override
     public void clearNodeDataByNodeID(Long nodeID) {

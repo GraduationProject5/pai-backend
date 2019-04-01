@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * 使用这个类的原意是:有一些不能用Spring Data JPA处理的SQL查询用这个类代替实现.
+ */
 @Repository
 public class DatabaseHelper {
 
@@ -427,39 +430,16 @@ public class DatabaseHelper {
         return "user" + userID + "_" + tableName;
     }
 
+    //todo
 
-    //test
-//    public static void main(String[] args){
-//        DatabaseHelper dh = new DatabaseHelper();
+    /**
+     * 删除用户表,以及用户_表关系
+     * @param userID
+     * @param tableName
+     */
+    public void dropUserTable(Long userID,String tableName){
 
-//        List<ColumnVO> clist = new ArrayList<>();
-//        ColumnVO cvo1 = new ColumnVO() ;
-//        cvo1.columnName = "c1" ;
-//        cvo1.columnType = ColumnType.INT;
-//        cvo1.description = "NOT NULL PRIMARY KEY" ;
-//        ColumnVO cvo2 = new ColumnVO() ;
-//        cvo2.columnName = "c2" ;
-//        cvo2.columnType = ColumnType.STRING;
-//        cvo2.description = "NOT NULL" ;
-//        clist.add(cvo1);
-//        clist.add(cvo2);
-//        TableVO tableVO = new TableVO();
-//        tableVO.tableName="test1";
-//        tableVO.columnVOList=clist;
-//        dh.executeCreateTableByVO(1,tableVO);
-
-
-//未测试成功 ，因为要启动项目 @Autowired repository
-//        String[] lines = {
-//                "2,asd,ewr",
-//                "23,ss,sss"
-//        };
-//
-//        dh.insertData(1,"username",lines,",");
-
-//        User username = new User("223re","ASDw");
-//       System.out.println(null==dh.userRepository.findByEmailAndPassword("javalem@163.com","asd"));
-//    }
+    }
 
 
 }
