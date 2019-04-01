@@ -2,7 +2,7 @@
 
 FROM java:8
 
-VOLUME tmp
+VOLUME tmp:/pai-backend
 
 ADD **/*.jar app.jar
 
