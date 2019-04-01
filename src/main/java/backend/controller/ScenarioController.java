@@ -175,7 +175,9 @@ public class ScenarioController {
         return scenarioService.callAlgorithm(algorithmName,input);
     }
 
+    @PostMapping(value = "/executeExperiment")
+    public void executeExperiment() {
 
-
+    }
 
 }
