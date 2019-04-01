@@ -230,7 +230,7 @@ public class DatabaseHelper {
 //                    "fields terminated by ',' optionally enclosed by '\"' escaped by '\"' \n" +
 //                    "lines terminated by '\\r\\n';";
 
-            String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'";
+            String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
 
             System.out.println(insertSql);
             Statement stmt = con.createStatement();
