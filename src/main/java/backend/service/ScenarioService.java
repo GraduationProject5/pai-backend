@@ -2,10 +2,7 @@ package backend.service;
 
 //import model.*;
 
-import backend.model.po.Component;
-import backend.model.po.EdgePO;
-import backend.model.po.NodePO;
-import backend.model.po.Section;
+import backend.model.po.*;
 import backend.model.vo.EdgeVO;
 import backend.model.vo.NodeVO;
 
@@ -80,6 +77,11 @@ public interface ScenarioService {
      * 获取所有Component
      */
     List<Component> getAllComponents();
+
+    /**
+     * 获取Component和Section的父子关系
+     */
+    List<R_Section_Component> getRelationForSectionsAndComponents();
 
     /**
      * 提供给算法调用后，保存运算中间结果的数据 DataSet

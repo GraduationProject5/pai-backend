@@ -39,6 +39,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Autowired
     ComponentRepository componentRepository;
     @Autowired
+    RSectionComponentRepository rSectionComponentRepository;
+    @Autowired
     EdgePORepository edgePORepository;
     @Autowired
     NodePORepository nodePORepository;
@@ -137,6 +139,11 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Override
     public List<Component> getAllComponents() {
         return componentRepository.findAll();
+    }
+
+    @Override
+    public List<R_Section_Component> getRelationForSectionsAndComponents() {
+        return rSectionComponentRepository.findAll();
     }
 
     @Override

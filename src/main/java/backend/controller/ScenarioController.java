@@ -144,6 +144,7 @@ public class ScenarioController {
         Map<String,Object> result = HttpResponseHelper.newResultMap();
         result.put("sections",scenarioService.getAllSections());
         result.put("components",scenarioService.getAllComponents());
+        result.put("relation",scenarioService.getRelationForSectionsAndComponents());
         return result;
     }
 
