@@ -5,7 +5,6 @@ import backend.util.config.LoginProperties;
 import backend.util.json.HttpResponseHelper;
 import backend.util.register.email.EmailUtility;
 //import net.sf.json.JSONObject;
-import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
