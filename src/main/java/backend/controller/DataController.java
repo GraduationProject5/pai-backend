@@ -175,4 +175,15 @@ public class DataController {
         return result;
     }
 
+    /**
+     * 删除用户的数据库表和表相关关系
+     */
+    @GetMapping(value = "/dropTable")
+    public void dropTable(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("tableID") Long tableID
+    ) {
+        dataService.dropUserTable(Long.parseLong(userID),tableID);
+    }
+
 }

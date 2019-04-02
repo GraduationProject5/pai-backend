@@ -83,7 +83,7 @@ public interface DataService {
     /**
      * 删除用户的数据库表和表相关关系
      */
-    void dropUserTable(Long userID,String tableName);
+    void dropUserTable(Long userID,Long tableID);
 
     ///////////////////////////  数据表相关 end //////////////////////////////////
 

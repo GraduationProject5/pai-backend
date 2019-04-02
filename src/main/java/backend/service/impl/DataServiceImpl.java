@@ -154,8 +154,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public void dropUserTable(Long userID, String tableName) {
-        databaseHelper.dropUserTable(userID,tableName);
+    public void dropUserTable(Long userID,Long tableID) {
+        databaseHelper.dropUserTable(userID,tableID);
     }
 
     public List<Experiment> getExperimentsByUser(long userID) {

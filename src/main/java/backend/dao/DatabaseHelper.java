@@ -369,7 +369,7 @@ public class DatabaseHelper {
         return list;
     }
 
-    //TODO 获取用户的所有表信息[tableID,tableName,description]，不包含表的列属性
+    //获取用户的所有表信息[tableID,tableName,description]，不包含表的列属性
     public List<TablePO> getDatabasesByUser(long userID) {
 
         List<R_User_Table> rutlist = rUserTableRepository.findByUserID(userID);
@@ -382,11 +382,10 @@ public class DatabaseHelper {
         }
         if (tablePOList.size() > 0)
             return tablePOList;
-        else
+        else  //无则返回null
             return null;
     }
 
-    //TODO 测试！
     public List<Experiment> getExperimentsByUser(long userID) {
         List<R_User_Experiment> ruelist = rUserExperimentRepository.findByUserID(userID);
         List<Experiment> elist = new ArrayList<>();
@@ -434,10 +433,32 @@ public class DatabaseHelper {
 
     /**
      * 删除用户表,以及用户_表关系
-     * @param userID
-     * @param tableName
      */
-    public void dropUserTable(Long userID,String tableName){
+    public void dropUserTable(Long userID,Long tableID){
+        TablePO tablePO = tablePORepository.findByTableID(tableID);
+        String tableName = tablePO.getTableName();
+
+        String tableNameInMySQL = formatUserTableName(userID,tableName);
+        //drop table
+        Statement st = null;
+        String drop_sql = "drop TABLE "+tableNameInMySQL+";";
+        try {
+            st = con.createStatement();
+            st.execute(drop_sql);
+            st.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        //delete record in tablePO
+        tablePORepository.delete(tablePO);
+
+        //delete record in r_user_table
+        R_User_Table r_user_table = rUserTableRepository.findByTableID(tableID);
+        rUserTableRepository.delete(r_user_table);
+        //note: rUserTableRepository.deleteByTableID()会报错,原因不清楚
+
 
     }
 

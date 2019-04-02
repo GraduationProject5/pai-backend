@@ -7,5 +7,7 @@ public interface TablePORepository extends JpaRepository<TablePO,Long> {
 
     TablePO findByTableName(String tableName) ;
 
-    TablePO findByTableID(long tableID);
+    TablePO findByTableID(Long tableID);
+
+    void deleteByTableID(Long tableID);
 }
