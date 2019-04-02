@@ -13,6 +13,7 @@ import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,42 +153,43 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     @Override
     public List<Map<String,Object>> getSectionsAndComponents() {
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-//        List<Section> sectionList =  getAllSections();
-//        List<Component> componentList = getAllComponents();
         List<R_Section_Component> r_section_componentList = getRelationForSectionsAndComponents();
-        List<Map<String,Object>> sectionList = new ArrayList<>();
+        List<Map<String,Object>> sectionList = new ArrayList<>();   //返回结果
 
-        List<Integer> sectionContained = new ArrayList<>(); //用来存储已经添加过的SectionID
+        Map<Integer,List<Component>> sectionMap = new HashMap<>();  //用来存储已经添加过的SectionID和已添加的Component
 
         for(R_Section_Component r_section_component:r_section_componentList) {
             int sectionID = r_section_component.getSectionID();
             int componentID = r_section_component.getComponentID();
-            Section section = sectionRepository.findBySectionID(sectionID);
+
+            Section section;
             Component component = componentRepository.findByComponentID(componentID);
 
-            if(!sectionContained.contains(sectionID)){
+            if(sectionMap.containsKey(sectionID)){
+                //找到节点
+                List<Component> componentList = sectionMap.get(sectionID);
+                componentList.add(component);
+                sectionMap.put(sectionID,componentList);
+            }
+            else {
+                section = sectionRepository.findBySectionID(sectionID);
                 //创建新的节点
                 Map<String,Object> subNode = HttpResponseHelper.newResultMap();
                 subNode.put("sectionID",sectionID);
                 subNode.put("sectionName",section.getSectionName());
-                subNode.put("components",new ArrayList<Component>());
-                sectionContained.add(sectionID);
                 sectionList.add(subNode);
-            } else {
-                //找到节点
-                for(Map<String,Object> node : sectionList) {
-                    if( (int)node.get("sectionID")==sectionID ) {
-                        //添加子组件
-                         List<Component> componentList = (List<Component>) node.get("components");
-                         componentList.add(component);
-                         node.put("components",componentList);
-                    } else {
-                        continue;
-                    }
-                }
+
+                List<Component> componentList = new ArrayList<>();
+                componentList.add(component);
+                sectionMap.put(sectionID,componentList);
             }
         }
+        for (Map<String,Object> map:sectionList){
+            int sectionID = (int)map.get("sectionID");
+            List<Component> list = sectionMap.get(sectionID);
+            map.put("components",list);
+        }
+
        return sectionList;
     }
 
