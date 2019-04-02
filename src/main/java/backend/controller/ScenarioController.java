@@ -175,8 +175,11 @@ public class ScenarioController {
         return scenarioService.callAlgorithm(algorithmName,input);
     }
 
+    //点击运行实验
     @PostMapping(value = "/executeExperiment")
-    public void executeExperiment() {
+    public void executeExperiment(
+//            @RequestParam
+    ) {
 
     }
 
