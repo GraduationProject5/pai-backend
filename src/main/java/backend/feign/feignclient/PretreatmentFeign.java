@@ -4,6 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -16,8 +18,6 @@ import java.util.Map;
  * 1.5 随机森林填充数据
  * 1.6 数据格式化
  */
-
-//TODO 修改传入参数和返回类型
 
 @Service
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
@@ -40,8 +40,9 @@ public interface PretreatmentFeign {
      *      将目标列转换为哑变量后的csv数据文件
      */
     @PostMapping(value = "/dummy/")
-    Map<String, Object> setDummy(
-            @RequestBody Map<String, Object> map
+    MultipartFile setDummy(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target
     );
 
 
@@ -57,8 +58,8 @@ public interface PretreatmentFeign {
      */
 
     @PostMapping(value = "/setId/")
-    Map<String, Object> setId(
-            @RequestBody Map<String, Object> map
+    MultipartFile setId(
+            @RequestParam MultipartFile csv_file
     );
 
     /**
@@ -73,8 +74,9 @@ public interface PretreatmentFeign {
      *      csv数据文件
      */
     @PostMapping(value = "/standard/")
-    Map<String, Object> standardized(
-            @RequestBody Map<String, Object> map
+    MultipartFile standardized(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target
     );
 
     /**
@@ -89,8 +91,9 @@ public interface PretreatmentFeign {
      */
 
     @PostMapping(value = "/normalize/")
-    Map<String, Object> normalized(
-            @RequestBody Map<String, Object> map
+    MultipartFile normalized(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target
     );
 
     /**
@@ -108,8 +111,10 @@ public interface PretreatmentFeign {
      */
 
     @PostMapping(value = "/randomForest/")
-    Map<String, Object> setRandomForest(
-            @RequestBody Map<String, Object> map
+    MultipartFile setRandomForest(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String ref
     );
 
     /**
@@ -135,7 +140,10 @@ public interface PretreatmentFeign {
 
     @PostMapping(value = "/format/")
     Map<String, Object> formatting(
-            @RequestBody Map<String, Object> map
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String label,
+            @RequestParam String all_used,
+            @RequestParam String data_col
     );
 
 }

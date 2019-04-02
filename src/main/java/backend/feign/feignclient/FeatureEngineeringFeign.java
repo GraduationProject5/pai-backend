@@ -4,6 +4,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -16,8 +18,6 @@ import java.util.Map;
  * 2.5 随机森林特征重要性
  * 2.6 GDBT特征重要性
  */
-
-//TODO 修改传入参数和返回类型
 
 @Service
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
@@ -39,7 +39,9 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/PCA/")
     Map<String, Object> getPCA(
-            @RequestBody Map<String, Object> map
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam int feature_num
     );
 
     /**
@@ -56,8 +58,11 @@ public interface FeatureEngineeringFeign {
      *      csv数据文件
      */
     @PostMapping(value = "/discrete/")
-    Map<String, Object> getDiscretization(
-            @RequestBody Map<String, Object> map
+    MultipartFile getDiscretization(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String discrete_method,
+            @RequestParam int num
     );
 
 
@@ -74,8 +79,10 @@ public interface FeatureEngineeringFeign {
      *      csv数据文件
      */
     @PostMapping(value = "/scale/")
-    Map<String, Object> getScale(
-            @RequestBody Map<String, Object> map
+    MultipartFile getScale(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String scale
     );
 
     /**
@@ -93,8 +100,13 @@ public interface FeatureEngineeringFeign {
      *      csv数据文件
      */
     @PostMapping(value = "/soften/")
-    Map<String, Object> getSoften(
-            @RequestBody Map<String, Object> map
+    MultipartFile getSoften(
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String soften_method,
+            @RequestParam String min,
+            @RequestParam String max
+
     );
 
     /**
@@ -111,7 +123,9 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/importance/")
     Map<String, Object> getRFImportance(
-            @RequestBody Map<String, Object> map
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String label
     );
 
     /**
@@ -129,7 +143,8 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/GDBT_importance/")
     Map<String, Object> getGDBTImportance(
-            @RequestBody Map<String, Object> map
+            @RequestParam MultipartFile csv_file,
+            @RequestParam String target,
+            @RequestParam String label
     );
-
 }
