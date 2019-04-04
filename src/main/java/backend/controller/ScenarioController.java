@@ -219,7 +219,7 @@ public class ScenarioController {
 
             //拓扑出执行序列
             IndegreeTable indegreeTable = new IndegreeTable(nodePOList, edgePOList);
-            List<Long> executeLine = indegreeTable.getResultOutputList();
+            List<String> executeLine = indegreeTable.getResultOutputList();
             System.out.println(executeLine + " happy");
             httpResult.put("result", executeLine);
             return httpResult;
