@@ -65,11 +65,25 @@ public class EdgePO {
      */
     public EdgePO(EdgeVO edgeVO,Long experimentID){
         setIndex(edgeVO.index);
-        setEdge_no(edgeVO.edgeNo);
-        setSourceNo(edgeVO.sourceNo);
+        setEdge_no(edgeVO.id);
+        setSourceNo(edgeVO.source);
         setSourceAnchor(edgeVO.sourceAnchor);
-        setTargetNo(edgeVO.targetNo);
+        setTargetNo(edgeVO.target);
         setTargetAnchor(edgeVO.targetAnchor);
         setExperimentID(experimentID);
+    }
+
+    /**
+     * 生成VO返回
+     */
+    public EdgeVO toEdgeVO(){
+        EdgeVO edgeVO = new EdgeVO();
+        edgeVO.id=this.edge_no;
+        edgeVO.index=this.index;
+        edgeVO.source=this.sourceNo;
+        edgeVO.target=this.targetNo;
+        edgeVO.sourceAnchor=this.sourceAnchor;
+        edgeVO.targetAnchor=this.targetAnchor;
+        return edgeVO;
     }
 }

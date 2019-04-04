@@ -15,7 +15,7 @@ public class MLService {
     /**
      * svm
      *
-     * @param map double tol, int c, int[][] practice_x, int[]   practice_y, double[][] test_x, int[] test_y
+     * @param map double tol, double c, int[][] practice_x, int[]   practice_y, double[][] test_x, int[] test_y
      * @return "result_y": int[]
      */
     public Map<String,Object> support_vector_machine(Map<String, Object> map) {

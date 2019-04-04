@@ -54,8 +54,7 @@ public class DataServiceImpl implements DataService {
     public void deleteExperiment(Long experimentID) {
         //dataParams, dataResults, dataSet, edges, experiment, nodes, r_user_experiment
         scenarioService.clearScenario(experimentID);
-        experimentRepository.deleteByExperimentID(experimentID);
-        rUserExperimentRepository.deleteByExperimentID(experimentID);
+        databaseHelper.deleteExperimentPOAndRelation(experimentID);
     }
 
     @Override

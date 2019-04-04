@@ -30,6 +30,14 @@ public class IndegreeTable {
         topologicalSort();
     }
 
+    /**
+     * 用这个方法返回执行的节点顺序,NodeID
+     * @return
+     */
+    public List<Long> getExecuteOrder(){
+        return this.resultOutputList;
+    }
+
     public void getTopologyString(){
         for(Long l : this.resultOutputList) {
             System.out.print(l+",");
