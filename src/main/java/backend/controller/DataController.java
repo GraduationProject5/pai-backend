@@ -11,6 +11,7 @@ import backend.model.vo.ColumnVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +43,9 @@ public class DataController {
                 (Long.parseLong(userID), tableName, columnVOList, description);
 
         if (tableID < 0) {
-            handleErrorResult(result,tableID);
+            handleErrorResult(result, tableID);
         } else {
-            handleSuccessResult(result,tableID);
+            handleSuccessResult(result, tableID);
         }
 
         return result;
@@ -63,24 +64,24 @@ public class DataController {
                 (Long.parseLong(userID), tableName, sqlScript);
 
         if (tableID < 0) {
-            handleErrorResult(result,tableID);
+            handleErrorResult(result, tableID);
         } else {
-           handleSuccessResult(result,tableID);
+            handleSuccessResult(result, tableID);
         }
 
         return result;
     }
 
-    void handleErrorResult(Map<String, Object> result,Long result_code) {
+    void handleErrorResult(Map<String, Object> result, Long result_code) {
         if (result_code < 0) {
             result.put("result", false);
-            if(result_code==DatabaseProperties.Code_ExecuteSqlFail)
+            if (result_code == DatabaseProperties.Code_ExecuteSqlFail)
                 result.put("message", "execute sql fail");
         }
     }
 
 
-    void handleSuccessResult(Map<String, Object> result,Long result_code){
+    void handleSuccessResult(Map<String, Object> result, Long result_code) {
         result.put("result", true);
         result.put("tableID", result_code);
     }
@@ -117,7 +118,7 @@ public class DataController {
             if (insertRes.get(true) != null) {
                 httpResult.put("result", "成功插入" + insertRes.get(true) + "条数据！");
             } else {
-                httpResult.put("result", false);
+                httpResult.put("result", "数据上传失败！");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,7 +184,7 @@ public class DataController {
             @SessionAttribute("userID") String userID,
             @RequestParam("tableID") Long tableID
     ) {
-        dataService.dropUserTable(Long.parseLong(userID),tableID);
+        dataService.dropUserTable(Long.parseLong(userID), tableID);
     }
 
 }

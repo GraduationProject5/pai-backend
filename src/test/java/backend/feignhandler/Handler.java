@@ -1,4 +1,4 @@
-package backend.feign.feignhandler;
+package backend.feignhandler;
 
 public abstract class Handler {
 

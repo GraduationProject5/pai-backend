@@ -42,6 +42,7 @@ public class DataServiceImpl implements DataService {
 
     @Autowired
     private DatabaseHelper databaseHelper;
+
     @Value(value = "${spring.resources.static-locations}")
     String newPath;
 
@@ -96,15 +97,13 @@ public class DataServiceImpl implements DataService {
         return databaseHelper.executeCreateTableByScript(userID, tableName, scriptText);
     }
 
-    // 将scv数据插入数据库表
+    // 将csv数据插入数据库表
     public Map<Boolean, Integer> insertCsv(String userID, String fileName, String tableName, MultipartFile csvFile) {
-
-        //String rootPath = ClassUtils.getDefaultClassLoader().getResource("PaiBackendApplication").getPath();
 
         Map<Boolean, Integer> map = null;
 
         File uploadDir = new File(newPath);
-        //如果不存在，則新建文件夹
+        //如果不存在，则新建文件夹
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }
@@ -132,6 +131,23 @@ public class DataServiceImpl implements DataService {
         }
         map.put(false, 0);
         return map;
+    }
+
+    // 将数据库表导出为csv文件，进行数据预处理
+    public String exportCsv(String userID, String tableName) {
+
+//        File exportDir = new File(newPath);
+//        //如果不存在，新建文件夹
+//        if (!exportDir.exists()) {
+//            exportDir.mkdirs();
+//        }
+        //导出的文件路径+文件名
+        String exportFileName = newPath + new Date().getTime() + ".csv";
+
+        if (databaseHelper.exportCsv(userID, tableName, exportFileName)) {
+            return exportFileName;
+        }
+        return null;
     }
 
     public void insertData(long userID, String tableName, String[] lines, String splitChar) {

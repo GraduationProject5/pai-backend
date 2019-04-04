@@ -1,4 +1,4 @@
-package backend.feign.feignhandler;
+package backend.feignhandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;

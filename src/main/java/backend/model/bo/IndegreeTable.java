@@ -103,6 +103,4 @@ public class IndegreeTable {
         return result;
     }
 
-
-
 }

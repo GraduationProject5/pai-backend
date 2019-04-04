@@ -87,13 +87,13 @@ public class DatabaseHelper {
         for (int i = 0; i < clist.size() - 1; i++) {
             createSql += clist.get(i).toMySqlString() + ",";
         }
-        createSql += clist.get(clist.size() - 1).toMySqlString() ;
-        if(primaryKeyList.size()>0){
-            createSql += ",PRIMARY KEY(" ;
-            for(int i=0; i<primaryKeyList.size()-1;i++) {
-                createSql += primaryKeyList.get(i)+",";
+        createSql += clist.get(clist.size() - 1).toMySqlString();
+        if (primaryKeyList.size() > 0) {
+            createSql += ",PRIMARY KEY(";
+            for (int i = 0; i < primaryKeyList.size() - 1; i++) {
+                createSql += primaryKeyList.get(i) + ",";
             }
-            createSql += primaryKeyList.get(primaryKeyList.size()-1);
+            createSql += primaryKeyList.get(primaryKeyList.size() - 1);
             createSql += ")";
         }
         createSql += ");";
@@ -224,16 +224,6 @@ public class DatabaseHelper {
         System.out.println(path);
         try {
 
-//            String insertSql = "load data infile \'" + path + "\'\n" +
-//                    "into table " + "user"+userID+"_"+tableName + " character set gb2312\n" +
-//                    "fields terminated by ',' optionally enclosed by '\"' escaped by '\"' \n" +
-//                    "lines terminated by '\\r\\n';";
-
-//            String insertSql = "load data local infile \'" + path + "\'\n" +
-//                    "into table " + "user"+userID+"_"+tableName + "\n" +
-//                    "fields terminated by ',' optionally enclosed by '\"' escaped by '\"' \n" +
-//                    "lines terminated by '\\r\\n';";
-
             String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
 
             System.out.println(insertSql);
@@ -248,8 +238,26 @@ public class DatabaseHelper {
             return resultMap;
         }
     }
-    //lines:每行  splitChar 列分隔符
 
+    //导出数据库为csv文件
+    public Boolean exportCsv(String userID, String tableName, String exportFileName) {
+
+        try {
+            String exportSql = "SELECT * FROM user" + userID + "_" + tableName + " INTO OUTFILE \'" + exportFileName + "\' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'; ";
+            System.out.println(exportSql);
+            Statement stmt = con.createStatement();
+            stmt.executeQuery(exportSql);
+//            System.out.println(resultSet.getString(0));
+            stmt.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    //lines:每行  splitChar 列分隔符
     public void insertToUserTable(long userID, String tableName, String[] lines, String splitChar) {
 
         try {
@@ -434,14 +442,14 @@ public class DatabaseHelper {
     /**
      * 删除用户表,以及用户_表关系
      */
-    public void dropUserTable(Long userID,Long tableID){
+    public void dropUserTable(Long userID, Long tableID) {
         TablePO tablePO = tablePORepository.findByTableID(tableID);
         String tableName = tablePO.getTableName();
 
-        String tableNameInMySQL = formatUserTableName(userID,tableName);
+        String tableNameInMySQL = formatUserTableName(userID, tableName);
         //drop table
         Statement st = null;
-        String drop_sql = "drop TABLE "+tableNameInMySQL+";";
+        String drop_sql = "drop TABLE " + tableNameInMySQL + ";";
         try {
             st = con.createStatement();
             st.execute(drop_sql);
