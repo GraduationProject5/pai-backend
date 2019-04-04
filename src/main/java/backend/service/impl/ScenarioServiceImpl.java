@@ -110,9 +110,20 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         result.put("experimentID",experimentID);
         result.put("experimentName",experiment.getExperimentName());
-        result.put("experimentDescription",experiment.getDescription());
-        result.put("nodes",nodePOList);
-        result.put("edges",edgePOList);
+        result.put("description",experiment.getDescription());
+
+        List<NodeVO> nodeVOList = new ArrayList<>();
+        List<EdgeVO> edgeVOList = new ArrayList<>();
+        for(NodePO nodePO:nodePOList){
+            nodeVOList.add(nodePO.toNodeVO());
+        }
+        for(EdgePO edgePO:edgePOList){
+            edgeVOList.add(edgePO.toEdgeVO());
+        }
+
+        result.put("nodes",nodeVOList);
+        result.put("edges",edgeVOList);
+
         result.put("dataset",dataSetList);
         result.put("dataparams",dataParamList);
         result.put("dataresults",dataResultList);

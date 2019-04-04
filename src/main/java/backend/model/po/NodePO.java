@@ -25,7 +25,11 @@ public class NodePO {
     @Id
     @GeneratedValue
     @Column(name = "node_id")
-    private Long nodeID;
+    private Long nodeID;        //建表主键
+
+    @Basic
+    @Column(name = "node_no")
+    private String nodeNo ;         //"id"
 
     @Basic
     @Column(name = "render_index")
@@ -40,20 +44,25 @@ public class NodePO {
     private String name;
 
     @Basic
-    @Column(name = "node_no")
-    private String nodeNo ;
+    @Column(name = "nodeid")
+    private String nodeIdStr ;         //"nodeid"
+
+    @Basic
+    @Type( type = "json" )
+    @Column(name = "settings_json",columnDefinition = "json")
+    private Map<String,Object> settings ;
 
     @Basic
     @Column(name = "shape")
     private String shape;
 
     @Basic
-    @Column(name = "type")
-    private String type;
-
-    @Basic
     @Column(name = "size")
     private String size;
+
+    @Basic
+    @Column(name = "type")
+    private String type;
 
     @Basic
     @Column(name = "x")
@@ -64,22 +73,17 @@ public class NodePO {
     private double y;
 
     @Basic
+    @Type( type = "json" )
+    @Column(name = "anchor_json",columnDefinition = "json")
+    private Map<String,Object> anchorJson ;
+
+    @Basic
     @Column(name = "component_id")
     private int componentID;
 
     @Basic
     @Column(name = "experiment_id")
     private Long experimentID;      //long Long??
-
-    @Basic
-    @Type( type = "json" )
-    @Column(name = "anchor_json",columnDefinition = "json")
-    private Map<String,Object> anchorJson ;
-
-    @Basic
-    @Type( type = "json" )
-    @Column(name = "settings_json",columnDefinition = "json")
-    private Map<String,Object> settings ;
 
     /**
      * 从VO构造
@@ -89,15 +93,35 @@ public class NodePO {
         setIndex(nodeVO.index);
         setName(nodeVO.name);
         setLabel(nodeVO.label);
-        setNodeNo(nodeVO.nodeNo);
+        setNodeNo(nodeVO.id);
+        setNodeIdStr(nodeVO.nodeid);
         setShape(nodeVO.shape);
         setType(nodeVO.type);
         setSize(nodeVO.size);
         setX(nodeVO.x);
         setY(nodeVO.y);
-        setAnchorJson(nodeVO.anchorJson);
+//        setAnchorJson(nodeVO.anchorJson);
         setSettings(nodeVO.settings);
         setComponentID(componentID);
         setExperimentID(experimentID);
+    }
+
+    /**
+     * 返回VO
+     */
+    public NodeVO toNodeVO(){
+        NodeVO nodeVO = new NodeVO();
+        nodeVO.id=this.nodeNo;
+        nodeVO.index=this.index;
+        nodeVO.label=this.label;
+        nodeVO.name=this.name;
+        nodeVO.nodeid=this.nodeIdStr;
+        nodeVO.settings=this.settings;
+        nodeVO.shape=this.shape;
+        nodeVO.size=this.size;
+        nodeVO.type=this.type;
+        nodeVO.x=this.x;
+        nodeVO.y=this.y;
+        return nodeVO;
     }
 }

@@ -100,6 +100,7 @@ public class DatabaseHelper {
         return createSql;
     }
 
+    //todo 检查输入是否安全?
     public boolean createTableByText(String mysqlText) {
         Statement st = null;
         try {
@@ -182,6 +183,11 @@ public class DatabaseHelper {
         R_User_Experiment rue = new R_User_Experiment(userID, experimentID);
         R_User_Experiment rue_getID = rUserExperimentRepository.save(rue);
         return rue_getID;
+    }
+
+    public void deleteExperimentPOAndRelation(Long experimentID) {
+        experimentRepository.deleteByExperimentID(experimentID);
+        rUserExperimentRepository.deleteByExperimentID(experimentID);
     }
 
     //返回列数 输入的tableName已经过添加前缀处理
