@@ -402,4 +402,11 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     }
 
+    public String getFunNameByNodeID(String nodeID) {
+
+        NodePO nodePO = nodePORepository.findByNodeNo(nodeID);
+
+        return nodePO.getLabel();
+    }
+
 }

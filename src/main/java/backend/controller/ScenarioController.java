@@ -217,11 +217,21 @@ public class ScenarioController {
                 edgePOList.add(edgePO);
             }
 
-            //拓扑出执行序列
+            //拓扑出执行序列，执行序列输出的是 节点的id
             IndegreeTable indegreeTable = new IndegreeTable(nodePOList, edgePOList);
             List<String> executeLine = indegreeTable.getResultOutputList();
             System.out.println(executeLine + " happy");
-            httpResult.put("result", executeLine);
+
+            //根据节点的id，查找节点的算法名称label
+            //funLine -> 节点算法名称链表
+            List<String> funLine = new ArrayList<>();
+            for (String nodeID :
+                    executeLine) {
+                String funName = scenarioService.getFunNameByNodeID(nodeID);
+                funLine.add(funName);
+            }
+
+            httpResult.put("result", funLine);
             return httpResult;
         } else {
             httpResult.put("Error", "数据导出失败！");

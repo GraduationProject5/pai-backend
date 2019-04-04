@@ -33,7 +33,17 @@ public interface UserService {
      */
     boolean checkExist(String email);
 
+    /**
+     * 登出
+     *
+     * @param token
+     */
     void logout(String token);
 
+    /**
+     * 根据token查找用户的id
+     * @param token
+     * @return
+     */
     Long getUserIDByToken(String token);
 }

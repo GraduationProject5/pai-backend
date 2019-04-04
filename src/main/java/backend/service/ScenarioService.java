@@ -104,6 +104,14 @@ public interface ScenarioService {
      */
     void executeExperiment();
 
+    /**
+     * 根据节点id查找节点算法名称
+     *
+     * @param nodeID
+     * @return
+     */
+    String getFunNameByNodeID(String nodeID);
+
     /////////////////////////////////// 场景相关 end //////////////////////////////////////
 
     /////////////////////////////////// Section和Component相关 begin //////////////////////////////////////

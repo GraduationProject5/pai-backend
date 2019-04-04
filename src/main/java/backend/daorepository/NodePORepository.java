@@ -12,6 +12,12 @@ public interface NodePORepository extends JpaRepository<NodePO,String> {
 
     void deleteByExperimentID(Long experimentID) ;
 
+    /**
+     * 根据node_no查找node信息
+     *
+     * @param nodeNo
+     * @return
+     */
     NodePO findByNodeNo(String nodeNo);
 
 }
