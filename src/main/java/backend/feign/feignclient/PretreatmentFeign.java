@@ -41,8 +41,8 @@ public interface PretreatmentFeign {
      */
     @PostMapping(value = "/dummy/")
     MultipartFile setDummy(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target
     );
 
 
@@ -59,7 +59,7 @@ public interface PretreatmentFeign {
 
     @PostMapping(value = "/setId/")
     MultipartFile setId(
-            @RequestParam MultipartFile csv_file
+            @RequestParam(value = "csv_file") MultipartFile csv_file
     );
 
     /**
@@ -75,8 +75,8 @@ public interface PretreatmentFeign {
      */
     @PostMapping(value = "/standard/")
     MultipartFile standardized(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target
     );
 
     /**
@@ -92,8 +92,8 @@ public interface PretreatmentFeign {
 
     @PostMapping(value = "/normalize/")
     MultipartFile normalized(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target
     );
 
     /**
@@ -112,9 +112,9 @@ public interface PretreatmentFeign {
 
     @PostMapping(value = "/randomForest/")
     MultipartFile setRandomForest(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String ref
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "ref") String ref
     );
 
     /**
@@ -140,10 +140,10 @@ public interface PretreatmentFeign {
 
     @PostMapping(value = "/format/")
     Map<String, Object> formatting(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String label,
-            @RequestParam String all_used,
-            @RequestParam String data_col
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "label") String label,
+            @RequestParam(value = "all_used") String all_used,
+            @RequestParam(value = "data_col", required = false) String data_col
     );
 
 }

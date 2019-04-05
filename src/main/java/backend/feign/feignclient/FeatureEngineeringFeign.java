@@ -39,9 +39,9 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/PCA/")
     Map<String, Object> getPCA(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam int feature_num
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "feature_num") int feature_num
     );
 
     /**
@@ -59,10 +59,10 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/discrete/")
     MultipartFile getDiscretization(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String discrete_method,
-            @RequestParam int num
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "discrete_method") String discrete_method,
+            @RequestParam(value = "num") int num
     );
 
 
@@ -80,9 +80,9 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/scale/")
     MultipartFile getScale(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String scale
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "scale") String scale
     );
 
     /**
@@ -101,11 +101,11 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/soften/")
     MultipartFile getSoften(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String soften_method,
-            @RequestParam String min,
-            @RequestParam String max
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "soften_method") String soften_method,
+            @RequestParam(value = "min") String min,
+            @RequestParam(value = "max") String max
 
     );
 
@@ -123,9 +123,9 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/importance/")
     Map<String, Object> getRFImportance(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String label
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "label") String label
     );
 
     /**
@@ -143,8 +143,8 @@ public interface FeatureEngineeringFeign {
      */
     @PostMapping(value = "/GDBT_importance/")
     Map<String, Object> getGDBTImportance(
-            @RequestParam MultipartFile csv_file,
-            @RequestParam String target,
-            @RequestParam String label
+            @RequestParam(value = "csv_file") MultipartFile csv_file,
+            @RequestParam(value = "target") String target,
+            @RequestParam(value = "label") String label
     );
 }
