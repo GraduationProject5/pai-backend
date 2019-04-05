@@ -9,7 +9,8 @@ public interface EdgePORepository extends JpaRepository<EdgePO,String> {
 
     List<EdgePO> findByExperimentID(Long experimentID);
 
-    void deleteByExperimentID(Long experimentID) ;
+
+//    void deleteByExperimentID(Long experimentID) ;
 
 
 }
