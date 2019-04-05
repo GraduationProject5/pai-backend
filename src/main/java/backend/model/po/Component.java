@@ -34,8 +34,8 @@ public class Component {
     //存储组件的结果
     @Basic
     @Type( type = "json" )
-    @Column(name = "setting",columnDefinition = "json")
-    private Map<String,Object> setting ;
+    @Column(name = "settings",columnDefinition = "json")
+    private Map<String,Object> settings ;
 
 
 }

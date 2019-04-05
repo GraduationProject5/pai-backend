@@ -135,8 +135,17 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataResultRepository.deleteByExperimentID(experimentID);
         dataParamRepository.deleteByExperimentID(experimentID);
         dataSetRepository.deleteByExperimentID(experimentID);
-        edgePORepository.deleteByExperimentID(experimentID);
-        nodePORepository.deleteByExperimentID(experimentID);
+
+        List<NodePO> nodePOList = nodePORepository.findByExperimentID(experimentID);
+        List<EdgePO> edgePOList = edgePORepository.findByExperimentID(experimentID);
+        for(NodePO nodePO:nodePOList){
+            nodePORepository.delete(nodePO);
+        }
+        for (EdgePO edgePO:edgePOList){
+            edgePORepository.delete(edgePO);
+        }
+//        edgePORepository.deleteByExperimentID(experimentID);
+//        nodePORepository.deleteByExperimentID(experimentID);
     }
 
     @Override
