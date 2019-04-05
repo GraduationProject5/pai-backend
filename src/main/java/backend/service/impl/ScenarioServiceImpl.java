@@ -75,26 +75,31 @@ public class ScenarioServiceImpl implements ScenarioService {
     public boolean saveScenario(Long experimentID,
                                 List<NodeVO> nodeVOList,
                                 List<EdgeVO> edgeVOList) {
-        nodeVOList = JSONHelper.toNodeVOList(nodeVOList);
-        edgeVOList = JSONHelper.toEdgeVOList(edgeVOList);
+        if(nodeVOList!=null)
+            nodeVOList = JSONHelper.toNodeVOList(nodeVOList);
+        if(edgeVOList!=null)
+            edgeVOList = JSONHelper.toEdgeVOList(edgeVOList);
 
         //转换没问题，清空场景
         clearScenario(experimentID);
 
-        for(NodeVO nodeVO:nodeVOList) {
-            NodePO nodePO = new NodePO
-                    (nodeVO,getComponentIDByFuncName(nodeVO.label),experimentID);
+        if(nodeVOList!=null) {
+            for (NodeVO nodeVO : nodeVOList) {
+                NodePO nodePO = new NodePO
+                        (nodeVO, getComponentIDByFuncName(nodeVO.label), experimentID);
 //            nodePO =
-            nodePORepository.save(nodePO); //返回带有id的nodePO
-            //在第一次运行时才初始化对应的DataSet
+                nodePORepository.save(nodePO); //返回带有id的nodePO
+                //在第一次运行时才初始化对应的DataSet
 //            Long nodeID = nodePO.getNodeID();
+            }
         }
-        for(EdgeVO edgeVO:edgeVOList){
-            EdgePO edgePO = new EdgePO
-                    (edgeVO,experimentID);
-            edgePORepository.save(edgePO);
+        if(edgeVOList!=null) {
+            for (EdgeVO edgeVO : edgeVOList) {
+                EdgePO edgePO = new EdgePO
+                        (edgeVO, experimentID);
+                edgePORepository.save(edgePO);
+            }
         }
-
         return true;
     }
 
