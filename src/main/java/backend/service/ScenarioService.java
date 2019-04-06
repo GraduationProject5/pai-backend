@@ -85,7 +85,7 @@ public interface ScenarioService {
     /**
      * 保存组件参数
      */
-    boolean saveSettingsForNode(Long nodeID, Map<String, Object> settings);
+    boolean saveSettingsForNode(String nodeIDStr, Map<String, Object> settings);
 
     /**
      * 获取单一节点的数据集

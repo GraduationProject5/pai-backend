@@ -154,8 +154,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public boolean saveSettingsForNode(Long nodeID, Map<String, Object> settings) {
-        NodePO nodePO = nodePORepository.findByNodeID(nodeID);
+    public boolean saveSettingsForNode(String nodeIDStr, Map<String, Object> settings) {
+        NodePO nodePO = nodePORepository.findByNodeIDStr(nodeIDStr);
         nodePO.setSettings(settings);
         nodePORepository.save(nodePO);
         return true;

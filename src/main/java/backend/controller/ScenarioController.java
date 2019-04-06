@@ -159,10 +159,11 @@ public class ScenarioController {
     //保存组件参数到NodePO
     @PostMapping(value = "/saveSettingsForNode")
     public boolean saveParamsForNode(
+            @SessionAttribute("userID") String userID,
             @RequestBody Map<String, Object> params) {
-        Long nodeID = Long.parseLong( (int)params.get("nodeID")+"");
+        String nodeIDStr =  params.get("nodeID")+"";
         Map<String, Object> settings = (Map<String, Object>) params.get("settings");
-        return scenarioService.saveSettingsForNode(nodeID, settings);
+        return scenarioService.saveSettingsForNode(nodeIDStr, settings);
     }
 
 

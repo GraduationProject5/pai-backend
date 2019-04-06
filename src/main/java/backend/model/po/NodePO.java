@@ -45,7 +45,7 @@ public class NodePO {
 
     @Basic
     @Column(name = "nodeid")
-    private String nodeIdStr ;         //"nodeid"
+    private String nodeIDStr ;         //"nodeid"
 
     @Basic
     @Type( type = "json" )
@@ -94,7 +94,7 @@ public class NodePO {
         setName(nodeVO.name);
         setLabel(nodeVO.label);
         setNodeNo(nodeVO.id);
-        setNodeIdStr(nodeVO.nodeid);
+        setNodeIDStr(nodeVO.nodeid);
         setShape(nodeVO.shape);
         setType(nodeVO.type);
         setSize(nodeVO.size);
@@ -115,7 +115,7 @@ public class NodePO {
         nodeVO.index=this.index;
         nodeVO.label=this.label;
         nodeVO.name=this.name;
-        nodeVO.nodeid=this.nodeIdStr;
+        nodeVO.nodeid=this.nodeIDStr;
         nodeVO.settings=this.settings;
         nodeVO.shape=this.shape;
         nodeVO.size=this.size;
