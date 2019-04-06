@@ -102,7 +102,7 @@ public interface ScenarioService {
     /**
      * 运行实验
      */
-    void executeExperiment();
+    void executeLine(List<String> funLine);
 
     /**
      * 根据节点id查找节点算法名称

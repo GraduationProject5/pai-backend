@@ -233,6 +233,9 @@ public class ScenarioController {
             }
 
             httpResult.put("result", funLine);
+
+            scenarioService.executeLine(funLine);
+
             return httpResult;
         } else {
             httpResult.put("Error", "数据导出失败！");
