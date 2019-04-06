@@ -407,7 +407,9 @@ public class ScenarioServiceImpl implements ScenarioService {
         return component.getComponentID();
     }
 
-    public void executeExperiment() {
+    public void executeLine(List<String> funLine) {
+
+
 
     }
 
