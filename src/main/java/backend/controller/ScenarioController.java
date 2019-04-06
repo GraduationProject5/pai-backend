@@ -160,7 +160,7 @@ public class ScenarioController {
     @PostMapping(value = "/saveSettingsForNode")
     public boolean saveParamsForNode(
             @RequestBody Map<String, Object> params) {
-        Long nodeID = (Long) params.get("nodeID");
+        Long nodeID = Long.parseLong( (int)params.get("nodeID")+"");
         Map<String, Object> settings = (Map<String, Object>) params.get("settings");
         return scenarioService.saveSettingsForNode(nodeID, settings);
     }
