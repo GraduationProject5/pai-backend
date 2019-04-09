@@ -86,7 +86,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         if(nodeVOList!=null) {
             for (NodeVO nodeVO : nodeVOList) {
                 NodePO nodePO = new NodePO
-                        (nodeVO, getComponentIDByFuncName(nodeVO.label), experimentID);
+                        (nodeVO, getComponentIDByComponentName(nodeVO.label), experimentID);
 //            nodePO =
                 nodePORepository.save(nodePO); //返回带有id的nodePO
                 //在第一次运行时才初始化对应的DataSet
