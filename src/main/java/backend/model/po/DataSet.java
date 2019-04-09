@@ -36,8 +36,8 @@ public class DataSet {
     private Long experimentID;
 
     @Basic
-    @Column(name = "node_id")
-    private Long nodeID;
+    @Column(name = "node_no")
+    private String nodeNo;
 
     @Basic
     @Column(name = "type")

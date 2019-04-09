@@ -25,7 +25,7 @@ public interface ScenarioService {
     /**
      * 提供给算法调用后，保存运算中间结果的数据 DataSet
      */
-    void saveComputingResult(Long userID, Long experimentID, Long nodeID, String type,
+    void saveComputingResult(Long userID, Long experimentID, String nodeNo, String type,
                              Map<String, Object> params, Map<String, Object> data);
 
     /**
@@ -85,19 +85,18 @@ public interface ScenarioService {
     /**
      * 保存组件参数
      */
-    boolean saveSettingsForNode(String nodeIDStr, Map<String, Object> settings);
+    boolean saveSettingsForNode(String nodeNo, Map<String, Object> settings);
 
     /**
      * 获取单一节点的数据集
      */
-    Map<String, Object> findDataset(Long userID, Long experimentID, Long nodeID);
+    Map<String, Object> getDataSet(Long userID, Long experimentID,String nodeNo);
 
     /**
      * 清除节点的中间运算结果
      *
-     * @param nodeID
      */
-    void clearNodeDataByNodeID(Long nodeID);
+    void clearNodeDataByNodeNo(String nodeNo);
 
     /**
      * 运行实验

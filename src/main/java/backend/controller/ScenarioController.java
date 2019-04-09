@@ -90,9 +90,9 @@ public class ScenarioController {
     public Map<String, Object> getDataSet(
             @SessionAttribute("userID") String userID,
             @RequestParam("experimentID") Long experimentID,
-            @RequestParam("nodeID") Long nodeID
+            @RequestParam("nodeNo") String nodeNo
     ) {
-        return scenarioService.findDataset(Long.parseLong(userID), experimentID, nodeID);
+        return scenarioService.getDataSet(Long.parseLong(userID), experimentID, nodeNo);
     }
 
 
@@ -161,9 +161,9 @@ public class ScenarioController {
     public boolean saveParamsForNode(
             @SessionAttribute("userID") String userID,
             @RequestBody Map<String, Object> params) {
-        String nodeIDStr =  params.get("nodeID")+"";
+        String nodeNo =  (String) params.get("nodeNo");
         Map<String, Object> settings = (Map<String, Object>) params.get("settings");
-        return scenarioService.saveSettingsForNode(nodeIDStr, settings);
+        return scenarioService.saveSettingsForNode(nodeNo, settings);
     }
 
 
