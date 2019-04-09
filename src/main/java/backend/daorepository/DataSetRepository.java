@@ -10,12 +10,12 @@ public interface DataSetRepository extends JpaRepository<DataSet,Long> {
 
     List<DataSet> findByUserID(Long userID);
 
-    List<DataSet> findByNodeID(Long nodeID);
+    List<DataSet> findByNodeNo(String nodeNo);
 
     @Transactional
-    void deleteAllByNodeID(Long nodeID);
+    void deleteAllByNodeNo(String nodeNo);
 
-    DataSet findByUserIDAndExperimentIDAndNodeID(Long userID,Long experimentID,Long nodeID);
+    DataSet findByUserIDAndExperimentIDAndNodeNo(Long userID,Long experimentID,String nodeNo);
 
     List<DataSet> findByExperimentID(Long experimentID);
 

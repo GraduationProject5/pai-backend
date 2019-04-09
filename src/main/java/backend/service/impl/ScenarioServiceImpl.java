@@ -86,7 +86,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         if(nodeVOList!=null) {
             for (NodeVO nodeVO : nodeVOList) {
                 NodePO nodePO = new NodePO
-                        (nodeVO, getComponentIDByFuncName(nodeVO.label), experimentID);
+                        (nodeVO, getComponentIDByComponentName(nodeVO.label), experimentID);
 //            nodePO =
                 nodePORepository.save(nodePO); //返回带有id的nodePO
                 //在第一次运行时才初始化对应的DataSet
@@ -145,8 +145,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public boolean saveSettingsForNode(String nodeIDStr, Map<String, Object> settings) {
-        NodePO nodePO = nodePORepository.findByNodeIDStr(nodeIDStr);
+    public boolean saveSettingsForNode(String nodeNo, Map<String, Object> settings) {
+        NodePO nodePO = nodePORepository.findByNodeNo(nodeNo);
         nodePO.setSettings(settings);
         nodePORepository.save(nodePO);
         return true;
@@ -210,14 +210,14 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public void saveComputingResult(Long userID, Long experimentID, Long nodeID, String type,
+    public void saveComputingResult(Long userID, Long experimentID,String nodeNo, String type,
                                     Map<String,Object> params,Map<String,Object> data) {
-        clearNodeDataByNodeID(nodeID);
+        clearNodeDataByNodeNo(nodeNo);
 
         DataSet dataSet = new DataSet();
         dataSet.setUserID(userID);
         dataSet.setExperimentID(experimentID);
-        dataSet.setNodeID(nodeID);
+        dataSet.setNodeNo(nodeNo);
         dataSet.setType(type);
         dataSet = dataSetRepository.save(dataSet);  //get ID
         Long dataSetID = dataSet.getDataSetID();
@@ -237,14 +237,14 @@ public class ScenarioServiceImpl implements ScenarioService {
 
 
     @Override
-    public void clearNodeDataByNodeID(Long nodeID) {
-        List<DataSet> dataSetList = dataSetRepository.findByNodeID(nodeID);
+    public void clearNodeDataByNodeNo(String nodeNo) {
+        List<DataSet> dataSetList = dataSetRepository.findByNodeNo(nodeNo);
         for(DataSet dataSet : dataSetList){
             Long dataSetID = dataSet.getDataSetID();
             dataParamRepository.deleteAllByDataSetID(dataSetID);
             dataResultRepository.deleteAllByDataSetID(dataSetID);
         }
-        dataSetRepository.deleteAllByNodeID(nodeID);
+        dataSetRepository.deleteAllByNodeNo(nodeNo);
     }
 
     //todo
@@ -254,19 +254,27 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public Map<String, Object> findDataset(Long userID,Long experimentID,Long nodeID) {
-        DataSet dataSet =  dataSetRepository.findByUserIDAndExperimentIDAndNodeID(userID,experimentID,nodeID);
+    public Map<String, Object> getDataSet(Long userID,Long experimentID, String nodeNo) {
+        DataSet dataSet =  dataSetRepository.findByUserIDAndExperimentIDAndNodeNo(userID,experimentID,nodeNo);
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
+        //检查是否存在
+        if(dataSet==null){
+            result.put("result",false);
+            result.put("message","can not find DataSet");
+            return  result;
+        }
+
         long dataSetID = dataSet.getDataSetID();
         List<DataParam> dataParamList = dataParamRepository.findByDataSetID(dataSetID);
         List<DataResult> dataResultList = dataResultRepository.findByDataSetID(dataSetID);
-        Map<String, Object> result = HttpResponseHelper.newResultMap();
+
 
         result.put("id",dataSetID) ; //实验结果ID
         result.put("experimentId",experimentID) ;
 
 
         Map<String, Object> results = HttpResponseHelper.newResultMap();
-        results.put("id",nodeID);
+        results.put("id",nodeNo);
         results.put("type",dataSet.getType());
         List<Map<String,Object>> dataParamsMapList = new ArrayList<>();
         for(DataParam dp:dataParamList){
