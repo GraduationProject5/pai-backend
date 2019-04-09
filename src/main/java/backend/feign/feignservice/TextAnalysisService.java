@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-//@RestController
-//@RequestMapping(value = "/text-analysis")
+@RestController
+@RequestMapping(value = "/text-analysis")
 //暂时保留 RequestMapping 用来测试算法能否调用
 @Service
 public class TextAnalysisService {
@@ -36,15 +36,15 @@ public class TextAnalysisService {
      *       ]
      *   }
      */
-//    @GetMapping(value = "getParticiples")
-//    public Map getParticiples(@SessionAttribute("userID") String userID,
-//                              @RequestParam("tableName") String tableName) {
-//        //获取表中的row
-//        List tableList = dataService.getData(Long.parseLong(userID), tableName);
-//        Map<String, Object> mapText = new HashMap<>();
-//        mapText.put("text", ((Map) tableList.get(0)).get("text"));
-//        return textAnalysisFeign.participles(mapText);
-//    }
+    @GetMapping(value = "getParticiples")
+    public Map getParticiples(@SessionAttribute("userID") String userID,
+                              @RequestParam("tableName") String tableName) {
+        //获取表中的row
+        List tableList = dataService.getData(Long.parseLong(userID), tableName);
+        Map<String, Object> mapText = new HashMap<>();
+        mapText.put("text", ((Map) tableList.get(0)).get("text"));
+        return textAnalysisFeign.participles(mapText);
+    }
 
     /**
      * 已测试

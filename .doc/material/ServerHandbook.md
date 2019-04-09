@@ -1,5 +1,4 @@
 # 服务器维护指南
-#### 编辑：陈步兵
 
 > 查看数据库运行日志，登陆服务器之后 
 > 
@@ -28,7 +27,8 @@ rm -rf [dir name]
 
 * 由于长时间没有数据操作，建议重启应用
 
-> ```
+> 
+```
 cd /var/lib/jenkins/workspace 
 ls   //pai-backend list
 cd pai-backend
@@ -51,7 +51,8 @@ docker-compose up -d
 
 * 数据库localinfile设置
 
->```
+>
+```
 sudo vi /etc/mysql/my.cnf
 	[mysqld]
 	local-infile 
@@ -75,7 +76,8 @@ mysql --local-infile -uroot -pyourpwd yourdbname
 
 #### 7. 服务器数据库安全设置
 
->```
+>
+```
 1. local_infile: 
 		loose-local-infile = 1
 2. secure_priv:
