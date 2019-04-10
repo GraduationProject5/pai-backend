@@ -32,6 +32,7 @@ public class UserController {
         boolean loginSuccess = (boolean)map.get("result");
         if(loginSuccess) {
             String token = (String) map.get("token");
+            session.setAttribute("token", token);
             session.setAttribute("userID", userService.getUserIDByToken(token));
         }
 
@@ -40,8 +41,11 @@ public class UserController {
 
     //todo 使用存疑
     @PostMapping(value = "/logout")
-    public void logout(@RequestHeader("token")String token ) {
+    public void logout(HttpSession session,
+                       @SessionAttribute("token")String token ) {
         userService.logout(token);
+        session.removeAttribute("userID");
+        session.removeAttribute("token");
     }
 
     @PostMapping(value = "/sendEmail")

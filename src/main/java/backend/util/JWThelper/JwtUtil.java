@@ -13,15 +13,48 @@ import sun.rmi.runtime.Log;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 //JSON Web Token
 
 public class JwtUtil {
 
     public static String    sercetKey   = LoginProperties.SercetKey ;
+//    public static long      keeptime    = LoginProperties.KeepTime ;
 
-//    public static long      keeptime    = LoginProperties.keeptime ;
+
+    public static List<String> loginID_List = new ArrayList<>();
+
+    public static boolean existToken(String token){
+        String userID = "";
+        try {
+            userID = verify(token).getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return existUserID(userID);
+    }
+
+    public static boolean existUserID(String userID){
+       if(loginID_List.contains(userID))
+           return true;
+       else
+           return false;
+    }
+
+    public static void removeTokenFromList(String token){
+        String userID = "";
+        try {
+            userID = verify(token).getId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(loginID_List.contains(userID)){
+            loginID_List.remove(userID);
+        }
+    }
 
     //Sample method to construct a JWT
     public static String generateToken(String id, String issuer, String subject){
@@ -61,20 +94,20 @@ public class JwtUtil {
     }
 
     //在拦截器中更新
-//    public String verifyAndUpdateToken(String token){
-//        try {
-//            Claims claims=verify(token);
-//
-//            String id=claims.getId();
-//            String subject=claims.getSubject();
-//            String issuer=claims.getIssuer();
-//
-//            return generateToken(id, issuer, subject);
-//        }catch (Exception ex){
-//            ex.printStackTrace();
-//        }
-//        return "0";
-//    }
+    public String verifyAndUpdateToken(String token){
+        try {
+            Claims claims=verify(token);
+
+            String id=claims.getId();
+            String subject=claims.getSubject();
+            String issuer=claims.getIssuer();
+
+            return generateToken(id, issuer, subject);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return "0";
+    }
 
     //在拦截器中更新
     public static Claims verify(String token) throws Exception {
@@ -84,7 +117,9 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
 
-        return  claims;
+        String userid = claims.getId();
+
+        return claims;
     }
 
     public static String getUserID(String token) throws Exception {

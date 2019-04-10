@@ -1,5 +1,6 @@
 package backend.util.JWThelper;
 
+import backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 
 public class JwtInterceptor implements HandlerInterceptor {
@@ -27,27 +29,24 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         httpServletResponse.setCharacterEncoding("utf-8");
         String requestURI = httpServletRequest.getRequestURI();
-        String param_token = httpServletRequest.getParameter("token");
-        String header_token = httpServletRequest.getHeader("token");
-        if(header_token == null && param_token == null){
 
-//            if(requestURI.contains("/user/login")) {
-//                System.out.println(requestURI);
-//                return true;
-//            }
 
+
+        String sessionToken = (String)httpServletRequest.getSession().getAttribute("token");
+
+        if(sessionToken==null){
             String str="{'result':'fail','message':'缺少token，无法验证','data':null}";
             dealErrorReturn(httpServletRequest,httpServletResponse,str);
             return false;
         }
-        if(param_token!=null){
-            header_token=param_token;
+//        System.out.println(sessionToken+"    !!!");
+//        System.out.println("size:"+JwtUtil.loginID_List.size());
+
+        if(!JwtUtil.existToken(sessionToken)) {
+            String str="{'result':'fail','message':'不存在这个token','data':null}";
+            dealErrorReturn(httpServletRequest,httpServletResponse,str);
+            return false;
         }
-
-//        header_token =
-        jwtUtil.verify(header_token) ;
-
-        httpServletResponse.setHeader("token",header_token);
         return true;
     }
 
@@ -62,6 +61,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest httpServletRequest,
                                 HttpServletResponse httpServletResponse,
                                 Object o, Exception e) throws Exception {
+
     }
 
     // 检测到没有token，直接返回不验证

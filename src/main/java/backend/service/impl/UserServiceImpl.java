@@ -26,7 +26,8 @@ public class UserServiceImpl implements UserService {
 //    @Autowired
 //    private RedisTemplate<String, String> redisTemplate;
 
-    private List<String> loginID_list = new ArrayList<>();
+//    private List<String> loginID_list = new ArrayList<>();
+
 
     public Map<String,Object> login(String email, String password) {
 
@@ -47,10 +48,19 @@ public class UserServiceImpl implements UserService {
             return result;
         }
 
+        boolean hasLogin = JwtUtil.existUserID(user.getUserID()+"");
+
+        if(hasLogin){
+            token = LoginProperties.Code_HasLogin;
+            result.put("result",false);
+            result.put("message",token);
+            return result;
+        }
+
         token = JwtUtil.generateToken(user.getUserID()+"","PAI-back end","user");
         //每次都不一样.!
+        JwtUtil.loginID_List.add(user.getUserID()+"");
 
-        this.loginID_list.add(token);
         result.put("result",true);
         result.put("token",token) ;
         return result;
@@ -67,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void logout(String token) {
-        this.loginID_list.remove(token);
+        JwtUtil.removeTokenFromList(token);
     }
 
     public Map<String,Object> register(String email, String password) {
