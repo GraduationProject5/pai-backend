@@ -1,5 +1,7 @@
 package backend.service;
 
+import java.util.Map;
+
 /**
  * Created by lienming on 2019/1/17.
  */
@@ -16,7 +18,7 @@ public interface UserService {
      * @param password
      * @return
      */
-    String login(String email, String password);
+    Map<String,Object> login(String email, String password);
 
     /**
      * register
@@ -24,7 +26,7 @@ public interface UserService {
      * @param password
      * @return
      */
-    long register(String email, String password);
+    Map<String,Object> register(String email, String password);
 
     /**
      * 验证存在
@@ -32,6 +34,8 @@ public interface UserService {
      * @return
      */
     boolean checkExist(String email);
+
+    Map<String,Object> sendEmail(String email);
 
     /**
      * 登出

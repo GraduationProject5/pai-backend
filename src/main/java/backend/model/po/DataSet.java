@@ -21,6 +21,7 @@ import java.util.Map;
 public class DataSet {
 
     @Id
+    @GeneratedValue
     @Column(name = "dataset_id")
     private Long dataSetID;
 

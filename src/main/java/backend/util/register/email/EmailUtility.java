@@ -18,7 +18,7 @@ public class EmailUtility {
     public static final String SMTPSERVER = "smtp.qq.com";
     public static final String SMTPPORT = "465"; //邮箱服务器默认端口
     private static final String FROM = "728385437@qq.com";
-    private static final String PWD = "okqbuktdkltmbahf" ;
+    private static final String PWD = "folvkcbjsrzlbfci" ;
 
     //Tips : Use this Method in Class Servlet.
     public static String sendAccountActivateEmail(String email) {

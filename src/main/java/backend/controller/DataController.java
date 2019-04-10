@@ -36,19 +36,10 @@ public class DataController {
             @RequestParam("tableName") String tableName,
             @RequestParam("description") String description,
             @RequestBody Map<String, ColumnVO> map) {
-
-        Map<String, Object> result = HttpResponseHelper.newResultMap();
         List<ColumnVO> columnVOList = JSONHelper.toColumnVOList(map);
-        long tableID = dataService.createTableByVO
+        return dataService.createTableByVO
                 (Long.parseLong(userID), tableName, columnVOList, description);
 
-        if (tableID < 0) {
-            handleErrorResult(result, tableID);
-        } else {
-            handleSuccessResult(result, tableID);
-        }
-
-        return result;
     }
 
     //用户建表 （通过MySql脚本）
@@ -57,35 +48,9 @@ public class DataController {
             @SessionAttribute("userID") String userID,
             @RequestParam("tableName") String tableName,
             @RequestParam("sql") String sqlScript) {
-
-        Map<String, Object> result = HttpResponseHelper.newResultMap();
-
-        long tableID = dataService.createTableByScript
+        return dataService.createTableByScript
                 (Long.parseLong(userID), tableName, sqlScript);
-
-        if (tableID < 0) {
-            handleErrorResult(result, tableID);
-        } else {
-            handleSuccessResult(result, tableID);
-        }
-
-        return result;
     }
-
-    void handleErrorResult(Map<String, Object> result, Long result_code) {
-        if (result_code < 0) {
-            result.put("result", false);
-            if (result_code == DatabaseProperties.Code_ExecuteSqlFail)
-                result.put("message", "execute sql fail");
-        }
-    }
-
-
-    void handleSuccessResult(Map<String, Object> result, Long result_code) {
-        result.put("result", true);
-        result.put("tableID", result_code);
-    }
-
 
     // 将用户上传的 csv数据表 插入到自建的数据库
     @PostMapping(value = "/insertCsv")

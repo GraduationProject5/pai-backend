@@ -80,9 +80,9 @@ public class DataServiceImpl implements DataService {
     }
 
     /*
-        根据给定列建表，返回tableID
+        根据给定列建表，成功返回(Long)tableID，失败返回(String)errorMessage
      */
-    public long createTableByVO(long userID, String tableName,
+    public  Map<String,Object> createTableByVO(long userID, String tableName,
                                 List<ColumnVO> columnVOList, String description) {
         TableVO tableVO = new TableVO();
         tableVO.tableName = tableName;
@@ -91,9 +91,22 @@ public class DataServiceImpl implements DataService {
         return databaseHelper.executeCreateTableByVO(userID, tableVO);
     }
 
-    // 根据SQL建表，返回tableID
-    public long createTableByScript(long userID, String tableName, String scriptText) {
+    // 根据SQL建表，成功返回(Long)tableID，失败返回(String)errorMessage
+    public  Map<String,Object> createTableByScript(long userID, String tableName, String scriptText) {
         return databaseHelper.executeCreateTableByScript(userID, tableName, scriptText);
+
+
+    }
+
+    private Object handleCreateTableResult(Map<String,Object> result){
+        boolean createSuccess = (boolean)result.get("result");
+        if(createSuccess){
+            Long tableID = (Long) result.get("tableID");
+            return tableID;
+        } else {
+            String errorMessage = (String) result.get("message");
+            return errorMessage;
+        }
     }
 
     // 将csv数据插入数据库表

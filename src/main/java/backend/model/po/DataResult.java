@@ -20,6 +20,7 @@ import java.util.Map;
 public class DataResult {
 
     @Id
+    @GeneratedValue
     @Column(name = "dataresult_id")
     private Long dataResultID;
 

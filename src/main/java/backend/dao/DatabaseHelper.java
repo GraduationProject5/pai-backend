@@ -101,36 +101,65 @@ public class DatabaseHelper {
     }
 
     //todo 检查输入是否安全?
-    public boolean createTableByText(String mysqlText) {
+    public Map<String,Object> createTableByText(String mysqlText) {
         Statement st = null;
+        Map<String,Object> result = new HashMap<>();
         try {
             st = con.createStatement();
             st.execute(mysqlText);
             st.close();
         } catch (SQLException e) {
+            String errorMessage = e.getMessage();
             e.printStackTrace();
-            return false;
+            result.put("result",false);
+            result.put("message",errorMessage);
+            return result;
         }
-        return true;
+        result.put("result",true);
+        return result;
     }
 
     //return tableID
-    public long executeCreateTableByVO(long userID, TableVO tableVO) {
+    public Map<String,Object> executeCreateTableByVO(long userID, TableVO tableVO) {
         String sql = formatMysqlCreate(userID, tableVO);
-        if (createTableByText(sql))
-            return createTableRelationship(userID, tableVO.tableName, tableVO.description);
-        else
-            return DatabaseProperties.Code_ExecuteSqlFail;
+        Map<String,Object> createTableResult = createTableByText(sql);
+        boolean createSuccess= (boolean)createTableResult.get("result");
+        Map<String,Object> result = new HashMap<>();
+        if (createSuccess) {
+            Long tableID = createTableRelationship(userID, tableVO.tableName, tableVO.description);
+            result.put("result",true);
+            result.put("tableID",tableID);
+            return result;
+        }
+
+        else {
+            result.put("result",false);
+            result.put("message",createTableResult.get("message"));
+            //DatabaseProperties.Code_ExecuteSqlFail;
+            return result;
+        }
+
     }
 
     //return tableID
-    public long executeCreateTableByScript(long userID, String tableName, String sql) {
-
+    public Map<String,Object> executeCreateTableByScript(long userID, String tableName, String sql) {
         sql = sql.replaceFirst(tableName, formatUserTableName(userID, tableName));
-        if (createTableByText(sql))
-            return createTableRelationship(userID, tableName, "no description");
-        else
-            return DatabaseProperties.Code_ExecuteSqlFail;
+        Map<String,Object> createTableResult = createTableByText(sql);
+        boolean createSuccess= (boolean)createTableResult.get("result");
+        Map<String,Object> result = new HashMap<>();
+        if (createSuccess) {
+            Long tableID = createTableRelationship(userID, tableName, "no description");
+            result.put("result",true);
+            result.put("tableID",tableID);
+            return result;
+        }
+
+        else {
+            result.put("result",false);
+            result.put("message", createTableResult.get("message"));
+            //DatabaseProperties.Code_ExecuteSqlFail;
+            return result;
+        }
     }
 
     public long createTableRelationship(long userID, String tableName, String description) {

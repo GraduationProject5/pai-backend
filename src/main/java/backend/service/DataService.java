@@ -48,13 +48,13 @@ public interface DataService {
     /**
      * 表的列属性存在VO
      */
-    long createTableByVO(long userID, String tableName,
+    Map<String,Object> createTableByVO(long userID, String tableName,
                          List<ColumnVO> columnVOList, String description);
 
     /**
      * 表的列属性描述在ScriptText
      */
-    long createTableByScript(long userID, String tableName, String ScriptText);
+    Map<String,Object> createTableByScript(long userID, String tableName, String ScriptText);
 
     /**
      * 查看用户下所有数据库

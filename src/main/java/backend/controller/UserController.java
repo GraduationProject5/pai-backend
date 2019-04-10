@@ -28,21 +28,14 @@ public class UserController {
     public Map<String,Object> login(HttpSession session,
                                     @RequestParam("email") String email,
                                     @RequestParam("password") String password) {
-
-        String token = userService.login(email,password) ;
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-
-        if(token.charAt(0) != '-' ) {   //...
+        Map<String,Object> map = userService.login(email,password);
+        boolean loginSuccess = (boolean)map.get("result");
+        if(loginSuccess) {
+            String token = (String) map.get("token");
             session.setAttribute("userID", userService.getUserIDByToken(token));
-            result.put("result",true);
-            result.put("token",token) ;
-        }
-        else {
-            result.put("result",false);
-            result.put("message",token);
         }
 
-        return result;
+        return map;
     }
 
     //todo 使用存疑
@@ -53,52 +46,13 @@ public class UserController {
 
     @PostMapping(value = "/sendEmail")
     public Map<String,Object> sendEmail(@RequestParam(value = "email") String email) {
-
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-
-        boolean exist = userService.checkExist(email) ;
-
-        if(exist){
-            //邮箱已注册
-            result.put("result",false);
-            result.put("code", LoginProperties.Code_EmailRegistered);
-        } else {
-            String code = EmailUtility.sendAccountActivateEmail(email);
-            result.put("result",true) ;
-            result.put("code",code); //交给前端验证
-        }
-
-        return result;
+        return userService.sendEmail(email);
     }
 
     @PostMapping (value = "/register")
     public Map<String,Object> register(@RequestParam(value = "email") String email,
                                         @RequestParam(value = "password") String password) {
-
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-
-        long query_userid = userService.register(email,password) ;
-
-//        System.out.println("register result: " +query_userid) ;
-
-        int queryID = (int)query_userid;
-        switch ( queryID ) {
-
-            case LoginProperties.Code_EmailRegistered:
-                result.put("result",false) ;
-                result.put("message", LoginProperties.Code_EmailRegistered );
-                return result ;
-
-            default:
-                result.put("result",true) ;
-                result.put("userID", queryID );
-                return result;
-        }
-
-
-
-
-
+        return userService.register(email,password);
     }
 
 

@@ -19,6 +19,7 @@ import java.util.Map;
 @Table(name = "dataparams", schema = "GraduationProject5")
 public class DataParam {
     @Id
+    @GeneratedValue
     @Column(name = "dataparam_id")
     private Long dataParamID;
 
