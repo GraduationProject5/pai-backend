@@ -40,17 +40,7 @@ public class ScenarioController {
             @SessionAttribute("userID") String userID,
             @RequestParam("experimentName") String experimentName,
             @RequestParam("description") String description) {
-        Map<String, Object> result = HttpResponseHelper.newResultMap();
-
-        long experimentID = dataService.
-                createExperiment(Long.parseLong(userID), experimentName, description);
-        if (experimentID > 0) {
-            result.put("result", true);
-            result.put("experimentID", experimentID);
-        } else {
-            result.put("result", false);
-        }
-        return result;
+        return dataService.createExperiment(Long.parseLong(userID), experimentName, description);
     }
 
     /**
@@ -110,33 +100,25 @@ public class ScenarioController {
             @SessionAttribute("userID") String userID,
             @RequestBody Map<String, Object> params
     ) {
+        int experimentID = (int) params.get("experimentID");
         Map<String, Object> result = HttpResponseHelper.newResultMap();
-//        String token = (String) params.get("token");
-//        Long userID = userService.getUserIDByToken(token);
 
-        if (Long.parseLong(userID) > 0) {  //认证user
-            int experimentID = (int) params.get("experimentID");
-            List<NodeVO> nodeVOList;
-            List<EdgeVO> edgeVOList;
-            try {
-                nodeVOList = (List<NodeVO>) params.get("nodes");
-                edgeVOList = (List<EdgeVO>) params.get("edges");
-            } catch (Exception e) {
-                e.printStackTrace();
-                result.put("result", false);
-                result.put("message", e.getMessage());
-                return result;
-            }
-
-
-            boolean isSuccess = scenarioService.saveScenario(Integer.toUnsignedLong(experimentID), nodeVOList, edgeVOList);
-            result.put("result", isSuccess);
-            return result;
-        } else {
+        List<NodeVO> nodeVOList;
+        List<EdgeVO> edgeVOList;
+        try {
+            nodeVOList = (List<NodeVO>) params.get("nodes");
+            edgeVOList = (List<EdgeVO>) params.get("edges");
+        } catch (Exception e) {
+            e.printStackTrace();
             result.put("result", false);
-            result.put("message", "not authorized");
+            result.put("message", e.getMessage());
             return result;
         }
+
+        boolean isSuccess = scenarioService.saveScenario(Integer.toUnsignedLong(experimentID), nodeVOList, edgeVOList);
+        result.put("result", isSuccess);
+        return result;
+
     }
 
     @GetMapping(value = "/getScenario")
@@ -144,16 +126,7 @@ public class ScenarioController {
             @SessionAttribute("userID") String userID,
             @RequestParam("experimentID") Long experimentID
     ) {
-//        Long userID = userService.getUserIDByToken(token);
-        if (Long.parseLong(userID) > 0) {  //认证user
-            return scenarioService.getScenario(experimentID);
-        } else {
-            Map<String, Object> result = HttpResponseHelper.newResultMap();
-            result.put("result", false);
-            result.put("message", "not authorized");
-            return result;
-        }
-
+        return scenarioService.getScenario(experimentID);
     }
 
     //保存组件参数到NodePO

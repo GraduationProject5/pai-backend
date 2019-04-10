@@ -22,7 +22,7 @@ public interface DataService {
     /**
      * 创建实验
      */
-    long createExperiment(long userID, String experimentName, String description);
+    Map<String, Object> createExperiment(long userID, String experimentName, String description);
 
 
     /**

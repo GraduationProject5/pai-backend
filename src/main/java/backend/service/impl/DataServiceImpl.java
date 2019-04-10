@@ -47,8 +47,18 @@ public class DataServiceImpl implements DataService {
     String newPath;
 
 
-    public long createExperiment(long userID, String experimentName, String description) {
-        return databaseHelper.executeCreateExperiment(userID, experimentName, description);
+    public Map<String, Object> createExperiment(long userID, String experimentName, String description) {
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
+
+        long experimentID = databaseHelper.executeCreateExperiment(userID, experimentName, description);
+
+        if (experimentID > 0) {
+            result.put("result", true);
+            result.put("experimentID", experimentID);
+        } else {
+            result.put("result", false);
+        }
+        return result;
     }
 
     @Override
