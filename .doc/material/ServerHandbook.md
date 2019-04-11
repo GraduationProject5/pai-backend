@@ -18,7 +18,15 @@ rm -rf [dir name]
 #### 1. 服务器数据库
 `RROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (111)`
 
-* 鉴于本服务器，建议直接命令行 `init 6`
+
+* 
+```
+systemctl status mysqld  #查看mysql的状态
+# 如果是退出状态
+systemctl restart mysqld #重启mysql服务
+mysql #测试问题是否解决
+```
+* 如果上面的方法不行，建议直接 `init 6`
 
 #### 2. 数据库连接池
 `com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure`
@@ -63,7 +71,7 @@ sudo vi /etc/mysql/my.cnf
 mysql --local-infile -uroot -pyourpwd yourdbname
 ```
 
-#### 6. jenkins 构建错误
+#### 6. jenkins 错误
 
 * 登陆Jenkins，查看 step 报错信息
 	* 常见错误：
@@ -73,6 +81,9 @@ mysql --local-infile -uroot -pyourpwd yourdbname
 			* 审查修改代码
 		* 网络问题（git代码pull不下来，images push不上去）
 			* abort 当前构建任务，重新手动构建
+
+			
+* Jenkins网页打不开，`systemctl restart jenkins` 重启Jenkins服务
 
 #### 7. 服务器数据库安全设置
 
