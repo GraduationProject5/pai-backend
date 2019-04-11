@@ -16,8 +16,8 @@ public class WebAppConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //         可添加多个
         registry.addInterceptor(getJwtHeader())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/user/login");
+                .excludePathPatterns("/user/login")
+                .addPathPatterns("/**");
     }
 
     //token 在header的拦截器
