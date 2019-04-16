@@ -37,15 +37,14 @@ pipeline{
 		}
 
 		stage('编译+单元测试'){
-			steps {
+//			steps {
 				echo "start compile"
                 sh "ls -l"
-
                 def mvn_version = 'M3'
                 withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
                     sh "mvn -U -e -am clean package"
                 }
-			}
+//			}
 		}
 
         stage('代码test'){
