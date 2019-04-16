@@ -2,6 +2,10 @@
 //#!groovy
 pipeline{
 	agent any
+
+    tools {
+        maven 'M3'
+    }
 	//定义仓库地址
 	environment {
 		REPOSITORY="https://github.com/GraduationProject5/pai-backend.git"
@@ -37,14 +41,11 @@ pipeline{
 		}
 
 		stage('编译+单元测试'){
-//			steps {
+			steps {
 				echo "start compile"
                 sh "ls -l"
-                def mvn_version = 'M3'
-                withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
-                    sh "mvn -U -e -am clean package"
-                }
-//			}
+                sh "mvn -U -e -am clean package"
+			}
 		}
 
         stage('代码test'){
