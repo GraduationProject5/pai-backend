@@ -3,9 +3,9 @@
 pipeline{
 	agent any
 
-    tools {
-        maven 'M3'
-    }
+//    tools {
+//        maven 'M3'
+//    }
 	//定义仓库地址
 	environment {
 		REPOSITORY="https://github.com/GraduationProject5/pai-backend.git"
