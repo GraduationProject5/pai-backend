@@ -40,7 +40,11 @@ pipeline{
 			steps {
 				echo "start compile"
                 sh "ls -l"
-                sh "mvn -U -e -am clean package"
+
+                def mvn_version = 'M3'
+                withEnv( ["PATH+MAVEN=${tool mvn_version}/bin"] ) {
+                    sh "mvn -U -e -am clean package"
+                }
 			}
 		}
 
