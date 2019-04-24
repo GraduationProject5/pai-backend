@@ -1,5 +1,7 @@
 # docker-compose.yml created by chen
-# 4040 -> 13100
+#
+# backend: 4040 -> 13100
+# 算法: 8000 -> 14000
 version: '2'
 services:
   pai-backend:

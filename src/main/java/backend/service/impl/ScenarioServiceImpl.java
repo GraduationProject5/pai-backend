@@ -1,9 +1,9 @@
 package backend.service.impl;
 
 import backend.daorepository.*;
-import backend.feign.feignservice.EvaluationService;
-import backend.feign.feignservice.MLService;
-import backend.feign.feignservice.TextAnalysisService;
+import backend.feign.feignservice.service.EvaluationService;
+import backend.feign.feignservice.service.MLService;
+import backend.feign.feignservice.service.TextAnalysisService;
 import backend.model.po.*;
 import backend.model.vo.EdgeVO;
 import backend.model.vo.NodeVO;
@@ -13,7 +13,6 @@ import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -422,6 +421,43 @@ public class ScenarioServiceImpl implements ScenarioService {
         NodePO nodePO = nodePORepository.findByNodeNo(nodeID);
 
         return nodePO.getLabel();
+    }
+
+//    public int getComponentIDByComponentName(String componentName){
+//
+//        int componentID = componentRepository.findComponentIDByComponentName(componentName);
+//
+//        return componentID;
+//    }
+
+    public List<NodePO> getNodePOListByNodeVOList(List<NodeVO> nodeVOList, long experimentID) {
+
+        List<NodePO> nodePOList = new ArrayList<>();
+
+        for (NodeVO nodeVO :
+                nodeVOList) {
+
+            //获取node的组件ID
+            String componentName = nodeVO.name;
+            int componentID = this.getComponentIDByComponentName(componentName);
+
+            NodePO nodePO = new NodePO(nodeVO, componentID, experimentID);
+            nodePOList.add(nodePO);
+        }
+
+        return nodePOList;
+    }
+
+    public List<EdgePO> getEdgePOListByEdgeVOList(List<EdgeVO> edgeVOList, long experimentID) {
+
+        List<EdgePO> edgePOList = new ArrayList<>();
+        for (EdgeVO edgeVO :
+                edgeVOList) {
+            EdgePO edgePO = new EdgePO(edgeVO, experimentID);
+            edgePOList.add(edgePO);
+        }
+
+        return edgePOList;
     }
 
 }

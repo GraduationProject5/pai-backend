@@ -12,9 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping(value = "/text-analysis")
-//暂时保留 RequestMapping 用来测试算法能否调用
 @Service
 public class TextAnalysisExec {
 

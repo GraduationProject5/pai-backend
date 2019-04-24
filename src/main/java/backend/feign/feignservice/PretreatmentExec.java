@@ -2,12 +2,16 @@ package backend.feign.feignservice;
 
 import backend.feign.feignclient.PretreatmentFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class PretreatmentExec {
 
     @Autowired
@@ -43,9 +47,11 @@ public class PretreatmentExec {
      * 返回：
      * csv数据文件
      */
-    public MultipartFile setId(
+    public Object setId(
             MultipartFile csv_file
     ) {
+//        Map<String, File> map = new HashMap<>();
+//        map.put("csv_file", csv_file);
         return pretreatmentFeign.setId(csv_file);
     }
 

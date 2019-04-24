@@ -136,6 +136,38 @@ public interface ScenarioService {
     //todo 各种组件的参数设置需要人为规定！
     List<Map<String, Object>> getSectionsAndComponents();
 
+    /**
+     * 根据组件名称获取组件的id
+     *
+     * @param componentName
+     * @return
+     */
+    int getComponentIDByComponentName(String componentName);
+
+    /**
+     * 根据方法名获取组件id
+     *
+     * @param funcName
+     * @return
+     */
+    int getComponentIDByFuncName(String funcName);
+
+    /**
+     * 根据nodeVo list 获取PO list
+     *
+     * @param nodeVOList
+     * @param experimentID
+     * @return
+     */
+    List<NodePO> getNodePOListByNodeVOList(List<NodeVO> nodeVOList, long experimentID);
+
+    /**
+     * @param edgeVOList
+     * @param experimentID
+     * @return
+     */
+    List<EdgePO> getEdgePOListByEdgeVOList(List<EdgeVO> edgeVOList, long experimentID);
+
 /////////////////////////////////// Section和Component相关 end  //////////////////////////////////////
 
 

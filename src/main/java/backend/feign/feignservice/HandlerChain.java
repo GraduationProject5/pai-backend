@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * handle 中间类
- * <p>
+ * Handle 中间类
  * 将所有的后继者对象填装在一个 List 内，
  * 方便交给调用 execute 处理
  */

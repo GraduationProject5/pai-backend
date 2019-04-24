@@ -1,5 +1,7 @@
 package backend.controller;
 
+import backend.feign.feignservice.PretreatmentExec;
+import backend.feign.feignservice.UploadFileExec;
 import backend.model.bo.IndegreeTable;
 import backend.model.po.DataSet;
 import backend.model.po.EdgePO;
@@ -17,9 +19,13 @@ import jdk.nashorn.internal.objects.annotations.Getter;
 import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +39,10 @@ public class ScenarioController {
     ScenarioService scenarioService;
     @Autowired
     DataService dataService;
+    @Autowired
+    PretreatmentExec pretreatmentExec;
+    @Autowired
+    UploadFileExec uploadFileExec;
 
     //创建实验
     @PostMapping(value = "/createExperiment")
@@ -134,7 +144,7 @@ public class ScenarioController {
     public boolean saveParamsForNode(
             @SessionAttribute("userID") String userID,
             @RequestBody Map<String, Object> params) {
-        String nodeNo =  (String) params.get("nodeNo");
+        String nodeNo = (String) params.get("nodeNo");
         Map<String, Object> settings = (Map<String, Object>) params.get("settings");
         return scenarioService.saveSettingsForNode(nodeNo, settings);
     }
@@ -170,31 +180,17 @@ public class ScenarioController {
 //        if (dataSourcePath != null) {
         if (true) {
             //获取实验的边和节点的信息
-            long experimentID = experimentInfoVO.getExperimentID();
+            long experimentID = experimentInfoVO.getExperimentID(); //实验id
             List<NodeVO> nodeVOList = experimentInfoVO.getNodes();
             List<EdgeVO> edgeVOList = experimentInfoVO.getEdges();
-            List<NodePO> nodePOList = new ArrayList<>();
-            List<EdgePO> edgePOList = new ArrayList<>();
-            for (NodeVO nodeVO :
-                    nodeVOList) {
-//                int componentID ;
-                //TODO componentID
-                NodePO nodePO = new NodePO(nodeVO, 2, experimentID);
-                System.out.println(nodePO.getIndex() + "  happy");
-                nodePOList.add(nodePO);
-            }
 
-            for (EdgeVO edgeVO :
-                    edgeVOList) {
-                EdgePO edgePO = new EdgePO(edgeVO, experimentID);
-                System.out.println(edgePO.getIndex() + "  happy");
-                edgePOList.add(edgePO);
-            }
+            List<NodePO> nodePOList = scenarioService.getNodePOListByNodeVOList(nodeVOList, experimentID);
+            System.out.println(nodePOList.size());
+            List<EdgePO> edgePOList = scenarioService.getEdgePOListByEdgeVOList(edgeVOList, experimentID);
 
             //拓扑出执行序列，执行序列输出的是 节点的id
             IndegreeTable indegreeTable = new IndegreeTable(nodePOList, edgePOList);
             List<String> executeLine = indegreeTable.getResultOutputList();
-            System.out.println(executeLine + " happy");
 
             //根据节点的id，查找节点的算法名称label
             //funLine -> 节点算法名称链表
@@ -205,6 +201,7 @@ public class ScenarioController {
                 funLine.add(funName);
             }
 
+            System.out.println("执行序列: " + funLine);
             httpResult.put("result", funLine);
 
             scenarioService.executeLine(funLine);
@@ -215,4 +212,30 @@ public class ScenarioController {
             return httpResult;
         }
     }
+
+    //文本分析
+    @PostMapping(value = "/executeTextAnalysis")
+    public Map<String, Object> executeTextAnalysis(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("tableName") String tableName
+//            @RequestBody ExperimentInfoVO experimentInfoVO
+    ) throws IOException {
+        Map<String, Object> httpResult = HttpResponseHelper.newResultMap();
+
+        File file = dataService.exportCsv(userID, tableName);
+
+        //添加id列
+//        Object idFile = pretreatmentExec.setId(file);
+        Object idFile = null;
+        try {
+            idFile = uploadFileExec.setID(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        httpResult.put("re", idFile);
+        return httpResult;
+    }
+
 }

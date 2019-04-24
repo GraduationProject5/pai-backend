@@ -11,16 +11,19 @@ import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
 import backend.service.ScenarioService;
 import backend.util.json.HttpResponseHelper;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -72,19 +75,18 @@ public class DataServiceImpl implements DataService {
     public Map<String, Object> updateExperimentInfo(ExperimentVO experimentVO) {
         Long experimentID = experimentVO.experimentID;
         Experiment experiment = experimentRepository.findByExperimentID(experimentID);
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
-        if(experiment==null) {
-            result.put("result",false);
-            result.put("message","No such ExperimentID");
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
+        if (experiment == null) {
+            result.put("result", false);
+            result.put("message", "No such ExperimentID");
             return result;
-        }
-        else {
-            if(experimentVO.experimentName!=null)
+        } else {
+            if (experimentVO.experimentName != null)
                 experiment.setExperimentName(experimentVO.experimentName);
-            if(experimentVO.description!=null)
+            if (experimentVO.description != null)
                 experiment.setDescription(experimentVO.description);
             experimentRepository.save(experiment);
-            result.put("result",true);
+            result.put("result", true);
             return result;
         }
     }
@@ -92,8 +94,8 @@ public class DataServiceImpl implements DataService {
     /*
         根据给定列建表，成功返回(Long)tableID，失败返回(String)errorMessage
      */
-    public  Map<String,Object> createTableByVO(long userID, String tableName,
-                                List<ColumnVO> columnVOList, String description) {
+    public Map<String, Object> createTableByVO(long userID, String tableName,
+                                               List<ColumnVO> columnVOList, String description) {
         TableVO tableVO = new TableVO();
         tableVO.tableName = tableName;
         tableVO.columnVOList = columnVOList;
@@ -102,15 +104,15 @@ public class DataServiceImpl implements DataService {
     }
 
     // 根据SQL建表，成功返回(Long)tableID，失败返回(String)errorMessage
-    public  Map<String,Object> createTableByScript(long userID, String tableName, String scriptText) {
+    public Map<String, Object> createTableByScript(long userID, String tableName, String scriptText) {
         return databaseHelper.executeCreateTableByScript(userID, tableName, scriptText);
 
 
     }
 
-    private Object handleCreateTableResult(Map<String,Object> result){
-        boolean createSuccess = (boolean)result.get("result");
-        if(createSuccess){
+    private Object handleCreateTableResult(Map<String, Object> result) {
+        boolean createSuccess = (boolean) result.get("result");
+        if (createSuccess) {
             Long tableID = (Long) result.get("tableID");
             return tableID;
         } else {
@@ -156,7 +158,7 @@ public class DataServiceImpl implements DataService {
     }
 
     // 将数据库表导出为csv文件，进行数据预处理
-    public String exportCsv(String userID, String tableName) {
+    public File exportCsv(String userID, String tableName) throws IOException {
 
 //        File exportDir = new File(newPath);
 //        //如果不存在，新建文件夹
@@ -166,10 +168,26 @@ public class DataServiceImpl implements DataService {
         //导出的文件路径+文件名
         String exportFileName = newPath + new Date().getTime() + ".csv";
 
+        File file = null;
+        MultipartFile multi = null;
+
         if (databaseHelper.exportCsv(userID, tableName, exportFileName)) {
-            return exportFileName;
+//            String dockerFilePath = "/var/lib/docker/overlay2/826f6a5ebb79dabfd32dc38a34522bcf7fbcc7761bcc9117880c65e55029e854/diff";
+            file = new File(exportFileName);
+            FileInputStream in_file = new FileInputStream(file);
+//            multi = new MockMultipartFile(file.getName(), IOUtils.toByteArray(in_file));
+
+            /**
+             * common
+             */
+//            FileItem fileItem = new DiskFileItem("mainFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
+//            try (InputStream input = new FileInputStream(file); OutputStream os = fileItem.getOutputStream()) {
+//                IOUtils.copy(input, os);
+//                multi = new CommonsMultipartFile(fileItem);
+//            }
+//            System.out.println(dockerFilePath+exportFileName);
         }
-        return null;
+        return file;
     }
 
     public void insertData(long userID, String tableName, String[] lines, String splitChar) {
@@ -192,8 +210,8 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public void dropUserTable(Long userID,Long tableID) {
-        databaseHelper.dropUserTable(userID,tableID);
+    public void dropUserTable(Long userID, Long tableID) {
+        databaseHelper.dropUserTable(userID, tableID);
     }
 
     public List<Experiment> getExperimentsByUser(long userID) {
