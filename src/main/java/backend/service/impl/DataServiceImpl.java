@@ -24,10 +24,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lienming on 2019/1/17.
@@ -217,5 +214,16 @@ public class DataServiceImpl implements DataService {
     public List<Experiment> getExperimentsByUser(long userID) {
         return databaseHelper.getExperimentsByUser(userID);
     }
+
+    public List<String> stringArrayToList(String[] strings) {
+        List<String> list = new ArrayList<>();
+        for (String str :
+                strings) {
+            list.add(str);
+        }
+
+        return list;
+    }
+
 
 }

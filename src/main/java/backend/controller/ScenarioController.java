@@ -1,6 +1,8 @@
 package backend.controller;
 
+import backend.feign.feignservice.EvaluationExec;
 import backend.feign.feignservice.PretreatmentExec;
+import backend.feign.feignservice.TextAnalysisExec;
 import backend.feign.feignservice.UploadFileExec;
 import backend.model.bo.IndegreeTable;
 import backend.model.po.DataSet;
@@ -14,6 +16,7 @@ import backend.model.vo.NodeVO;
 import backend.service.DataService;
 import backend.service.ScenarioService;
 import backend.service.UserService;
+import backend.util.config.StaticVariable;
 import backend.util.json.HttpResponseHelper;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.hibernate.validator.constraints.SafeHtml;
@@ -24,10 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/scenario")
@@ -43,6 +44,10 @@ public class ScenarioController {
     PretreatmentExec pretreatmentExec;
     @Autowired
     UploadFileExec uploadFileExec;
+    @Autowired
+    TextAnalysisExec textAnalysisExec;
+    @Autowired
+    EvaluationExec evaluationExec;
 
     //创建实验
     @PostMapping(value = "/createExperiment")
@@ -217,24 +222,107 @@ public class ScenarioController {
     @PostMapping(value = "/executeTextAnalysis")
     public Map<String, Object> executeTextAnalysis(
             @SessionAttribute("userID") String userID,
-            @RequestParam("tableName") String tableName
-//            @RequestBody ExperimentInfoVO experimentInfoVO
+            @RequestParam("tableName") String tableName,
+            @RequestParam("target") String target,
+            @RequestParam("n_topics") int n_topics
     ) throws IOException {
-        Map<String, Object> httpResult = HttpResponseHelper.newResultMap();
+        Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
 
         File file = dataService.exportCsv(userID, tableName);
 
-        //添加id列
-//        Object idFile = pretreatmentExec.setId(file);
-        Object idFile = null;
+        //=========添加id列=========//
+//        String setIdRes;
+//        try {
+//            setIdRes = uploadFileExec.setID(file);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            httpResult.clear();
+//            httpResult.put("Exception: ", "setID 异常");
+//            return httpResult;
+//        }
+
+        //=========哑变量=========//
+        String dummyRes;
         try {
-            idFile = uploadFileExec.setID(file);
+            dummyRes = uploadFileExec.dummy(file, target);
+
         } catch (Exception e) {
             e.printStackTrace();
+            httpResult.clear();
+            httpResult.put("Exception: ", "dummy 异常");
+            return httpResult;
         }
 
+        file.delete(); //删除本地临时文件
 
-        httpResult.put("re", idFile);
+        //=========分词 + 停词过滤=========//
+        List<List<List<String>>> partAndSwRes = scenarioService.executePartAndSw(dummyRes);
+        List<List<String>> partArray = partAndSwRes.get(0);//分词结果
+        List<List<String>> swArray = partAndSwRes.get(1);//停词结果
+
+        //=========labels_name==========//
+        Map<Integer, String> labelNameMap = scenarioService.getLabelName(dummyRes);
+
+        //=========labels_true=========//
+        List<Integer> trueLabels = scenarioService.getTrueLabels(dummyRes);
+
+        //=========词频统计===========//
+        TextAnalysisExec.FrequencyStatistics frequencyStatistics = textAnalysisExec.new FrequencyStatistics();
+        Map<String, Object> kvMap = new HashMap<>();
+        List<Map<String, Object>> kvList = new ArrayList<>();
+        int index = 0;
+        for (List swString :
+                swArray) {
+
+            Map<String, Object> tmpMap = new HashMap<>();
+            tmpMap.put("id", index);
+            tmpMap.put("text", swString);
+            kvList.add(tmpMap);
+            index++;
+        }
+        kvMap.put("news_list", kvList);
+        Map kvMapRes = frequencyStatistics.handleFeign(kvMap);
+
+        //=========LDA==========//
+        TextAnalysisExec.LDA lda = textAnalysisExec.new LDA();
+        Map<String, Object> ldaMap = new HashMap<>();
+        List<String> ldaList = new ArrayList<>();
+        for (List<String> textList :
+                swArray) {
+            String textStr = "";
+            for (String text :
+                    textList) {
+                textStr = textStr + " " + text;
+            }
+            ldaList.add(textStr.trim());
+        }
+        ldaMap.put("corpus", ldaList);
+        ldaMap.put("n_topics", n_topics);
+        Map<String, Object> ldaMapRes = lda.handleFeign(ldaMap);
+
+        //===========labels_pred=============//
+
+        List<Integer> preLabels = scenarioService.getPreLabels(ldaMapRes);
+
+
+        //===========聚类评估=============//
+        EvaluationExec.ClusterEvaluation clusterEvaluation = evaluationExec.new ClusterEvaluation();
+        Map<String, Object> ceMap = new HashMap<>();
+//        List<Integer> trueList = new ArrayList<>(Arrays.asList(2, 0, 2, 2, 0, 1));
+//        List<Integer> predList = new ArrayList<>(Arrays.asList(0, 0, 2, 2, 0, 2));
+        ceMap.put("labels_true", trueLabels);
+        ceMap.put("labels_pred", preLabels);
+        Map ceMapRes = clusterEvaluation.handleFeign(ceMap);
+
+        httpResult.put("哑变量结果", dummyRes);
+        httpResult.put("labelMap", labelNameMap);
+        httpResult.put("true_labels", trueLabels);
+        httpResult.put("pre_labels", preLabels);
+        httpResult.put("分词结果", partArray);
+        httpResult.put("停词过滤", swArray);
+        httpResult.put("词频统计", kvMapRes);//仅进行展示数据
+        httpResult.put("LDA结果", ldaMapRes);
+        httpResult.put("聚类结果", ceMapRes);
         return httpResult;
     }
 

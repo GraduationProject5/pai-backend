@@ -1,6 +1,7 @@
 package backend.service.impl;
 
 import backend.daorepository.*;
+import backend.feign.feignservice.TextAnalysisExec;
 import backend.feign.feignservice.service.EvaluationService;
 import backend.feign.feignservice.service.MLService;
 import backend.feign.feignservice.service.TextAnalysisService;
@@ -13,10 +14,7 @@ import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ScenarioServiceImpl implements ScenarioService {
@@ -50,6 +48,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     DataParamRepository dataParamRepository;
     @Autowired
     DataResultRepository dataResultRepository ;
+    @Autowired
+    TextAnalysisExec textAnalysisExec;
 
     @Override
     public List<EdgePO> findEdgesByExperimentID(Long experimentID) {
@@ -458,6 +458,108 @@ public class ScenarioServiceImpl implements ScenarioService {
         }
 
         return edgePOList;
+    }
+
+    public List<List<List<String>>> executePartAndSw(String dummyRes) {
+
+        List<List<List<String>>> res = new ArrayList<>();
+
+        TextAnalysisExec.Participles participles = textAnalysisExec.new Participles();
+        TextAnalysisExec.StopwordsFilter stopwordsFilter = textAnalysisExec.new StopwordsFilter();
+        String[] dummyResSplit = dummyRes.split("\\n");
+        List<String> dummyResList = dataService.stringArrayToList(dummyResSplit);
+        dummyResList.remove(0);//删除第一行
+        List<List<String>> partArray = new ArrayList();//分词结果
+        List<List<String>> swArray = new ArrayList<>();//停词结果
+        for (String temp :
+                dummyResList) {
+            //执行分词
+            Map<String, Object> partMap = new HashMap<>();
+            partMap.put("texts", temp);
+            Map partMapRes = participles.handleFeign(partMap);
+            partArray.add((List<String>) partMapRes.get("seg_list"));
+
+            //停词过滤
+            Map swMapRes = stopwordsFilter.handleFeign(partMapRes);
+            swArray.add((List<String>) swMapRes.get("stopped_tokens"));
+        }
+
+        res.add(partArray);
+        res.add(swArray);
+
+        return res;
+    }
+
+    public Map<Integer, String> getLabelName(String dummyRes) {
+
+        Map<Integer, String> labelMap = new HashMap<>();
+
+        String label = dummyRes.split("\\n")[0];
+        String[] strings = label.split(",");
+        List<String> stringList = dataService.stringArrayToList(strings);
+        stringList.remove(0);
+
+        int index = 1;
+        for (String str :
+                stringList) {
+            labelMap.put(index, str);
+            index++;
+        }
+
+        return labelMap;
+    }
+
+    public List<Integer> getTrueLabels(String dummyRes) {
+        List<Integer> trueLabels = new ArrayList<>();
+
+        String[] dummyResSplit = dummyRes.split("\\n");
+        List<String> dummyResList = dataService.stringArrayToList(dummyResSplit);
+        dummyResList.remove(0);//删除第一行
+        for (String string :
+                dummyResList) {
+            String[] strings = string.split(",");
+            List<String> stringList = dataService.stringArrayToList(strings);
+            stringList.remove(0);
+            int location = findLabelPosition(stringList);
+            trueLabels.add(location);
+        }
+
+
+        return trueLabels;
+    }
+
+    public int findLabelPosition(List<String> stringList) {
+
+        int location = 1;
+
+        for (String string :
+                stringList) {
+            if (Integer.parseInt(string) == 1) {
+                return location;
+            } else if (Integer.parseInt(string) == 0) {
+                location++;
+            } else {
+                System.out.println("labels不是常数！");
+            }
+        }
+        return location;
+    }
+
+    public List<Integer> getPreLabels(Map<String, Object> ldaMapRes) {
+        List<Integer> preLabels = new ArrayList<>();
+
+        List<List<Double>> doubleLists = (List<List<Double>>) ldaMapRes.get("docres");
+
+        for (List<Double> doubleList :
+                doubleLists) {
+            int maxIndex = doubleList.indexOf(Collections.max(doubleList));
+
+            //+1 从1开始计数
+            preLabels.add(maxIndex + 1);
+        }
+
+        return preLabels;
+
     }
 
 }

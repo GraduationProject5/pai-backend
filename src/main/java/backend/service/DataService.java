@@ -101,4 +101,9 @@ public interface DataService {
 
     ///////////////////////////  数据表相关 end //////////////////////////////////
 
+    /**
+     * string数组转为list
+     */
+    List<String> stringArrayToList(String[] strings);
+
 }

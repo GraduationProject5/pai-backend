@@ -171,4 +171,32 @@ public interface ScenarioService {
 /////////////////////////////////// Section和Component相关 end  //////////////////////////////////////
 
 
+    /////////////////////////////////// 运行场景相关  //////////////////////////////////////
+
+    /**
+     * 执行分词和停词过滤
+     *
+     * @param dummyRes
+     * @return
+     */
+    List<List<List<String>>> executePartAndSw(String dummyRes);
+
+    /**
+     * 获取分类
+     *
+     * @param dummyRes
+     * @return
+     */
+    Map<Integer, String> getLabelName(String dummyRes);
+
+    /**
+     * 获取整个新闻列表的true_label
+     *
+     * @param dummyRes
+     * @return
+     */
+    List<Integer> getTrueLabels(String dummyRes);
+
+    List<Integer> getPreLabels(Map<String, Object> map);
+
 }
