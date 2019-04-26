@@ -155,7 +155,7 @@ public class DataServiceImpl implements DataService {
     }
 
     // 将数据库表导出为csv文件，进行数据预处理
-    public File exportCsv(String userID, String tableName) throws IOException {
+    public String exportCsv(String userID, String tableName) throws IOException {
 
 //        File exportDir = new File(newPath);
 //        //如果不存在，新建文件夹
@@ -170,21 +170,10 @@ public class DataServiceImpl implements DataService {
 
         if (databaseHelper.exportCsv(userID, tableName, exportFileName)) {
 //            String dockerFilePath = "/var/lib/docker/overlay2/826f6a5ebb79dabfd32dc38a34522bcf7fbcc7761bcc9117880c65e55029e854/diff";
+//            file = new File(dockerFilePath + exportFileName);
             file = new File(exportFileName);
-            FileInputStream in_file = new FileInputStream(file);
-//            multi = new MockMultipartFile(file.getName(), IOUtils.toByteArray(in_file));
-
-            /**
-             * common
-             */
-//            FileItem fileItem = new DiskFileItem("mainFile", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length(), file.getParentFile());
-//            try (InputStream input = new FileInputStream(file); OutputStream os = fileItem.getOutputStream()) {
-//                IOUtils.copy(input, os);
-//                multi = new CommonsMultipartFile(fileItem);
-//            }
-//            System.out.println(dockerFilePath+exportFileName);
         }
-        return file;
+        return exportFileName;
     }
 
     public void insertData(long userID, String tableName, String[] lines, String splitChar) {

@@ -76,7 +76,7 @@ public interface DataService {
      * @return
      * @throws Exception
      */
-    File exportCsv(String userID, String tableName) throws IOException;
+    String exportCsv(String userID, String tableName) throws IOException;
 
     /**
      * 插入数据 [在csv实现后，弃用]

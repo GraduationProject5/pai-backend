@@ -8,3 +8,6 @@ services:
     image: registry.cn-shanghai.aliyuncs.com/cbb_registry/pai-backend:<BUILD_TAG>
     ports:
       - "13100:4040"
+    restart: always
+    volumes:
+      - /opt/jenkins/data:/tmp

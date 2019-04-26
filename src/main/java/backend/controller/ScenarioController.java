@@ -228,7 +228,7 @@ public class ScenarioController {
     ) throws IOException {
         Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
 
-        File file = dataService.exportCsv(userID, tableName);
+        File file = new File(dataService.exportCsv(userID, tableName));
 
         //=========添加id列=========//
 //        String setIdRes;
@@ -243,8 +243,13 @@ public class ScenarioController {
 
         //=========哑变量=========//
         String dummyRes;
+        List<String> dummyList;
         try {
             dummyRes = uploadFileExec.dummy(file, target);
+
+            String[] dummyStrings = dummyRes.split("\\n");
+            dummyList = dataService.stringArrayToList(dummyStrings);
+//            dummyList.remove(0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -314,7 +319,7 @@ public class ScenarioController {
         ceMap.put("labels_pred", preLabels);
         Map ceMapRes = clusterEvaluation.handleFeign(ceMap);
 
-        httpResult.put("哑变量结果", dummyRes);
+        httpResult.put("哑变量结果", dummyList);
         httpResult.put("labelMap", labelNameMap);
         httpResult.put("true_labels", trueLabels);
         httpResult.put("pre_labels", preLabels);
