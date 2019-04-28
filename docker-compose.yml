@@ -1,8 +1,13 @@
 # docker-compose.yml created by chen
-# 4040 -> 13100
+#
+# backend: 4040 -> 13100
+# 算法: 8000 -> 14000
 version: '2'
 services:
   pai-backend:
     image: registry.cn-shanghai.aliyuncs.com/cbb_registry/pai-backend:<BUILD_TAG>
     ports:
       - "13100:4040"
+    restart: always
+    volumes:
+      - /opt/jenkins/data:/tmp

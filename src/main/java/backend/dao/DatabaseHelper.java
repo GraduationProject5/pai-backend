@@ -284,6 +284,7 @@ public class DatabaseHelper {
             stmt.executeQuery(exportSql);
 //            System.out.println(resultSet.getString(0));
             stmt.close();
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();

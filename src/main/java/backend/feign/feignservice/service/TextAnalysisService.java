@@ -1,4 +1,4 @@
-package backend.feign.feignservice;
+package backend.feign.feignservice.service;
 
 import backend.feign.feignclient.TextAnalysisFeign;
 import backend.service.DataService;
@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@RestController
-@RequestMapping(value = "/text-analysis")
-//暂时保留 RequestMapping 用来测试算法能否调用
 @Service
 public class TextAnalysisService {
 
@@ -36,7 +33,6 @@ public class TextAnalysisService {
      *       ]
      *   }
      */
-    @GetMapping(value = "getParticiples")
     public Map getParticiples(@SessionAttribute("userID") String userID,
                               @RequestParam("tableName") String tableName) {
         //获取表中的row
@@ -60,19 +56,18 @@ public class TextAnalysisService {
      * ]
      * }
      */
-//    @GetMapping(value = "getStopwordsFilter")
-//    public Map getStopwordsFilter(@RequestBody Map<String, Object> map) {
-//        Map<String, Object> swMap = new LinkedHashMap<>();
-////        List<String> swList = new ArrayList<>();
-////        swList.add("；");
-////        swList.add("、");
-////        swList.add("的");
-////        swList.add("。");
-//        swMap.put("stop_list", StaticVariable.stop_words);
-//        swMap.put("seg_list", map.get("seg_list"));
-////        return swMap;
-//        return textAnalysisFeign.stopwords_filter(map);
-//    }
+    public Map getStopwordsFilter(@RequestBody Map<String, Object> map) {
+        Map<String, Object> swMap = new LinkedHashMap<>();
+//        List<String> swList = new ArrayList<>();
+//        swList.add("；");
+//        swList.add("、");
+//        swList.add("的");
+//        swList.add("。");
+        swMap.put("stop_list", StaticVariable.stop_words);
+        swMap.put("seg_list", map.get("seg_list"));
+//        return swMap;
+        return textAnalysisFeign.stopwords_filter(map);
+    }
 
     /**
      * 词频

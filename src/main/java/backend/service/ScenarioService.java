@@ -136,7 +136,79 @@ public interface ScenarioService {
     //todo 各种组件的参数设置需要人为规定！
     List<Map<String, Object>> getSectionsAndComponents();
 
+    /**
+     * 根据组件名称获取组件的id
+     *
+     * @param componentName
+     * @return
+     */
+    int getComponentIDByComponentName(String componentName);
+
+    /**
+     * 根据方法名获取组件id
+     *
+     * @param funcName
+     * @return
+     */
+    int getComponentIDByFuncName(String funcName);
+
+    /**
+     * 根据nodeVo list 获取PO list
+     *
+     * @param nodeVOList
+     * @param experimentID
+     * @return
+     */
+    List<NodePO> getNodePOListByNodeVOList(List<NodeVO> nodeVOList, long experimentID);
+
+    /**
+     * @param edgeVOList
+     * @param experimentID
+     * @return
+     */
+    List<EdgePO> getEdgePOListByEdgeVOList(List<EdgeVO> edgeVOList, long experimentID);
+
 /////////////////////////////////// Section和Component相关 end  //////////////////////////////////////
 
+
+    /////////////////////////////////// 运行场景相关  //////////////////////////////////////
+
+    String getNodeNoFromPoList(List<NodePO> nodePOList, String nodeName);
+
+    /**
+     * 执行分词和停词过滤
+     *
+     * @param dummyRes
+     * @return
+     */
+    List<List<List<String>>> executePartAndSw(String dummyRes);
+
+    /**
+     * 获取新闻分类
+     *
+     * @param dummyRes
+     * @return
+     */
+    Map<Integer, String> getLabelName(String dummyRes);
+
+    /**
+     * 获取整个新闻列表的true_label
+     *
+     *
+     * 获取文本的实际分类结果
+     *
+     * @param dummyRes
+     * @return
+     */
+    List<Integer> getTrueLabels(String dummyRes);
+
+
+    /**
+     * 获取文本的预测分类结果
+     *
+     * @param map
+     * @return
+     */
+    List<Integer> getPreLabels(Map<String, Object> map);
 
 }

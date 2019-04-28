@@ -10,4 +10,6 @@ public interface ComponentRepository extends JpaRepository<Component,Integer> {
     Component findByComponentName(String componentName);
 
     Component findByFuncName(String funcName);
+
+    int findComponentIDByComponentName(String componentName);
 }

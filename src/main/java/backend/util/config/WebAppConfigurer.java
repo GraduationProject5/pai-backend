@@ -4,6 +4,7 @@ import backend.util.JWThelper.JwtInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -17,10 +18,19 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 //         可添加多个
         registry.addInterceptor(getJwtHeader())
                 .excludePathPatterns("/user/login")
+                .excludePathPatterns("/index")
                 .addPathPatterns("/**");
     }
 
     //token 在header的拦截器
+
+    /**
+     * 添加静态资源
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    }
 
     public HandlerInterceptor getJwtHeader(){
         return new JwtInterceptor();

@@ -1,4 +1,4 @@
-package backend.feign.feignservice;
+package backend.feign.feignservice.service;
 
 import backend.feign.feignclient.MLFeign;
 import org.springframework.beans.factory.annotation.Autowired;

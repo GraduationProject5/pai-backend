@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +76,7 @@ public interface DataService {
      * @return
      * @throws Exception
      */
-    String exportCsv(String userID, String tableName);
+    String exportCsv(String userID, String tableName) throws IOException;
 
     /**
      * 插入数据 [在csv实现后，弃用]
@@ -98,5 +100,10 @@ public interface DataService {
     void dropUserTable(Long userID, Long tableID);
 
     ///////////////////////////  数据表相关 end //////////////////////////////////
+
+    /**
+     * string数组转为list
+     */
+    List<String> stringArrayToList(String[] strings);
 
 }

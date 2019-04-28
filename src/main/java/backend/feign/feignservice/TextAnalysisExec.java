@@ -12,9 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping(value = "/text-analysis")
-//暂时保留 RequestMapping 用来测试算法能否调用
 @Service
 public class TextAnalysisExec {
 
@@ -38,16 +35,17 @@ public class TextAnalysisExec {
          * ]
          * }
          */
-        @GetMapping(value = "getParticiples")
         @Override
         //TODO @SessionAttribute("userID") String userID,
         //     @RequestParam("tableName") String tableName
         public Map<String, Object> handleFeign(Map<String, Object> map) {
-            //获取表中的row
-//            List tableList = dataService.getData(Long.parseLong(userID), tableName);
-//            Map<String, Object> mapText = new HashMap<>();
-//            mapText.put("text", ((Map) tableList.get(0)).get("text"));
-            return textAnalysisFeign.participles(map);
+            //获取表中的内容
+            String temp = map.get("texts").toString();
+            String[] tempSplit = temp.split(",");
+            String content = tempSplit[0];//获取内容
+            Map<String, Object> tmpMap = new HashMap<>();
+            tmpMap.put("text", content);
+            return textAnalysisFeign.participles(tmpMap);
         }
     }
 
@@ -70,15 +68,9 @@ public class TextAnalysisExec {
         @Override
         public Map<String, Object> handleFeign(Map<String, Object> map) {
             Map<String, Object> swMap = new LinkedHashMap<>();
-//        List<String> swList = new ArrayList<>();
-//        swList.add("；");
-//        swList.add("、");
-//        swList.add("的");
-//        swList.add("。");
             swMap.put("stop_list", StaticVariable.stop_words);
             swMap.put("seg_list", map.get("seg_list"));
-//        return swMap;
-            return textAnalysisFeign.stopwords_filter(map);
+            return textAnalysisFeign.stopwords_filter(swMap);
         }
     }
 

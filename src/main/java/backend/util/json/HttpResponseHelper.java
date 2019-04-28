@@ -1,6 +1,7 @@
 package backend.util.json;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class HttpResponseHelper {
@@ -9,4 +10,7 @@ public class HttpResponseHelper {
         return new HashMap<>();
     }
 
+    public static LinkedHashMap<String, Object> newLinkedResultMap() {
+        return new LinkedHashMap<>();
+    }
 }

@@ -1,12 +1,26 @@
 package backend.feign.feignclient;
 
+//import backend.util.config.FeignSpringFormEncoder;
+
+import backend.util.config.FeignConfig;
+import backend.util.config.FeignSpringFormEncoder;
+import feign.Logger;
+import feign.codec.Encoder;
+import feign.form.spring.SpringFormEncoder;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Scope;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -21,6 +35,7 @@ import java.util.Map;
 
 @Service
 @FeignClient(url = "${ml.feign.url}", name = "algorithm")
+//        ,configuration = FeignConfig.class)
 public interface PretreatmentFeign {
 
     /**
@@ -57,10 +72,31 @@ public interface PretreatmentFeign {
      *      csv数据文件
      */
 
-    @PostMapping(value = "/setId/")
-    MultipartFile setId(
-            @RequestParam(value = "csv_file") MultipartFile csv_file
+    @PostMapping(value = "/setId/"
+//            ,
+//            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+//            produces = {MediaType.MULTIPART_FORM_DATA_VALUE}
+    )
+    File setId(
+//            @RequestHeader(value = "content-type") String content,
+            @RequestPart("csv_file") MultipartFile csv_file
     );
+
+//    class FormSupportConfig {
+//        @Autowired
+//        private ObjectFactory<HttpMessageConverters> messageConverters;
+////         new一个form编码器，实现支持form表单提交
+//        @Bean
+//        public Encoder feignEncoder(ObjectFactory<HttpMessageConverters> messageConverters) {
+//            return new FeignSpringFormEncoder();
+//        }
+//
+//        // 开启Feign的日志
+//        @Bean
+//        public Logger.Level logger() {
+//            return Logger.Level.FULL;
+//        }
+//    }
 
     /**
      * 标准化
