@@ -218,13 +218,13 @@ public class ScenarioController {
         }
     }
 
-    //文本分析
+    //运行 文本分类
     @PostMapping(value = "/executeTextAnalysis")
     public Map<String, Object> executeTextAnalysis(
             @SessionAttribute("userID") String userID,
             @RequestParam("tableName") String tableName,
             @RequestParam("target") String target,
-            @RequestParam("n_topics") int n_topics
+            @RequestBody ExperimentInfoVO experimentInfoVO
     ) throws IOException {
         Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
 
@@ -241,7 +241,13 @@ public class ScenarioController {
 //            return httpResult;
 //        }
 
+        long experimentID = experimentInfoVO.getExperimentID(); //实验id
+        long userId = Long.parseLong(userID);
+        List<NodeVO> nodeVOList = experimentInfoVO.getNodes();
+        List<NodePO> nodePOList = scenarioService.getNodePOListByNodeVOList(nodeVOList, experimentID);
+
         //=========哑变量=========//
+//        String nodeID = nodePOList;
         String dummyRes;
         List<String> dummyList;
         try {
@@ -250,60 +256,125 @@ public class ScenarioController {
             String[] dummyStrings = dummyRes.split("\\n");
             dummyList = dataService.stringArrayToList(dummyStrings);
 //            dummyList.remove(0);
+            Map<String, Object> dummyMapResToSave = new HashMap<>();
+            dummyMapResToSave.put("哑变量", dummyList);
+            //保存数据
+            String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "哑变量");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, dummyMapResToSave);
+
+            httpResult.put("哑变量", "运行成功并保存结果！");
 
         } catch (Exception e) {
             e.printStackTrace();
-            httpResult.clear();
-            httpResult.put("Exception: ", "dummy 异常");
+            httpResult.put("哑变量", "运行 dummy 异常，保存数据失败!");
             return httpResult;
         }
 
         file.delete(); //删除本地临时文件
 
+
         //=========分词 + 停词过滤=========//
-        List<List<List<String>>> partAndSwRes = scenarioService.executePartAndSw(dummyRes);
-        List<List<String>> partArray = partAndSwRes.get(0);//分词结果
-        List<List<String>> swArray = partAndSwRes.get(1);//停词结果
+
+        List<List<String>> partArray = new ArrayList<>();//分词结果
+        List<List<String>> swArray = new ArrayList<>();
+        try {
+            List<List<List<String>>> partAndSwRes = scenarioService.executePartAndSw(dummyRes);
+            partArray = partAndSwRes.get(0);//分词结果
+            swArray = partAndSwRes.get(1);//停词结果
+
+            Map<String, Object> partMapRes = new HashMap<>();
+            partMapRes.put("分词结果", partArray);
+            String nodeNo1 = scenarioService.getNodeNoFromPoList(nodePOList, "分词");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo1, "node", null, partMapRes);
+
+            Map<String, Object> swMapRes = new HashMap<>();
+            swMapRes.put("停词过滤", swArray);
+            String nodeNo2 = scenarioService.getNodeNoFromPoList(nodePOList, "停词过滤");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo2, "node", null, swMapRes);
+
+            httpResult.put("分词/停词过滤", "运行成功并保存结果！");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            httpResult.put("分词/停词过滤", "运行 分词/停词过滤 异常，保存数据失败!");
+            return httpResult;
+        }
+
 
         //=========labels_name==========//
         Map<Integer, String> labelNameMap = scenarioService.getLabelName(dummyRes);
+
+        // 新闻主题的数量
+        int n_topics = labelNameMap.size();
 
         //=========labels_true=========//
         List<Integer> trueLabels = scenarioService.getTrueLabels(dummyRes);
 
         //=========词频统计===========//
-        TextAnalysisExec.FrequencyStatistics frequencyStatistics = textAnalysisExec.new FrequencyStatistics();
-        Map<String, Object> kvMap = new HashMap<>();
-        List<Map<String, Object>> kvList = new ArrayList<>();
-        int index = 0;
-        for (List swString :
-                swArray) {
 
-            Map<String, Object> tmpMap = new HashMap<>();
-            tmpMap.put("id", index);
-            tmpMap.put("text", swString);
-            kvList.add(tmpMap);
-            index++;
+        try {
+            TextAnalysisExec.FrequencyStatistics frequencyStatistics = textAnalysisExec.new FrequencyStatistics();
+            Map<String, Object> kvMap = new HashMap<>();
+            List<Map<String, Object>> kvList = new ArrayList<>();
+            int index = 0;
+            for (List swString :
+                    swArray) {
+
+                Map<String, Object> tmpMap = new HashMap<>();
+                tmpMap.put("id", index);
+                tmpMap.put("text", swString);
+                kvList.add(tmpMap);
+                index++;
+            }
+            kvMap.put("news_list", kvList);
+            Map kvMapRes = frequencyStatistics.handleFeign(kvMap);
+
+            Map<String, Object> kvMapResToSave = new HashMap<>();
+            kvMapResToSave.put("词频统计", kvMapRes);
+            String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "词频统计");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, kvMapResToSave);
+
+            httpResult.put("词频统计", "运行成功并保存结果！");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            httpResult.put("词频统计", "运行 分词/停词过滤 异常，保存数据失败!");
+            return httpResult;
         }
-        kvMap.put("news_list", kvList);
-        Map kvMapRes = frequencyStatistics.handleFeign(kvMap);
+
 
         //=========LDA==========//
-        TextAnalysisExec.LDA lda = textAnalysisExec.new LDA();
-        Map<String, Object> ldaMap = new HashMap<>();
-        List<String> ldaList = new ArrayList<>();
-        for (List<String> textList :
-                swArray) {
-            String textStr = "";
-            for (String text :
-                    textList) {
-                textStr = textStr + " " + text;
+        Map<String, Object> ldaMapRes = new HashMap<>();
+        try {
+            TextAnalysisExec.LDA lda = textAnalysisExec.new LDA();
+            Map<String, Object> ldaMap = new HashMap<>();
+            List<String> ldaList = new ArrayList<>();
+            for (List<String> textList :
+                    swArray) {
+                String textStr = "";
+                for (String text :
+                        textList) {
+                    textStr = textStr + " " + text;
+                }
+                ldaList.add(textStr.trim());
             }
-            ldaList.add(textStr.trim());
+            ldaMap.put("corpus", ldaList);
+            ldaMap.put("n_topics", n_topics);
+            ldaMapRes = lda.handleFeign(ldaMap);
+
+            Map<String, Object> ldaMapResToSave = new HashMap<>();
+            ldaMapResToSave.put("lda", ldaMapRes);
+            String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "LDA");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, ldaMapResToSave);
+
+            httpResult.put("lda", "运行成功并保存结果！");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            httpResult.put("lda", "运行 lda 异常，保存数据失败!");
+            return httpResult;
         }
-        ldaMap.put("corpus", ldaList);
-        ldaMap.put("n_topics", n_topics);
-        Map<String, Object> ldaMapRes = lda.handleFeign(ldaMap);
+
 
         //===========labels_pred=============//
 
@@ -311,23 +382,30 @@ public class ScenarioController {
 
 
         //===========聚类评估=============//
-        EvaluationExec.ClusterEvaluation clusterEvaluation = evaluationExec.new ClusterEvaluation();
-        Map<String, Object> ceMap = new HashMap<>();
-//        List<Integer> trueList = new ArrayList<>(Arrays.asList(2, 0, 2, 2, 0, 1));
-//        List<Integer> predList = new ArrayList<>(Arrays.asList(0, 0, 2, 2, 0, 2));
-        ceMap.put("labels_true", trueLabels);
-        ceMap.put("labels_pred", preLabels);
-        Map ceMapRes = clusterEvaluation.handleFeign(ceMap);
 
-        httpResult.put("哑变量结果", dummyList);
-        httpResult.put("labelMap", labelNameMap);
-        httpResult.put("true_labels", trueLabels);
-        httpResult.put("pre_labels", preLabels);
-        httpResult.put("分词结果", partArray);
-        httpResult.put("停词过滤", swArray);
-        httpResult.put("词频统计", kvMapRes);//仅进行展示数据
-        httpResult.put("LDA结果", ldaMapRes);
-        httpResult.put("聚类结果", ceMapRes);
+        try {
+            EvaluationExec.ClusterEvaluation clusterEvaluation = evaluationExec.new ClusterEvaluation();
+            Map<String, Object> ceMap = new HashMap<>();
+            ceMap.put("labels_true", trueLabels);
+            ceMap.put("labels_pred", preLabels);
+            Map ceMapRes = clusterEvaluation.handleFeign(ceMap);
+
+
+            Map<String, Object> ceMapResToSave = new HashMap<>();
+            ceMapResToSave.put("聚类结果", ceMapRes);
+            String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "聚类评估");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, ceMapResToSave);
+
+            httpResult.put("聚类评估", "运行成功并保存结果！");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            httpResult.put("聚类评估", "运行 聚类评估 异常，保存数据失败!");
+            return httpResult;
+
+        }
+
         return httpResult;
     }
 

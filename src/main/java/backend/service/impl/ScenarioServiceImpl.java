@@ -233,8 +233,6 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataSet = dataSetRepository.save(dataSet);
     }
 
-
-
     @Override
     public void clearNodeDataByNodeNo(String nodeNo) {
         List<DataSet> dataSetList = dataSetRepository.findByNodeNo(nodeNo);
@@ -560,6 +558,18 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         return preLabels;
 
+    }
+
+    public String getNodeNoFromPoList(List<NodePO> nodePOList, String nodeName) {
+        String nodeNo = null;
+
+        for (NodePO nodePO :
+                nodePOList) {
+            if (nodePO.getName() == nodeName) {
+                nodeNo = nodePO.getNodeNo();
+            }
+        }
+        return nodeNo;
     }
 
 }

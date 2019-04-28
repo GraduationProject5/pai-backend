@@ -173,6 +173,8 @@ public interface ScenarioService {
 
     /////////////////////////////////// 运行场景相关  //////////////////////////////////////
 
+    String getNodeNoFromPoList(List<NodePO> nodePOList, String nodeName);
+
     /**
      * 执行分词和停词过滤
      *
@@ -182,7 +184,7 @@ public interface ScenarioService {
     List<List<List<String>>> executePartAndSw(String dummyRes);
 
     /**
-     * 获取分类
+     * 获取新闻分类
      *
      * @param dummyRes
      * @return
@@ -192,11 +194,21 @@ public interface ScenarioService {
     /**
      * 获取整个新闻列表的true_label
      *
+     *
+     * 获取文本的实际分类结果
+     *
      * @param dummyRes
      * @return
      */
     List<Integer> getTrueLabels(String dummyRes);
 
+
+    /**
+     * 获取文本的预测分类结果
+     *
+     * @param map
+     * @return
+     */
     List<Integer> getPreLabels(Map<String, Object> map);
 
 }
