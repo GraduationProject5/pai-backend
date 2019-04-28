@@ -1,0 +1,84 @@
+package backend.feign.feignclient;
+
+
+import backend.util.config.FeignConfig;
+import feign.Logger;
+import feign.codec.Encoder;
+import feign.form.FormEncoder;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.support.SpringEncoder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.Map;
+
+@Service
+@FeignClient(url = "${ml.feign.url}", name = "algorithm", configuration = FeignConfig.class)
+public interface PicClassificationFeign {
+
+    /**
+     * 创建实验目录
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping(value = "/create_exp/",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    Map<String, ?> create_exp(
+            Map<String, ?> map
+    );
+
+    /**
+     * 创建实验下训练类图片目录
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping(value = "/create_train_dir/",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    Map<String, ?> create_train_dir(
+            Map<String, ?> map
+    );
+
+    /**
+     * 上传图片
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping(value = "/upload_pics/")
+    Map<String, Object> upload_pics(
+            @RequestBody Map<String, Object> map
+    );
+
+    /**
+     * 进行训练
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping(value = "/pic_train/")
+    Map<String, Object> pic_train(
+            @RequestBody Map<String, Object> map
+    );
+
+
+    /**
+     * 获取训练结果
+     *
+     * @param map
+     * @return
+     */
+    @PostMapping(value = "/train_result/")
+    Map<String, Object> train_result(
+            @RequestBody Map<String, Object> map
+    );
+
+}

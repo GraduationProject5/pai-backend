@@ -125,4 +125,11 @@ public class UserServiceImpl implements UserService {
             return false ; // not exist
         }
     }
+
+    public String getUserNameByUserID(long userID) {
+
+        User tmp = userRepository.getOne(userID);
+
+        return tmp.getEmail();
+    }
 }
