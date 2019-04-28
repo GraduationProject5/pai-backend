@@ -18,13 +18,13 @@ public class IndegreeTable {
 
     Map<String,Integer> inDegreeMap;
 
-    List<NodePO> nodeList ;
+    List<NodePO> nodePOList ;
     List<EdgePO> edgePOList;
 
     List<String> resultOutputList;
 
     public IndegreeTable(List<NodePO> nodeList,List<EdgePO> edgePOList) {
-        this.nodeList = nodeList;
+        this.nodePOList = nodeList;
         this.edgePOList = edgePOList;
         initMap();
         topologicalSort();
@@ -46,7 +46,7 @@ public class IndegreeTable {
 
     void initMap(){
         this.inDegreeMap = new HashMap<>();
-        for(NodePO nodePO:this.nodeList){
+        for(NodePO nodePO:this.nodePOList){
             this.inDegreeMap.put(nodePO.getNodeNo(),0);
         }
         for(EdgePO edgePO : this.edgePOList) {
@@ -84,7 +84,7 @@ public class IndegreeTable {
             //输出列表,输出列表时才有count++
             this.resultOutputList.add(nodeNo);
             count++;
-            if(count>=nodeList.size()) {
+            if(count>=nodePOList.size()) {
                 break;
             }
 
