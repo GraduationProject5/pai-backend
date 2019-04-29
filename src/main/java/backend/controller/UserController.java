@@ -24,6 +24,21 @@ public class UserController {
     @Autowired
     private UserService userService ;
 
+    Cookie getTokenCookies(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        String token = null;
+        if(cookies == null){
+            return null;
+        }
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("token")){
+                return cookie;
+            }
+        }
+        return null;
+    }
+
+
     /**
         Web端调用后端需要登录的接口时在请求头中携带Token
      */
@@ -33,28 +48,26 @@ public class UserController {
                                     HttpSession session,
                                     @RequestParam("email") String email,
                                     @RequestParam("password") String password) {
-        Cookie[] cookies = httpServletRequest.getCookies();
+
         String token = null;
-        if(cookies != null){
-            for(Cookie cookie : cookies){
-                if(cookie.getName().equals("token")){
-                    token = cookie.getValue();
-                    if(token!=null){
-                        Map<String,Object> result = HttpResponseHelper.newResultMap();
-                        result.put("result",false);
-                        result.put("message","已登录");
-                        return result;
-                    }
-                }
-            }
+        Cookie cookie = getTokenCookies(httpServletRequest);
+        if(cookie != null){
+             token = cookie.getValue();
+             if(token!=null){
+                 Map<String,Object> result = HttpResponseHelper.newResultMap();
+                 result.put("result",false);
+                 result.put("message","已登录");
+                 return result;
+             }
         }
+
 
         Map<String,Object> map = userService.login(email,password);
         boolean loginSuccess = (boolean)map.get("result");
         if(loginSuccess) {
             token = (String) map.get("token");
-            Cookie cookie = new Cookie("token",token);
-            cookie.setMaxAge(3600);
+            cookie = new Cookie("token",token);
+            cookie.setMaxAge(-1);
             cookie.setPath("/");
             httpServletResponse.addCookie(cookie);
             session.setAttribute("token", token);
@@ -67,8 +80,14 @@ public class UserController {
     //todo 使用存疑
     @PostMapping(value = "/logout")
     public void logout(HttpSession session,
+                       HttpServletRequest httpServletRequest,
+                       HttpServletResponse httpServletResponse,
                        @SessionAttribute("token")String token ) {
-        userService.logout(token);
+        Cookie cookie = getTokenCookies(httpServletRequest);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        httpServletResponse.addCookie(cookie);
+//        userService.logout(token);
         session.removeAttribute("userID");
         session.removeAttribute("token");
     }
