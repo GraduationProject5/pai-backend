@@ -1,9 +1,6 @@
 package backend.controller;
 
-import backend.feign.feignservice.EvaluationExec;
-import backend.feign.feignservice.PretreatmentExec;
-import backend.feign.feignservice.TextAnalysisExec;
-import backend.feign.feignservice.UploadFileExec;
+import backend.feign.feignservice.*;
 import backend.model.bo.IndegreeTable;
 import backend.model.po.DataSet;
 import backend.model.po.EdgePO;
@@ -48,13 +45,21 @@ public class ScenarioController {
     TextAnalysisExec textAnalysisExec;
     @Autowired
     EvaluationExec evaluationExec;
+    @Autowired
+    PicClassificationExec picClassificationExec;
+
 
     //创建实验
     @PostMapping(value = "/createExperiment")
     public Map<String, Object> createExperiment(
             @SessionAttribute("userID") String userID,
             @RequestParam("experimentName") String experimentName,
-            @RequestParam("description") String description) {
+            @RequestParam(value = "description", required = false) String description) {
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+        System.out.println("================");
+        System.out.println(picClassificationExec.createExp(userName, experimentName));
+
         return dataService.createExperiment(Long.parseLong(userID), experimentName, description);
     }
 
@@ -251,26 +256,28 @@ public class ScenarioController {
         String dummyRes;
         List<String> dummyList;
         try {
+
             dummyRes = uploadFileExec.dummy(file, target);
 
             String[] dummyStrings = dummyRes.split("\\n");
             dummyList = dataService.stringArrayToList(dummyStrings);
+
 //            dummyList.remove(0);
             Map<String, Object> dummyMapResToSave = new HashMap<>();
             dummyMapResToSave.put("哑变量", dummyList);
             //保存数据
+
             String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "哑变量");
             scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, dummyMapResToSave);
-
             httpResult.put("哑变量", "运行成功并保存结果！");
+
+//            file.delete(); //删除本地临时文件
 
         } catch (Exception e) {
             e.printStackTrace();
             httpResult.put("哑变量", "运行 dummy 异常，保存数据失败!");
             return httpResult;
         }
-
-        file.delete(); //删除本地临时文件
 
 
         //=========分词 + 停词过滤=========//
@@ -302,13 +309,16 @@ public class ScenarioController {
 
 
         //=========labels_name==========//
-        Map<Integer, String> labelNameMap = scenarioService.getLabelName(dummyRes);
+        Map<String, Object> labelNameMap = scenarioService.getLabelName(dummyRes);
 
         // 新闻主题的数量
         int n_topics = labelNameMap.size();
 
         //=========labels_true=========//
         List<Integer> trueLabels = scenarioService.getTrueLabels(dummyRes);
+
+        Map<String, Object> trueLabelsMap = new HashMap<>();
+        trueLabelsMap.put("true_labels", trueLabels);
 
         //=========词频统计===========//
 
@@ -406,6 +416,19 @@ public class ScenarioController {
 
         }
 
+        scenarioService.saveComputingResult(userId, experimentID, "labels_name", "node", null, labelNameMap);
+        scenarioService.saveComputingResult(userId, experimentID, "true_labels", "node", null, trueLabelsMap);
+
+        return httpResult;
+    }
+
+
+    //运行图片分类
+    @PostMapping(value = "/executePicClassification")
+    public Map<String, Object> executePicClassification(
+            @SessionAttribute("userID") String userID
+    ) {
+        Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
         return httpResult;
     }
 

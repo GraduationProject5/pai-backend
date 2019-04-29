@@ -1,8 +1,10 @@
 package backend.controller;
 
+import backend.feign.feignservice.PicClassificationExec;
 import backend.model.po.TablePO;
 import backend.model.vo.TableVO;
 import backend.service.DataService;
+import backend.service.UserService;
 import backend.util.config.DatabaseProperties;
 import backend.util.file.CsvImportUtils;
 import backend.util.json.HttpResponseHelper;
@@ -25,6 +27,10 @@ public class DataController {
 
     @Autowired
     private DataService dataService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    PicClassificationExec picClassificationExec;
 
 //    private Map newResultMap = HttpResponseHelper.newResultMap();
 //    newResultMap.clear();
@@ -150,6 +156,31 @@ public class DataController {
             @RequestParam("tableID") Long tableID
     ) {
         dataService.dropUserTable(Long.parseLong(userID), tableID);
+    }
+
+    //创建训练集文件夹
+    @PostMapping(value = "/createTrainDir")
+    public Map<String, ?> createTrainDir(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("expName") String expName,
+            //文件夹名称，比如bird/cat
+            @RequestParam("dirName") String dirName
+    ) {
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+        return picClassificationExec.createTrainDir(userName, expName, dirName);
+    }
+
+    //上传图片
+    @PostMapping(value = "/uploadPics")
+    public Map<String, ?> uploadPics(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("expName") String expName,
+            //文件夹名称，比如bird/cat
+            @RequestParam("dirName") String dirName
+    ) {
+
+
+        return null;
     }
 
 }

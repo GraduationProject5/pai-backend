@@ -189,7 +189,7 @@ public interface ScenarioService {
      * @param dummyRes
      * @return
      */
-    Map<Integer, String> getLabelName(String dummyRes);
+    Map<String, Object> getLabelName(String dummyRes);
 
     /**
      * 获取整个新闻列表的true_label

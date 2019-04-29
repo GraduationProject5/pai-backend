@@ -230,7 +230,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         dataResult.setDataSetID(dataSetID);
         dataResult.setExperimentID(experimentID);
         dataResult.setData(data);
-        dataSet = dataSetRepository.save(dataSet);
+        dataResult = dataResultRepository.save(dataResult);
     }
 
     @Override
@@ -488,9 +488,9 @@ public class ScenarioServiceImpl implements ScenarioService {
         return res;
     }
 
-    public Map<Integer, String> getLabelName(String dummyRes) {
+    public Map<String, Object> getLabelName(String dummyRes) {
 
-        Map<Integer, String> labelMap = new HashMap<>();
+        Map<String, Object> labelMap = new HashMap<>();
 
         String label = dummyRes.split("\\n")[0];
         String[] strings = label.split(",");
@@ -500,7 +500,7 @@ public class ScenarioServiceImpl implements ScenarioService {
         int index = 1;
         for (String str :
                 stringList) {
-            labelMap.put(index, str);
+            labelMap.put(str, index);
             index++;
         }
 
@@ -510,8 +510,13 @@ public class ScenarioServiceImpl implements ScenarioService {
     public List<Integer> getTrueLabels(String dummyRes) {
         List<Integer> trueLabels = new ArrayList<>();
 
-        String[] dummyResSplit = dummyRes.split("\\n");
+        String[] dummyResSplit = dummyRes.split("\n");
         List<String> dummyResList = dataService.stringArrayToList(dummyResSplit);
+        System.out.println(dummyResList.get(0));
+        System.out.println(dummyResList.get(1));
+        System.out.println(dummyResList.get(2));
+        System.out.println(dummyResList.get(3));
+        System.out.println(dummyResList.get(4));
         dummyResList.remove(0);//删除第一行
         for (String string :
                 dummyResList) {
@@ -529,6 +534,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     public int findLabelPosition(List<String> stringList) {
 
         int location = 1;
+
+        System.out.println(stringList);
 
         for (String string :
                 stringList) {
@@ -565,7 +572,9 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         for (NodePO nodePO :
                 nodePOList) {
-            if (nodePO.getName() == nodeName) {
+
+            if (nodePO.getName().equals(nodeName)) {
+
                 nodeNo = nodePO.getNodeNo();
             }
         }

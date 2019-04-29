@@ -259,7 +259,7 @@ public class DatabaseHelper {
         System.out.println(path);
         try {
 
-            String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
+            String insertSql = "LOAD DATA LOCAL INFILE \'" + path + "\' INTO TABLE " + "user" + userID + "_" + tableName + " FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n';";
 
             System.out.println(insertSql);
             Statement stmt = con.createStatement();
@@ -278,7 +278,7 @@ public class DatabaseHelper {
     public Boolean exportCsv(String userID, String tableName, String exportFileName) {
 
         try {
-            String exportSql = "SELECT * FROM user" + userID + "_" + tableName + " INTO OUTFILE \'" + exportFileName + "\' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n'; ";
+            String exportSql = "SELECT * FROM user" + userID + "_" + tableName + " INTO OUTFILE \'" + exportFileName + "\' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\r\\n'; ";
             System.out.println(exportSql);
             Statement stmt = con.createStatement();
             stmt.executeQuery(exportSql);

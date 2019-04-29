@@ -51,4 +51,12 @@ public interface UserService {
      * @return
      */
     Long getUserIDByToken(String token);
+
+    /**
+     * 根据id查找用户名
+     *
+     * @param userID
+     * @return
+     */
+    String getUserNameByUserID(long userID);
 }
