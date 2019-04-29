@@ -11,6 +11,7 @@ import sun.misc.BASE64Encoder;
 import sun.rmi.runtime.Log;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.Cookie;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.ArrayList;

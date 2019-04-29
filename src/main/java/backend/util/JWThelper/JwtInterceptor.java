@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -31,25 +32,27 @@ public class JwtInterceptor implements HandlerInterceptor {
                              Object o) throws Exception {
 
         httpServletResponse.setCharacterEncoding("utf-8");
-        String requestURI = httpServletRequest.getRequestURI();
 
+        Cookie[] cookies = httpServletRequest.getCookies();
+        String token = null;
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals("token")){
+                     token = cookie.getValue();
+                }
+            }
+        }
 
-
-        String sessionToken = (String)httpServletRequest.getSession().getAttribute("token");
-
-        if(sessionToken==null){
+        if(token==null){
             Map<String,Object> map = HttpResponseHelper.newResultMap();
             map.put("result",false);
             map.put("message","缺少token，无法验证");
-//            String str="{'result':false,'message':'缺少token，无法验证','data':null}";
             dealErrorReturn(httpServletRequest,httpServletResponse,map);
             return false;
         }
-//        System.out.println(sessionToken+"    !!!");
-//        System.out.println("size:"+JwtUtil.loginID_List.size());
-
-        if(!JwtUtil.existToken(sessionToken)) {
-//            String str="{'result':false,'message':'不存在这个token','data':null}";
+        String userID = JwtUtil.getUserID(token);
+        System.out.println(userID);
+        if(Integer.parseInt(userID)<=0) {
             Map<String,Object> map = HttpResponseHelper.newResultMap();
             map.put("result",false);
             map.put("message","不存在这个token");
@@ -58,6 +61,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         }
         return true;
     }
+//        String sessionToken = (String)httpServletRequest.getSession().getAttribute("token");
+//        if(sessionToken==null){
+//            Map<String,Object> map = HttpResponseHelper.newResultMap();
+//            map.put("result",false);
+//            map.put("message","缺少token，无法验证");
+////            String str="{'result':false,'message':'缺少token，无法验证','data':null}";
+//            dealErrorReturn(httpServletRequest,httpServletResponse,map);
+//            return false;
+//        }
+//        System.out.println(sessionToken+"    !!!");
+//        System.out.println("size:"+JwtUtil.loginID_List.size());
+//        if(!JwtUtil.existToken(sessionToken)) {
+//            Map<String,Object> map = HttpResponseHelper.newResultMap();
+//            map.put("result",false);
+//            map.put("message","不存在这个token");
+//            dealErrorReturn(httpServletRequest,httpServletResponse,map);
+//            return false;
+//        }
+
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest,

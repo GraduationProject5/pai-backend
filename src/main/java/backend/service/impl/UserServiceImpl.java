@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmailAndPassword(email,password) ;
 
         if( null == user ) {
-
             if( checkExist(email) ) {
                 token = LoginProperties.Code_WrongPassword;  //-1
             }
@@ -48,18 +47,19 @@ public class UserServiceImpl implements UserService {
             return result;
         }
 
-        boolean hasLogin = JwtUtil.existUserID(user.getUserID()+"");
 
-        if(hasLogin){
-            token = LoginProperties.Code_HasLogin;
-            result.put("result",false);
-            result.put("message",token);
-            return result;
-        }
+//        boolean hasLogin = JwtUtil.existUserID(user.getUserID()+"");
+//        if(hasLogin){
+//            token = LoginProperties.Code_HasLogin;
+//            result.put("result",false);
+//            result.put("message",token);
+//            return result;
+//        }
 
         token = JwtUtil.generateToken(user.getUserID()+"","PAI-back end","user");
         //每次都不一样.!
-        JwtUtil.loginID_List.add(user.getUserID()+"");
+//        JwtUtil.loginID_List.add(user.getUserID()+"");
+
 
         result.put("result",true);
         result.put("token",token) ;
@@ -77,7 +77,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public void logout(String token) {
-        JwtUtil.removeTokenFromList(token);
+
+
+//        JwtUtil.removeTokenFromList(token);
     }
 
     public Map<String,Object> register(String email, String password) {
