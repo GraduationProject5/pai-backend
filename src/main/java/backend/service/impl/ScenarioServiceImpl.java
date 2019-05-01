@@ -272,18 +272,18 @@ public class ScenarioServiceImpl implements ScenarioService {
         Map<String, Object> results = HttpResponseHelper.newResultMap();
         results.put("id", nodeNo);
         results.put("type", dataSet.getType());
-        List<Map<String, Object>> dataParamsMapList = new ArrayList<>();
-        for (DataParam dp : dataParamList) {
-            dataParamsMapList.add(dp.getParam());
-        }
-        results.put("paras", dataParamsMapList);
+//        List<Map<String, Object>> dataParamsMapList = new ArrayList<>();
+//        for (DataParam dp : dataParamList) {
+//            dataParamsMapList.add(dp.getParam());
+//        }
+        results.put("paras", ((Map) dataParamList.get(0).getParam()).get("paras"));
 
         Map<String, Object> data = HttpResponseHelper.newResultMap();
-        List<Map<String, Object>> dataResultsMapList = new ArrayList<>();
-        for (DataResult dr : dataResultList) {
-            dataResultsMapList.add(dr.getData());
-        }
-        results.put("data", dataResultsMapList);
+//        List<Map<String, Object>> dataResultsMapList = new ArrayList<>();
+//        for (DataResult dr : dataResultList) {
+//            dataResultsMapList.add(dr.getData());
+//        }
+        results.put("data", ((Map) dataResultList.get(0).getData()).get("data"));
 
         result.put("results", results);
         return result;
@@ -592,7 +592,7 @@ public class ScenarioServiceImpl implements ScenarioService {
                 params) {
             Map<String, Object> dummyParam = new HashMap<>();//一个
             dummyParam.put("title", tmp);
-            dummyParam.put("dataindex", tmp);
+            dummyParam.put("dataIndex", tmp);
             dummyParam.put("key", tmp);
 
             dummyParamList.add(dummyParam);

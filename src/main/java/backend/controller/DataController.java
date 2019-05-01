@@ -26,7 +26,7 @@ import java.util.Map;
 public class DataController {
 
     @Autowired
-    private DataService dataService;
+    DataService dataService;
     @Autowired
     UserService userService;
     @Autowired
