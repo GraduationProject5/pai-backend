@@ -104,6 +104,13 @@
             <artifactId>jstl</artifactId>
         </dependency>
 
+        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--        </dependency>-->
+
+
         <!--热部署的支持-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -131,10 +138,10 @@
 
         <!--这个JSON没用到-->
         <!--<dependency>-->
-            <!--<groupId>net.sf.json-lib</groupId>-->
-            <!--<artifactId>json-lib</artifactId>-->
-            <!--<version>2.4</version>-->
-            <!--<classifier>jdk15</classifier>-->
+        <!--<groupId>net.sf.json-lib</groupId>-->
+        <!--<artifactId>json-lib</artifactId>-->
+        <!--<version>2.4</version>-->
+        <!--<classifier>jdk15</classifier>-->
         <!--</dependency>-->
 
         <!--邮箱发送-->
@@ -195,7 +202,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.47</version>
         </dependency>
-
 
 
         <dependency>
@@ -259,6 +265,44 @@
                     </resources>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <installDirectory>target</installDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v10.11.0</nodeVersion>
+                            <npmVersion>6.4.1</npmVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>webpack build</id>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- end::frontend-maven-plugin[] -->
+
         </plugins>
     </build>
 </project>

@@ -47,7 +47,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Autowired
     DataParamRepository dataParamRepository;
     @Autowired
-    DataResultRepository dataResultRepository ;
+    DataResultRepository dataResultRepository;
     @Autowired
     TextAnalysisExec textAnalysisExec;
 
@@ -63,7 +63,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     @Override
     public String findAlgorithmNameByNodeID(Long nodeID) {
-        NodePO nodePO = nodePORepository.findByNodeID(nodeID) ;
+        NodePO nodePO = nodePORepository.findByNodeID(nodeID);
         int componentID = nodePO.getComponentID();
         Component component = componentRepository.findByComponentID(componentID);
         String algorithmName = component.getFuncName();
@@ -74,15 +74,15 @@ public class ScenarioServiceImpl implements ScenarioService {
     public boolean saveScenario(Long experimentID,
                                 List<NodeVO> nodeVOList,
                                 List<EdgeVO> edgeVOList) {
-        if(nodeVOList!=null)
+        if (nodeVOList != null)
             nodeVOList = JSONHelper.toNodeVOList(nodeVOList);
-        if(edgeVOList!=null)
+        if (edgeVOList != null)
             edgeVOList = JSONHelper.toEdgeVOList(edgeVOList);
 
         //转换没问题，清空场景
         clearScenario(experimentID);
 
-        if(nodeVOList!=null) {
+        if (nodeVOList != null) {
             for (NodeVO nodeVO : nodeVOList) {
                 NodePO nodePO = new NodePO
                         (nodeVO, getComponentIDByComponentName(nodeVO.label), experimentID);
@@ -92,7 +92,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 //            Long nodeID = nodePO.getNodeID();
             }
         }
-        if(edgeVOList!=null) {
+        if (edgeVOList != null) {
             for (EdgeVO edgeVO : edgeVOList) {
                 EdgePO edgePO = new EdgePO
                         (edgeVO, experimentID);
@@ -103,8 +103,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public Map<String,Object> getScenario(Long experimentID) {
-        Map<String,Object> result = HttpResponseHelper.newResultMap();
+    public Map<String, Object> getScenario(Long experimentID) {
+        Map<String, Object> result = HttpResponseHelper.newResultMap();
         Experiment experiment = experimentRepository.findByExperimentID(experimentID);
         List<NodePO> nodePOList = nodePORepository.findByExperimentID(experimentID);
         List<EdgePO> edgePOList = edgePORepository.findByExperimentID(experimentID);
@@ -112,25 +112,25 @@ public class ScenarioServiceImpl implements ScenarioService {
         List<DataParam> dataParamList = dataParamRepository.findByExperimentID(experimentID);
         List<DataResult> dataResultList = dataResultRepository.findByExperimentID(experimentID);
 
-        result.put("experimentID",experimentID);
-        result.put("experimentName",experiment.getExperimentName());
-        result.put("description",experiment.getDescription());
+        result.put("experimentID", experimentID);
+        result.put("experimentName", experiment.getExperimentName());
+        result.put("description", experiment.getDescription());
 
         List<NodeVO> nodeVOList = new ArrayList<>();
         List<EdgeVO> edgeVOList = new ArrayList<>();
-        for(NodePO nodePO:nodePOList){
+        for (NodePO nodePO : nodePOList) {
             nodeVOList.add(nodePO.toNodeVO());
         }
-        for(EdgePO edgePO:edgePOList){
+        for (EdgePO edgePO : edgePOList) {
             edgeVOList.add(edgePO.toEdgeVO());
         }
 
-        result.put("nodes",nodeVOList);
-        result.put("edges",edgeVOList);
+        result.put("nodes", nodeVOList);
+        result.put("edges", edgeVOList);
 
-        result.put("dataset",dataSetList);
-        result.put("dataparams",dataParamList);
-        result.put("dataresults",dataResultList);
+        result.put("dataset", dataSetList);
+        result.put("dataparams", dataParamList);
+        result.put("dataresults", dataResultList);
         return result;
     }
 
@@ -167,50 +167,49 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public List<Map<String,Object>> getSectionsAndComponents() {
+    public List<Map<String, Object>> getSectionsAndComponents() {
         List<R_Section_Component> r_section_componentList = getRelationForSectionsAndComponents();
-        List<Map<String,Object>> sectionList = new ArrayList<>();   //返回结果
+        List<Map<String, Object>> sectionList = new ArrayList<>();   //返回结果
 
-        Map<Integer,List<Component>> sectionMap = new HashMap<>();  //用来存储已经添加过的SectionID和已添加的Component
+        Map<Integer, List<Component>> sectionMap = new HashMap<>();  //用来存储已经添加过的SectionID和已添加的Component
 
-        for(R_Section_Component r_section_component:r_section_componentList) {
+        for (R_Section_Component r_section_component : r_section_componentList) {
             int sectionID = r_section_component.getSectionID();
             int componentID = r_section_component.getComponentID();
 
             Section section;
             Component component = componentRepository.findByComponentID(componentID);
 
-            if(sectionMap.containsKey(sectionID)){
+            if (sectionMap.containsKey(sectionID)) {
                 //找到节点
                 List<Component> componentList = sectionMap.get(sectionID);
                 componentList.add(component);
-                sectionMap.put(sectionID,componentList);
-            }
-            else {
+                sectionMap.put(sectionID, componentList);
+            } else {
                 section = sectionRepository.findBySectionID(sectionID);
                 //创建新的节点
-                Map<String,Object> subNode = HttpResponseHelper.newResultMap();
-                subNode.put("sectionID",sectionID);
-                subNode.put("sectionName",section.getSectionName());
+                Map<String, Object> subNode = HttpResponseHelper.newResultMap();
+                subNode.put("sectionID", sectionID);
+                subNode.put("sectionName", section.getSectionName());
                 sectionList.add(subNode);
 
                 List<Component> componentList = new ArrayList<>();
                 componentList.add(component);
-                sectionMap.put(sectionID,componentList);
+                sectionMap.put(sectionID, componentList);
             }
         }
-        for (Map<String,Object> map:sectionList){
-            int sectionID = (int)map.get("sectionID");
+        for (Map<String, Object> map : sectionList) {
+            int sectionID = (int) map.get("sectionID");
             List<Component> list = sectionMap.get(sectionID);
-            map.put("components",list);
+            map.put("components", list);
         }
 
-       return sectionList;
+        return sectionList;
     }
 
     @Override
-    public void saveComputingResult(Long userID, Long experimentID,String nodeNo, String type,
-                                    Map<String,Object> params,Map<String,Object> data) {
+    public void saveComputingResult(Long userID, Long experimentID, String nodeNo, String type,
+                                    Map<String, Object> params, Map<String, Object> data) {
         clearNodeDataByNodeNo(nodeNo);
 
         DataSet dataSet = new DataSet();
@@ -236,7 +235,7 @@ public class ScenarioServiceImpl implements ScenarioService {
     @Override
     public void clearNodeDataByNodeNo(String nodeNo) {
         List<DataSet> dataSetList = dataSetRepository.findByNodeNo(nodeNo);
-        for(DataSet dataSet : dataSetList){
+        for (DataSet dataSet : dataSetList) {
             Long dataSetID = dataSet.getDataSetID();
             dataParamRepository.deleteAllByDataSetID(dataSetID);
             dataResultRepository.deleteAllByDataSetID(dataSetID);
@@ -251,14 +250,14 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public Map<String, Object> getDataSet(Long userID,Long experimentID, String nodeNo) {
-        DataSet dataSet =  dataSetRepository.findByUserIDAndExperimentIDAndNodeNo(userID,experimentID,nodeNo);
+    public Map<String, Object> getDataSet(Long userID, Long experimentID, String nodeNo) {
+        DataSet dataSet = dataSetRepository.findByUserIDAndExperimentIDAndNodeNo(userID, experimentID, nodeNo);
         Map<String, Object> result = HttpResponseHelper.newResultMap();
         //检查是否存在
-        if(dataSet==null){
-            result.put("result",false);
-            result.put("message","can not find DataSet");
-            return  result;
+        if (dataSet == null) {
+            result.put("result", false);
+            result.put("message", "can not find DataSet");
+            return result;
         }
 
         long dataSetID = dataSet.getDataSetID();
@@ -266,27 +265,27 @@ public class ScenarioServiceImpl implements ScenarioService {
         List<DataResult> dataResultList = dataResultRepository.findByDataSetID(dataSetID);
 
 
-        result.put("id",dataSetID) ; //实验结果ID
-        result.put("experimentId",experimentID) ;
+        result.put("id", dataSetID); //实验结果ID
+        result.put("experimentId", experimentID);
 
 
         Map<String, Object> results = HttpResponseHelper.newResultMap();
-        results.put("id",nodeNo);
-        results.put("type",dataSet.getType());
-        List<Map<String,Object>> dataParamsMapList = new ArrayList<>();
-        for(DataParam dp:dataParamList){
+        results.put("id", nodeNo);
+        results.put("type", dataSet.getType());
+        List<Map<String, Object>> dataParamsMapList = new ArrayList<>();
+        for (DataParam dp : dataParamList) {
             dataParamsMapList.add(dp.getParam());
         }
-        results.put("paras",dataParamsMapList);
+        results.put("paras", dataParamsMapList);
 
         Map<String, Object> data = HttpResponseHelper.newResultMap();
-        List<Map<String,Object>> dataResultsMapList = new ArrayList<>();
-        for(DataResult dr:dataResultList){
+        List<Map<String, Object>> dataResultsMapList = new ArrayList<>();
+        for (DataResult dr : dataResultList) {
             dataResultsMapList.add(dr.getData());
         }
-        results.put("data",dataResultsMapList);
+        results.put("data", dataResultsMapList);
 
-        result.put("results",results);
+        result.put("results", results);
         return result;
 //        result.put("dataSet",dataSet);
 //        result.put("dataParams",dataParamList);
@@ -295,98 +294,99 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
 
-    /** 根据算法名字（算法组件的简写）和对应的输入参数调用算法
+    /**
+     * 根据算法名字（算法组件的简写）和对应的输入参数调用算法
      *
      * @param algorithmName
      * @param input
      * @return
      */
     @Override
-    public Map<String,Object> callAlgorithm(String algorithmName,Map<String,Object> input) {
+    public Map<String, Object> callAlgorithm(String algorithmName, Map<String, Object> input) {
 
-        Map result = null ;
+        Map result = null;
 
         switch (algorithmName) {
 
             //case in EvaluationService
-            case "ce":{
+            case "ce": {
                 result = evaluationService.cluster_evaluation(input);
                 break;
             }
-            case "re":{
+            case "re": {
                 result = evaluationService.regression_evaluation(input);
                 break;
             }
-            case "tcd":{
+            case "tcd": {
                 result = evaluationService.tcd(input);
                 break;
             }
-            case "mcd":{
+            case "mcd": {
                 result = evaluationService.mcd(input);
                 break;
             }
-            case "cm":{
+            case "cm": {
                 result = evaluationService.confusion_matrix(input);
                 break;
             }
 
             //case in MLServiceImpl
-            case "svm":{
+            case "svm": {
                 result = mlService.support_vector_machine(input);
                 break;
             }
-            case "lr":{
+            case "lr": {
                 result = mlService.logic_regression(input);
                 break;
             }
-            case "GBDT":{
+            case "GBDT": {
                 result = mlService.gbdt_binary_classification(input);
                 break;
             }
-            case "knn":{
+            case "knn": {
                 result = mlService.k_nearest_neighbors(input);
                 break;
             }
-            case "rf":{
+            case "rf": {
                 result = mlService.random_forest(input);
                 break;
             }
-            case "nb":{
+            case "nb": {
                 result = mlService.naive_bayes(input);
                 break;
             }
-            case "linear":{
+            case "linear": {
                 result = mlService.linear_regression(input);
                 break;
             }
-            case "GBDT_regression":{
+            case "GBDT_regression": {
                 result = mlService.gbdt_regression(input);
                 break;
             }
-            case "KMeans":{
+            case "KMeans": {
                 result = mlService.k_means_cluster(input);
                 break;
             }
 
             //case in TextAnalysisService
-            case "par":{
+            case "par": {
 
             }
 
-            case "sw":{
+            case "sw": {
 
             }
 
-            case "kv":{
+            case "kv": {
 
             }
 
-            case "lda":{
+            case "lda": {
 
             }
 
             default: {
-                return null ;
+                return null;
             }
 
         }
@@ -394,22 +394,21 @@ public class ScenarioServiceImpl implements ScenarioService {
         return result;
     }
 
-    public int getComponentIDByFuncName(String funcName){
+    public int getComponentIDByFuncName(String funcName) {
         Component component = componentRepository.findByFuncName(funcName);
-        if(component==null)
+        if (component == null)
             return -1;
         return component.getComponentID();
     }
 
-    public int getComponentIDByComponentName(String componentName){
+    public int getComponentIDByComponentName(String componentName) {
         Component component = componentRepository.findByComponentName(componentName);
-        if(component==null)
+        if (component == null)
             return -1;
         return component.getComponentID();
     }
 
     public void executeLine(List<String> funLine) {
-
 
 
     }
@@ -581,4 +580,255 @@ public class ScenarioServiceImpl implements ScenarioService {
         return nodeNo;
     }
 
+    public Map<String, Object> setDummyParams(List<String> dummyList) {
+
+        Map<String, Object> dummyParams = new HashMap<>();//所有的
+
+        List<Map<String, Object>> dummyParamList = new ArrayList<>();//存一个的链表
+
+        String[] params = dummyList.get(0).split(",");
+
+        for (String tmp :
+                params) {
+            Map<String, Object> dummyParam = new HashMap<>();//一个
+            dummyParam.put("title", tmp);
+            dummyParam.put("dataindex", tmp);
+            dummyParam.put("key", tmp);
+
+            dummyParamList.add(dummyParam);
+        }
+
+        dummyParams.put("paras", dummyParamList);
+
+        return dummyParams;
+    }
+
+    public Map<String, Object> setDummyData(List<String> dummyList) {
+
+        Map<String, Object> dummyData = new HashMap<>();
+
+        List<Map<String, Object>> dummyDataList = new ArrayList<>();
+
+//        Map<String, Object> dummySingleData = new HashMap<>();
+
+        String[] columns = dummyList.get(0).split(",");
+
+        //去除首行，剩下data
+        dummyList.remove(0);
+
+        //插入数据
+        for (int i = 0; i < dummyList.size(); i++) {
+            String dummyStr = dummyList.get(i);
+            String[] data = dummyStr.split(",");
+
+            Map<String, Object> dummySingleData = new HashMap<>();
+            dummySingleData.put("id", i);
+
+            for (int j = 0; j < data.length; j++) {
+                dummySingleData.put(columns[j], data[j]);
+            }
+
+            dummyDataList.add(dummySingleData);
+        }
+
+        dummyData.put("data", dummyDataList);
+
+        return dummyData;
+    }
+
+    public Map<String, Object> setParams(List<String> params) {
+
+        Map<String, Object> partParams = new HashMap<>();
+
+        List<Map> partParamsList = new ArrayList<>();
+
+        for (String param :
+                params) {
+            Map<String, Object> partParam = new HashMap<>();
+            partParam.put("title", param);
+            partParam.put("dataIndex", param.toLowerCase());
+            partParam.put("key", param.toLowerCase());
+
+            partParamsList.add(partParam);
+        }
+
+
+        partParams.put("paras", partParamsList);
+
+        return partParams;
+    }
+
+    public Map<String, Object> setPartData(List<List<String>> partArray) {
+
+        Map<String, Object> partData = new HashMap<>();
+
+        List<Map<String, Object>> partDataList = new ArrayList<>();
+
+        for (int i = 0; i < partArray.size(); i++) {
+            Map<String, Object> partSingleData = new HashMap<>();
+            List<String> partStr = partArray.get(i);
+            String tmp = listToString(partStr);
+            partSingleData.put("id", i);
+            partSingleData.put("seg_list", tmp);
+            partDataList.add(partSingleData);
+        }
+
+        partData.put("data", partDataList);
+
+        return partData;
+
+    }
+
+    public Map<String, Object> setSwData(List<List<String>> partArray) {
+
+        Map<String, Object> partData = new HashMap<>();
+
+        List<Map<String, Object>> partDataList = new ArrayList<>();
+
+        for (int i = 0; i < partArray.size(); i++) {
+            Map<String, Object> partSingleData = new HashMap<>();
+            List<String> partStr = partArray.get(i);
+            String tmp = listToString(partStr);
+            partSingleData.put("id", i);
+            partSingleData.put("stopped_tokens", tmp);
+            partDataList.add(partSingleData);
+        }
+
+        partData.put("data", partDataList);
+
+        return partData;
+
+    }
+
+    public static String listToString(List<String> list) {
+
+        if (list == null) {
+            return null;
+        }
+
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        //第一个前面不拼接","
+        for (String string : list) {
+            if (first) {
+                first = false;
+            } else {
+                result.append(",");
+            }
+            result.append(string);
+        }
+        return result.toString();
+    }
+
+    public Map<String, Object> setKvParams(Map<String, Object> kvMapRes) {
+        Map<String, Object> kvParams = new HashMap<>();
+
+        //kvs
+        Map<String, Object> kvs = (Map) kvMapRes.get("kvs");
+
+        List<Map<String, Object>> kvParamList = new ArrayList<>();
+
+        Map<String, Object> tmp = new HashMap<>();
+        tmp.put("title", "Word_list");
+        tmp.put("dataIndex", "word_list");
+        tmp.put("key", "word_list");
+
+        kvParamList.add(tmp);
+
+        for (int i = 0; i < kvs.size(); i++) {
+            Map<String, Object> indexMap = new HashMap<>();
+            indexMap.put("title", String.valueOf(i));
+            indexMap.put("dataIndex", String.valueOf(i));
+            indexMap.put("key", String.valueOf(i));
+            kvParamList.add(indexMap);
+        }
+
+
+        kvParams.put("paras", kvParamList);
+//        Map<String, Object> kvSingleParams = new HashMap<>();
+
+        return kvParams;
+
+    }
+
+    public Map<String, Object> setKvData(Map<String, Object> kvMapRes) {
+
+        Map<String, Object> kvData = new HashMap<>();
+
+        //kvs
+        Map<String, Object> kvs = (Map) kvMapRes.get("kvs");
+
+        //kvs长度
+        int kvsLength = kvs.size();
+
+        //word_list
+        List<String> wordList = (List<String>) kvMapRes.get("word_list");
+
+        //wordList 长度
+        int wordListLength = wordList.size();
+
+        List<Map<String, Object>> kvDataList = new ArrayList<>();
+
+        for (int i = 0; i < wordListLength; i++) {
+            Map<String, Object> kvSingleData = new HashMap<>();
+            kvSingleData.put("id", i);
+            kvSingleData.put("word_list", wordList.get(i));
+            for (int j = 0; j < kvsLength; j++) {
+                // 一个kv
+                Map<String, Integer> singleKvs = (Map<String, Integer>) kvs.get(String.valueOf(j));
+                if (singleKvs.get(String.valueOf(i)) != null) {
+                    kvSingleData.put(String.valueOf(j), String.valueOf(singleKvs.get(String.valueOf(i))));
+                } else {
+                    kvSingleData.put(String.valueOf(j), "0");
+                }
+            }
+            kvDataList.add(kvSingleData);
+        }
+
+        kvData.put("data", kvDataList);
+
+        return kvData;
+    }
+
+    public Map<String, Object> setLdaData(Map<String, Object> ldaMapRes) {
+        Map<String, Object> ldaData = new HashMap<>();
+
+        List<List<Double>> ldaLists = (List<List<Double>>) ldaMapRes.get("docres");
+
+        List<Map<String, Object>> ldaDataList = new ArrayList<>();
+
+        for (int i = 0; i < ldaLists.size(); i++) {
+            Map<String, Object> ldaSingleData = new HashMap<>();
+            ldaSingleData.put("id", String.valueOf(i));
+            ldaSingleData.put("docres", ldaLists.get(i));
+            ldaDataList.add(ldaSingleData);
+        }
+
+        ldaData.put("data", ldaDataList);
+
+        return ldaData;
+    }
+
+    public Map<String, Object> setCeData(List<String> ceParamsList, Map<String, Object> ceMapRes) {
+        Map<String, Object> ceData = new HashMap<>();
+
+        List<Map<String, Object>> ceDataList = new ArrayList<>();
+
+        Map<String, Object> ceSingleData = new HashMap<>();
+
+        //就一个
+        ceSingleData.put("id", "0");
+        for (String paraStr :
+                ceParamsList) {
+            ceSingleData.put(paraStr, ceMapRes.get(paraStr));
+        }
+
+        ceDataList.add(ceSingleData);
+
+        ceData.put("data", ceDataList);
+
+        return ceData;
+
+    }
 }

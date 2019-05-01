@@ -195,7 +195,7 @@ public class ScenarioController {
             List<EdgeVO> edgeVOList = experimentInfoVO.getEdges();
 
             List<NodePO> nodePOList = scenarioService.getNodePOListByNodeVOList(nodeVOList, experimentID);
-            System.out.println(nodePOList.size());
+//            System.out.println(nodePOList.size());
             List<EdgePO> edgePOList = scenarioService.getEdgePOListByEdgeVOList(edgeVOList, experimentID);
 
             //拓扑出执行序列，执行序列输出的是 节点的id
@@ -231,7 +231,11 @@ public class ScenarioController {
             @RequestParam("target") String target,
             @RequestBody ExperimentInfoVO experimentInfoVO
     ) throws IOException {
+
+
         Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
+        boolean result = true;
+        httpResult.put("result", result);
 
         File file = new File(dataService.exportCsv(userID, tableName));
 
@@ -255,6 +259,8 @@ public class ScenarioController {
 //        String nodeID = nodePOList;
         String dummyRes;
         List<String> dummyList;
+        //=========labels_name==========//
+        Map<String, Object> labelNameMap;
         try {
 
             dummyRes = uploadFileExec.dummy(file, target);
@@ -263,53 +269,66 @@ public class ScenarioController {
             dummyList = dataService.stringArrayToList(dummyStrings);
 
 //            dummyList.remove(0);
-            Map<String, Object> dummyMapResToSave = new HashMap<>();
-            dummyMapResToSave.put("哑变量", dummyList);
-            //保存数据
+
+            //设置params参数
+            Map<String, Object> dummyParams = scenarioService.setDummyParams(dummyList);
+
+            //设置保存的数据
+            Map<String, Object> dummyData = scenarioService.setDummyData(dummyList);
 
             String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "哑变量");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, dummyMapResToSave);
+
+            //label 的名称
+            labelNameMap = scenarioService.getLabelName(dummyRes);
+
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "table", dummyParams, dummyData);
             httpResult.put("哑变量", "运行成功并保存结果！");
 
-//            file.delete(); //删除本地临时文件
+            file.delete(); //删除本地临时文件
 
         } catch (Exception e) {
             e.printStackTrace();
-            httpResult.put("哑变量", "运行 dummy 异常，保存数据失败!");
+            httpResult.remove("result");
+            result = false;
+            httpResult.put("result", result);
+            httpResult.put("reason", "运行 dummy 异常，保存数据失败!");
             return httpResult;
         }
 
 
         //=========分词 + 停词过滤=========//
 
-        List<List<String>> partArray = new ArrayList<>();//分词结果
-        List<List<String>> swArray = new ArrayList<>();
+        List<List<String>> partArray;//分词结果
+        List<List<String>> swArray;
         try {
             List<List<List<String>>> partAndSwRes = scenarioService.executePartAndSw(dummyRes);
             partArray = partAndSwRes.get(0);//分词结果
             swArray = partAndSwRes.get(1);//停词结果
 
-            Map<String, Object> partMapRes = new HashMap<>();
-            partMapRes.put("分词结果", partArray);
-            String nodeNo1 = scenarioService.getNodeNoFromPoList(nodePOList, "分词");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo1, "node", null, partMapRes);
 
-            Map<String, Object> swMapRes = new HashMap<>();
-            swMapRes.put("停词过滤", swArray);
+            Map<String, Object> partParams = scenarioService.setParams(new ArrayList<>(Arrays.asList("Seg_list")));
+            Map<String, Object> partData = scenarioService.setPartData(partArray);
+
+            String nodeNo1 = scenarioService.getNodeNoFromPoList(nodePOList, "分词");
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo1, "table", partParams, partData);
+
+            Map<String, Object> swParams = scenarioService.setParams(new ArrayList<>(Arrays.asList("Stopped_tokens")));
+            Map<String, Object> swData = scenarioService.setSwData(swArray);
+
             String nodeNo2 = scenarioService.getNodeNoFromPoList(nodePOList, "停词过滤");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo2, "node", null, swMapRes);
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo2, "table", swParams, swData);
 
             httpResult.put("分词/停词过滤", "运行成功并保存结果！");
 
         } catch (Exception e) {
             e.printStackTrace();
-            httpResult.put("分词/停词过滤", "运行 分词/停词过滤 异常，保存数据失败!");
+            httpResult.remove("result");
+            result = false;
+            httpResult.put("result", result);
+            httpResult.put("reason", "运行 分词/停词过滤 异常，保存数据失败!");
             return httpResult;
         }
 
-
-        //=========labels_name==========//
-        Map<String, Object> labelNameMap = scenarioService.getLabelName(dummyRes);
 
         // 新闻主题的数量
         int n_topics = labelNameMap.size();
@@ -321,7 +340,6 @@ public class ScenarioController {
         trueLabelsMap.put("true_labels", trueLabels);
 
         //=========词频统计===========//
-
         try {
             TextAnalysisExec.FrequencyStatistics frequencyStatistics = textAnalysisExec.new FrequencyStatistics();
             Map<String, Object> kvMap = new HashMap<>();
@@ -337,18 +355,26 @@ public class ScenarioController {
                 index++;
             }
             kvMap.put("news_list", kvList);
-            Map kvMapRes = frequencyStatistics.handleFeign(kvMap);
+            Map<String, Object> kvMapRes = frequencyStatistics.handleFeign(kvMap);
 
-            Map<String, Object> kvMapResToSave = new HashMap<>();
-            kvMapResToSave.put("词频统计", kvMapRes);
+//            System.out.println(kvMapRes);
+            //设置参数
+            Map<String, Object> kvParams = scenarioService.setKvParams(kvMapRes);
+
+            //设置数值
+            Map<String, Object> kvData = scenarioService.setKvData(kvMapRes);
+
             String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "词频统计");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, kvMapResToSave);
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "table", kvParams, kvData);
 
             httpResult.put("词频统计", "运行成功并保存结果！");
 
         } catch (Exception e) {
             e.printStackTrace();
-            httpResult.put("词频统计", "运行 分词/停词过滤 异常，保存数据失败!");
+            httpResult.remove("result");
+            result = false;
+            httpResult.put("result", result);
+            httpResult.put("reason", "运行 词频统计 异常，保存数据失败!");
             return httpResult;
         }
 
@@ -372,16 +398,20 @@ public class ScenarioController {
             ldaMap.put("n_topics", n_topics);
             ldaMapRes = lda.handleFeign(ldaMap);
 
-            Map<String, Object> ldaMapResToSave = new HashMap<>();
-            ldaMapResToSave.put("lda", ldaMapRes);
+            Map<String, Object> ldaParams = scenarioService.setParams(new ArrayList<>(Arrays.asList("Docres")));
+            Map<String, Object> ldaData = scenarioService.setLdaData(ldaMapRes);
             String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "LDA");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, ldaMapResToSave);
+
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "table", ldaParams, ldaData);
 
             httpResult.put("lda", "运行成功并保存结果！");
 
         } catch (Exception e) {
             e.printStackTrace();
-            httpResult.put("lda", "运行 lda 异常，保存数据失败!");
+            httpResult.remove("result");
+            result = false;
+            httpResult.put("result", result);
+            httpResult.put("reason", "运行 lda 异常，保存数据失败!");
             return httpResult;
         }
 
@@ -398,26 +428,39 @@ public class ScenarioController {
             Map<String, Object> ceMap = new HashMap<>();
             ceMap.put("labels_true", trueLabels);
             ceMap.put("labels_pred", preLabels);
-            Map ceMapRes = clusterEvaluation.handleFeign(ceMap);
+            Map<String, Object> ceMapRes = clusterEvaluation.handleFeign(ceMap);
 
 
-            Map<String, Object> ceMapResToSave = new HashMap<>();
-            ceMapResToSave.put("聚类结果", ceMapRes);
+            List<String> ceParamsList = new ArrayList<>(Arrays.asList(
+                    "adjusted_Rand_index",
+                    "mutual_information_based_scores",
+                    "homogeneity_score",
+                    "completeness_score",
+                    "v_measure_score",
+                    "fowlkes_mallows_score"
+            ));
+            Map<String, Object> ceParams = scenarioService.setParams(ceParamsList);
+
+            Map<String, Object> ceData = scenarioService.setCeData(ceParamsList, ceMapRes);
+
             String nodeNo = scenarioService.getNodeNoFromPoList(nodePOList, "聚类评估");
-            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "node", null, ceMapResToSave);
+            scenarioService.saveComputingResult(userId, experimentID, nodeNo, "table", ceParams, ceData);
 
             httpResult.put("聚类评估", "运行成功并保存结果！");
 
         } catch (Exception e) {
 
             e.printStackTrace();
-            httpResult.put("聚类评估", "运行 聚类评估 异常，保存数据失败!");
+            httpResult.remove("result");
+            result = false;
+            httpResult.put("result", result);
+            httpResult.put("reason", "运行 聚类评估 异常，保存数据失败!");
             return httpResult;
 
         }
 
-        scenarioService.saveComputingResult(userId, experimentID, "labels_name", "node", null, labelNameMap);
-        scenarioService.saveComputingResult(userId, experimentID, "true_labels", "node", null, trueLabelsMap);
+//        scenarioService.saveComputingResult(userId, experimentID, "labels_name", "node", null, labelNameMap);
+//        scenarioService.saveComputingResult(userId, experimentID, "true_labels", "node", null, trueLabelsMap);
 
         return httpResult;
     }

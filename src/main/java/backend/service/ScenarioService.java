@@ -173,6 +173,88 @@ public interface ScenarioService {
 
     /////////////////////////////////// 运行场景相关  //////////////////////////////////////
 
+    /**
+     * 设置哑变量的参数
+     *
+     * @param dummyList
+     * @return
+     */
+    Map<String, Object> setDummyParams(List<String> dummyList);
+
+
+    /**
+     * 设置哑变量数据
+     *
+     * @param dummyList
+     * @return
+     */
+    Map<String, Object> setDummyData(List<String> dummyList);
+
+    /**
+     * set params
+     *
+     * @param string
+     * @return
+     */
+    Map<String, Object> setParams(List<String> string);
+
+    /**
+     * part data
+     *
+     * @param partArray
+     * @return
+     */
+    Map<String, Object> setPartData(List<List<String>> partArray);
+
+    /**
+     * sw data
+     *
+     * @param partArray
+     * @return
+     */
+    Map<String, Object> setSwData(List<List<String>> partArray);
+
+    /**
+     * kv params
+     *
+     * @param kvMapRes
+     * @return
+     */
+    Map<String, Object> setKvParams(Map<String, Object> kvMapRes);
+
+    /**
+     * kv data
+     *
+     * @param kvMapRes
+     * @return
+     */
+    Map<String, Object> setKvData(Map<String, Object> kvMapRes);
+
+    /**
+     * ce data
+     *
+     * @param ceMapRes
+     * @return
+     */
+    Map<String, Object> setCeData(List<String> ceParamsList, Map<String, Object> ceMapRes);
+
+
+    /**
+     * lda data
+     *
+     * @param ldaMapRes
+     * @return
+     */
+    Map<String, Object> setLdaData(Map<String, Object> ldaMapRes);
+
+    /**
+     * 获取nodeNo
+     *
+     * @param nodePOList
+     * @param nodeName
+     * @return
+     */
+
     String getNodeNoFromPoList(List<NodePO> nodePOList, String nodeName);
 
     /**
