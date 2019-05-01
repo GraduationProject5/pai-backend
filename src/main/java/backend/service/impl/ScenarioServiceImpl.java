@@ -592,7 +592,7 @@ public class ScenarioServiceImpl implements ScenarioService {
                 params) {
             Map<String, Object> dummyParam = new HashMap<>();//一个
             dummyParam.put("title", tmp);
-            dummyParam.put("dataindex", tmp);
+            dummyParam.put("dataIndex", tmp);
             dummyParam.put("key", tmp);
 
             dummyParamList.add(dummyParam);
