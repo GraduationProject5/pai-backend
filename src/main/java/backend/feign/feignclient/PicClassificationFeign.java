@@ -43,7 +43,7 @@ public interface PicClassificationFeign {
      */
     @PostMapping(value = "/create_train_dir/",
             consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
-    Map<String, ?> create_train_dir(
+    Map<String, String> create_train_dir(
             Map<String, ?> map
     );
 
@@ -53,9 +53,10 @@ public interface PicClassificationFeign {
      * @param map
      * @return
      */
-    @PostMapping(value = "/upload_pics/")
+    @PostMapping(value = "/upload_pics/",
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     Map<String, Object> upload_pics(
-            @RequestBody Map<String, Object> map
+            Map<String, ?> map
     );
 
     /**
@@ -64,9 +65,10 @@ public interface PicClassificationFeign {
      * @param map
      * @return
      */
-    @PostMapping(value = "/pic_train/")
+    @PostMapping(value = "/pic_train/",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     Map<String, Object> pic_train(
-            @RequestBody Map<String, Object> map
+            Map<String, ?> map
     );
 
 
@@ -76,9 +78,10 @@ public interface PicClassificationFeign {
      * @param map
      * @return
      */
-    @PostMapping(value = "/train_result/")
+    @PostMapping(value = "/train_result/",
+            consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     Map<String, Object> train_result(
-            @RequestBody Map<String, Object> map
+            Map<String, ?> map
     );
 
 }

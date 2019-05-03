@@ -14,13 +14,15 @@ import javax.servlet.MultipartConfigElement;
 @EntityScan
 @SpringBootApplication
 @EnableFeignClients
-public class PaiBackendApplication extends SpringBootServletInitializer {
+public class PaiBackendApplication {
 
 
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(PaiBackendApplication.class);
-	}
+    //extends SpringBootServletInitializer
+
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//		return application.sources(PaiBackendApplication.class);
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(PaiBackendApplication.class, args);

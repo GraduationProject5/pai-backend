@@ -18,19 +18,19 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 //         可添加多个
         registry.addInterceptor(getJwtHeader())
                 .excludePathPatterns("/user/login")
-                .excludePathPatterns("/index")
+                .excludePathPatterns("/")
                 .addPathPatterns("/**");
     }
 
     //token 在header的拦截器
 
-    /**
-     * 添加静态资源
-     */
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-    }
+//    /**
+//     * 添加静态资源
+//     */
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+//    }
 
     public HandlerInterceptor getJwtHeader(){
         return new JwtInterceptor();

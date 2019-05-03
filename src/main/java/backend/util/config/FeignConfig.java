@@ -5,6 +5,7 @@ import feign.Logger;
 import feign.Retryer;
 import feign.codec.Encoder;
 import feign.form.FormEncoder;
+import feign.form.spring.SpringFormEncoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
@@ -27,7 +28,7 @@ public class FeignConfig {
 
     @Bean
     public Encoder feignFormEncoder() {
-        Encoder encoder = new FormEncoder(new SpringEncoder(this.messageConverters));
+        SpringFormEncoder encoder = new SpringFormEncoder(new SpringEncoder(this.messageConverters));
         return encoder;
     }
 

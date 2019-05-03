@@ -466,13 +466,43 @@ public class ScenarioController {
     }
 
 
-    //运行图片分类
-    @PostMapping(value = "/executePicClassification")
+    /**
+     * 开始图片训练
+     *
+     * @param userID
+     * @param trainParams
+     * @return
+     */
+    @PostMapping(value = "/executePicTrain")
     public Map<String, Object> executePicClassification(
-            @SessionAttribute("userID") String userID
+            @SessionAttribute("userID") String userID,
+            @RequestBody Map<String, Object> trainParams
     ) {
-        Map<String, Object> httpResult = HttpResponseHelper.newLinkedResultMap();
-        return httpResult;
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+
+        return picClassificationExec.picTrain(userName, trainParams);
+    }
+
+    /**
+     * 获取训练结果
+     *
+     * @param userID
+     * @param taskID
+     * @return
+     */
+    @GetMapping(value = "getPicTrainResult")
+    public Map<String, Object> getPicTrainResult(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("taskID") String taskID,
+            @RequestParam("experimentID") String experimentID,
+            @RequestParam("nodeNo") String nodeNo
+    ) {
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+
+        return picClassificationExec.getTrainResult(userID, taskID, experimentID, nodeNo);
+
     }
 
 }

@@ -248,6 +248,14 @@ public interface ScenarioService {
     Map<String, Object> setLdaData(Map<String, Object> ldaMapRes);
 
     /**
+     * ann data
+     *
+     * @param annMapRes
+     * @return
+     */
+    Map<String, Object> setAnnData(Map<String, Object> annMapRes);
+
+    /**
      * 获取nodeNo
      *
      * @param nodePOList

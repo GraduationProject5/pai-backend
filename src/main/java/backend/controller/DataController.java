@@ -13,7 +13,9 @@ import backend.model.vo.ColumnVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -158,29 +160,41 @@ public class DataController {
         dataService.dropUserTable(Long.parseLong(userID), tableID);
     }
 
-    //创建训练集文件夹
+    /**
+     * 创建训练集文件夹
+     *
+     * @param userID
+     * @param dirParams
+     * @return
+     */
     @PostMapping(value = "/createTrainDir")
     public Map<String, ?> createTrainDir(
             @SessionAttribute("userID") String userID,
-            @RequestParam("expName") String expName,
-            //文件夹名称，比如bird/cat
-            @RequestParam("dirName") String dirName
+//            Param("expName") String expName,
+//            //文件夹名称，比如bird/cat
+//            Param("dirName") String dirName,
+            @RequestBody Map<String, String> dirParams
     ) {
         String userName = userService.getUserNameByUserID(Long.parseLong(userID));
-        return picClassificationExec.createTrainDir(userName, expName, dirName);
+        return picClassificationExec.createTrainDir(userName, dirParams);
     }
 
     //上传图片
     @PostMapping(value = "/uploadPics")
-    public Map<String, ?> uploadPics(
-            @SessionAttribute("userID") String userID,
-            @RequestParam("expName") String expName,
-            //文件夹名称，比如bird/cat
-            @RequestParam("dirName") String dirName
+    @ResponseBody
+    public Map<String, ?> uploadPics(HttpServletRequest request,
+                                     @SessionAttribute("userID") String userID
     ) {
 
+        List<MultipartFile> pics = ((MultipartHttpServletRequest) request)
+                .getFiles("pic");
 
-        return null;
+        String expName = request.getParameter("expName");
+        String dirName = request.getParameter("dirName");
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+
+        return picClassificationExec.uploadPics(userName, expName, dirName, pics);
     }
 
 }

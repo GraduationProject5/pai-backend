@@ -14,7 +14,9 @@ import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ScenarioServiceImpl implements ScenarioService {
@@ -276,14 +278,14 @@ public class ScenarioServiceImpl implements ScenarioService {
 //        for (DataParam dp : dataParamList) {
 //            dataParamsMapList.add(dp.getParam());
 //        }
-        results.put("paras", ((Map) dataParamList.get(0).getParam()).get("paras"));
+        results.putAll(dataParamList.get(0).getParam());
 
         Map<String, Object> data = HttpResponseHelper.newResultMap();
 //        List<Map<String, Object>> dataResultsMapList = new ArrayList<>();
 //        for (DataResult dr : dataResultList) {
 //            dataResultsMapList.add(dr.getData());
 //        }
-        results.put("data", ((Map) dataResultList.get(0).getData()).get("data"));
+        results.putAll(dataResultList.get(0).getData());
 
         result.put("results", results);
         return result;
@@ -511,11 +513,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         String[] dummyResSplit = dummyRes.split("\n");
         List<String> dummyResList = dataService.stringArrayToList(dummyResSplit);
-        System.out.println(dummyResList.get(0));
-        System.out.println(dummyResList.get(1));
-        System.out.println(dummyResList.get(2));
-        System.out.println(dummyResList.get(3));
-        System.out.println(dummyResList.get(4));
+
         dummyResList.remove(0);//删除第一行
         for (String string :
                 dummyResList) {
@@ -533,8 +531,6 @@ public class ScenarioServiceImpl implements ScenarioService {
     public int findLabelPosition(List<String> stringList) {
 
         int location = 1;
-
-        System.out.println(stringList);
 
         for (String string :
                 stringList) {
@@ -801,7 +797,13 @@ public class ScenarioServiceImpl implements ScenarioService {
         for (int i = 0; i < ldaLists.size(); i++) {
             Map<String, Object> ldaSingleData = new HashMap<>();
             ldaSingleData.put("id", String.valueOf(i));
-            ldaSingleData.put("docres", ldaLists.get(i));
+            List<Double> singleList = ldaLists.get(i);
+            List<String> stringList = singleList.stream().map(String::valueOf).collect(Collectors.toList());
+//            for (Double tmp :
+//                    singleList) {
+//                stringList.add(String.valueOf(tmp));
+//            }
+            ldaSingleData.put("docres", listToString(stringList));
             ldaDataList.add(ldaSingleData);
         }
 
@@ -831,4 +833,47 @@ public class ScenarioServiceImpl implements ScenarioService {
         return ceData;
 
     }
+
+    public Map<String, Object> setAnnData(Map<String, Object> annMapRes) {
+
+        Map<String, Object> annData = new HashMap<>();
+
+        Map<String, Object> annHistory = (Map<String, Object>) annMapRes.get("history");
+
+        String annTest = String.valueOf(annMapRes.get("test"));
+
+
+        List<Map<String, Object>> annDataList = new ArrayList<>();
+
+        Map<String, Object> annSingleData = new HashMap<>();
+
+        annSingleData.put("id", "0");
+
+//        History Loss,History Acc,Test Loss,Test Acc
+
+        List<BigDecimal> historyLoss = (List<BigDecimal>) annHistory.get("loss");
+
+        List<BigDecimal> historyAcc = (List<BigDecimal>) annHistory.get("acc");
+
+        String testLoss = annTest.split(",")[0];
+
+        String testAcc = annTest.split(",")[1];
+
+
+        annSingleData.put("history loss", listToString(historyLoss.stream().map(String::valueOf).collect(Collectors.toList())));
+
+        annSingleData.put("history acc", listToString(historyAcc.stream().map(String::valueOf).collect(Collectors.toList())));
+
+        annSingleData.put("test loss", testLoss);
+
+        annSingleData.put("test acc", testAcc);
+
+        annDataList.add(annSingleData);
+
+        annData.put("data", annSingleData);
+
+        return annData;
+
+    }
+
 }
