@@ -60,7 +60,14 @@ public class DataController {
                 (Long.parseLong(userID), tableName, sqlScript);
     }
 
-    // 将用户上传的 csv数据表 插入到自建的数据库
+    /**
+     * 将用户上传的 csv数据表 插入到自建的数据库
+     *
+     * @param userID
+     * @param tableName
+     * @param csvFile
+     * @return
+     */
     @PostMapping(value = "/insertCsv")
     public Map<String, Object> insertCsv(@SessionAttribute("userID") String userID,
                                          @RequestParam("tableName") String tableName,
@@ -179,7 +186,13 @@ public class DataController {
         return picClassificationExec.createTrainDir(userName, dirParams);
     }
 
-    //上传图片
+    /**
+     * 上传图片
+     *
+     * @param request
+     * @param userID
+     * @return
+     */
     @PostMapping(value = "/uploadPics")
     @ResponseBody
     public Map<String, ?> uploadPics(HttpServletRequest request,

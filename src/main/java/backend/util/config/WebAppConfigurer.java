@@ -19,20 +19,27 @@ public class WebAppConfigurer implements WebMvcConfigurer {
         registry.addInterceptor(getJwtHeader())
                 .excludePathPatterns("/user/login")
                 .excludePathPatterns("/")
+                .excludePathPatterns("/static/**")
+//                .excludePathPatterns("/static/css/index.css")
+//                .excludePathPatterns("/static/js/index.js")
+//                .excludePathPatterns("/static/js/1.async.js")
+//                .excludePathPatterns("/static/js/0.async.js")
+//                .excludePathPatterns("/static/js/static/default-experiment.ebf878f9.png")
+//                .excludePathPatterns("/static/js/static/index.c4014088.jpg")
                 .addPathPatterns("/**");
     }
 
     //token 在header的拦截器
 
-//    /**
-//     * 添加静态资源
-//     */
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-//    }
+    /**
+     * 添加静态资源
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+    }
 
-    public HandlerInterceptor getJwtHeader(){
+    public HandlerInterceptor getJwtHeader() {
         return new JwtInterceptor();
     }
 }

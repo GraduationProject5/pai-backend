@@ -1,6 +1,9 @@
 package backend.service.impl;
 
 import backend.daorepository.*;
+import backend.feign.feignservice.AbstractHandler;
+import backend.feign.feignservice.HandlerChain;
+import backend.feign.feignservice.MainExec;
 import backend.feign.feignservice.TextAnalysisExec;
 import backend.feign.feignservice.service.EvaluationService;
 import backend.feign.feignservice.service.MLService;
@@ -14,6 +17,8 @@ import backend.util.json.JSONHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -410,10 +415,44 @@ public class ScenarioServiceImpl implements ScenarioService {
         return component.getComponentID();
     }
 
-    public void executeLine(List<String> funLine) {
+    public void executeLine(List<String> funLine, Map<String, Object> data) {
 
+        Map<String, String> map = new HashMap<>();
 
+        map.put("svm", "setSVM");
+        map.put("lr", "setLogicRegression");
+        map.put("GBDT", "setGBDT");
+        map.put("knn", "setKNearestNeighbors");
+        map.put("rf", "setRandomForest");
+        map.put("nb", "setNaiveBayes");
+        map.put("linear", "setLinearRegression");
+        map.put("GBDT_regression", "setGBDTRegression");
+        map.put("ce", "setClusterEvaluation");
+        map.put("re", "setRegressionEvaluation");
+        map.put("tcd", "setTcdEvaluation");
+        map.put("mcd", "setMcdEvaluation");
+        map.put("cm", "setConfusionMatrixEvaluation");
+
+        MainExec mainExec = new MainExec();
+        try {
+            for (String funcName :
+                    funLine) {
+
+                String methodName = map.get(funcName);
+
+                Method method = mainExec.getClass().getMethod(methodName, MainExec.class);
+                method.invoke(mainExec);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        List<AbstractHandler> abstractHandlerList = mainExec.getSuccessors();
+
+        HandlerChain handlerChain = new HandlerChain(abstractHandlerList);
+
+        handlerChain.process(data);
     }
+
 
     public String getFunNameByNodeID(String nodeID) {
 
@@ -870,7 +909,9 @@ public class ScenarioServiceImpl implements ScenarioService {
 
         annDataList.add(annSingleData);
 
-        annData.put("data", annSingleData);
+//        annData.put("data", annSingleData);
+
+        annData.put("data", annDataList);
 
         return annData;
 
