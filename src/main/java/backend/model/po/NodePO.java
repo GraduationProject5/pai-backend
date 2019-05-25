@@ -107,6 +107,25 @@ public class NodePO {
     }
 
     /**
+     * copy from another PO
+     */
+    public NodePO(NodePO nodePO,Long experimentID){
+        setNodeNo(nodePO.nodeNo);
+        setIndex(nodePO.index);
+        setLabel(nodePO.label);
+        setName(nodePO.name);
+        setNodeIDStr(nodePO.nodeIDStr);
+        setSettings(nodePO.settings);
+        setShape(nodePO.shape);
+        setSize(nodePO.size);
+        setType(nodePO.type);
+        setX(nodePO.x);
+        setY(nodePO.y);
+        setComponentID(nodePO.componentID);
+        setExperimentID(experimentID);
+    }
+
+    /**
      * 返回VO
      */
     public NodeVO toNodeVO(){

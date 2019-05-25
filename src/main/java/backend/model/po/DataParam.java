@@ -36,4 +36,13 @@ public class DataParam {
     @Basic
     @Column(name = "experiment_id")
     private Long experimentID;
+
+    /**
+     * copy
+     */
+    public DataParam(DataParam dataParam,Long dataSetID,Long experimentID){
+        setExperimentID(experimentID);
+        setParam(dataParam.param);
+        setDataSetID(dataSetID);
+    }
 }

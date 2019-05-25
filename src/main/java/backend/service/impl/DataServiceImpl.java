@@ -66,6 +66,21 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
+    public Map<String, Object> createTextAnalysisExperiment(long userID, String experimentName, String description) {
+        Map<String, Object> result = createExperiment(userID,experimentName,description);
+        Long experimentID = (Long) result.get("experimentID");
+        scenarioService.saveTextAnalysisScenario(experimentID,userID);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> createPicAnalysisExperiment(long userID, String experimentName, String description) {
+        Map<String, Object> result = createExperiment(userID,experimentName,description);
+
+        return result;
+    }
+
+    @Override
     public void deleteExperiment(Long experimentID) {
         //dataParams, dataResults, dataSet, edges, experiment, nodes, r_user_experiment
         scenarioService.clearScenario(experimentID);

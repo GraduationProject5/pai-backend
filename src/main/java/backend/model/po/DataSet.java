@@ -45,4 +45,13 @@ public class DataSet {
     private String type;
 
 
+    /**
+     * copy
+     */
+    public DataSet(DataSet dataSet,Long experiment,Long userID){
+        setUserID(userID);
+        setExperimentID(experiment);
+        setNodeNo(dataSet.nodeNo);
+        setType(dataSet.type);
+    }
 }

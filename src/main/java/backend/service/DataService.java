@@ -26,7 +26,15 @@ public interface DataService {
      */
     Map<String, Object> createExperiment(long userID, String experimentName, String description);
 
+    /**
+     * 创建文本分析实验
+     */
+    Map<String, Object> createTextAnalysisExperiment(long userID, String experimentName, String description);
 
+    /**
+     * 创建图片分类实验
+     */
+    Map<String, Object> createPicAnalysisExperiment(long userID, String experimentName, String description);
     /**
      * 删除实验以及相关的数据
      */

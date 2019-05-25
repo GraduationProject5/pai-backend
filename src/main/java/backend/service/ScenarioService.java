@@ -76,6 +76,11 @@ public interface ScenarioService {
     Map<String, Object> getScenario(Long experimentID);
 
     /**
+     * 获取文本分析场景
+     */
+    void saveTextAnalysisScenario(Long newExperimentID,Long userID);
+
+    /**
      * 清空场景
      *
      * @param experimentID

@@ -48,6 +48,19 @@ public class ScenarioController {
     @Autowired
     PicClassificationExec picClassificationExec;
 
+    //创建文本分类模板实验
+    @PostMapping(value = "/createTextAnalysisExperiment")
+    public Map<String, Object> createTextAnalysisExperiment(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("experimentName") String experimentName,
+            @RequestParam(value = "description", required = false) String description) {
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+        System.out.println("=======TextAnalysis Model Experiment=========");
+        System.out.println(picClassificationExec.createExp(userName, experimentName));
+
+        return dataService.createTextAnalysisExperiment(Long.parseLong(userID), experimentName, description);
+    }
 
     //创建实验
     @PostMapping(value = "/createExperiment")

@@ -74,6 +74,19 @@ public class EdgePO {
     }
 
     /**
+     * copy from another PO
+     */
+    public EdgePO(EdgePO edgePO,Long experimentID){
+        setIndex(edgePO.index);
+        setEdge_no(edgePO.edge_no);
+        setSourceNo(edgePO.sourceNo);
+        setSourceAnchor(edgePO.sourceAnchor);
+        setTargetNo(edgePO.targetNo);
+        setTargetAnchor(edgePO.targetAnchor);
+        setExperimentID(experimentID);
+    }
+
+    /**
      * 生成VO返回
      */
     public EdgeVO toEdgeVO(){

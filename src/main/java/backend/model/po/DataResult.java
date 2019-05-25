@@ -37,4 +37,13 @@ public class DataResult {
     @Basic
     @Column(name = "experiment_id")
     private Long experimentID;
+
+    /**
+     * copy
+     */
+    public DataResult(DataResult dataResult,Long dataSetID,Long experimentID){
+        setExperimentID(experimentID);
+        setData(dataResult.data);
+        setDataSetID(dataSetID);
+    }
 }
