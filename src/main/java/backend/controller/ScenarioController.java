@@ -181,14 +181,17 @@ public class ScenarioController {
             @SessionAttribute("userID") String userID,
             @RequestParam("tableName") String tableName,
             @RequestBody ExperimentInfoVO experimentInfoVO
-    ) {
+    ) throws IOException {
 
         Map<String, Object> httpResult = HttpResponseHelper.newResultMap();
 
         //导出数据为csv，返回导出文件路径，交给预处理
-//        String dataSourcePath = dataService.exportCsv(userID, tableName);
-//        if (dataSourcePath != null) {
-        if (true) {
+        String dataSourcePath = dataService.exportCsv(userID, tableName);
+
+        Map sourceData = new HashMap();
+        sourceData.put("data", new File(dataSourcePath));
+
+        if (dataSourcePath.equals("")) {
             //获取实验的边和节点的信息
             long experimentID = experimentInfoVO.getExperimentID(); //实验id
             List<NodeVO> nodeVOList = experimentInfoVO.getNodes();
@@ -214,7 +217,7 @@ public class ScenarioController {
             System.out.println("执行序列: " + funLine);
             httpResult.put("result", funLine);
 
-            scenarioService.executeLine(funLine);
+            scenarioService.executeLine(funLine, sourceData);
 
             return httpResult;
         } else {

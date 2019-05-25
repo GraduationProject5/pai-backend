@@ -28,6 +28,10 @@ public class MainExec {
      */
     List<AbstractHandler> successors = new ArrayList<>();
 
+    public List<AbstractHandler> getSuccessors() {
+        return successors;
+    }
+
     /**
      * 方法表内容
      */
@@ -51,7 +55,7 @@ public class MainExec {
         successors.add(tcdEvaluation);
     }
 
-    //多酚类 *多分类
+    //多分类
     public void setMcdEvaluation() {
         EvaluationExec.McdEvaluation mcdEvaluation = evaluationExec.new McdEvaluation();
         successors.add(mcdEvaluation);

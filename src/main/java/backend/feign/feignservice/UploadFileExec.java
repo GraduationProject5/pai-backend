@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 public class UploadFileExec {
 
 
-//    static String serverURL = "http://127.0.0.1:8000";
-
     private String serverURL;
 
     public UploadFileExec(@Value("${ml.feign.url}") String serverURL) {
