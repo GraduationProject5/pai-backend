@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by lienming on 2019/1/17.
  */
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/api/user")
 public class UserController {
 
     @Autowired

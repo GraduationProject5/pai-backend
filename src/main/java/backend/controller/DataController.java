@@ -24,7 +24,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value = "/data")
+@RequestMapping(value = "/api/data")
 public class DataController {
 
     @Autowired

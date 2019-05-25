@@ -28,7 +28,7 @@ import java.lang.reflect.Array;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = "/scenario")
+@RequestMapping(value = "/api/scenario")
 public class ScenarioController {
 
     @Autowired

@@ -17,9 +17,12 @@ public class WebAppConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 //         可添加多个
         registry.addInterceptor(getJwtHeader())
-                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/api/user/login")
+//                .excludePathPatterns("/user/login")
                 .excludePathPatterns("/")
                 .excludePathPatterns("/static/**")
+                .excludePathPatterns("/api/scenario/getSectionsAndComponents")
+                .excludePathPatterns("/api/experiment")
 //                .excludePathPatterns("/static/css/index.css")
 //                .excludePathPatterns("/static/js/index.js")
 //                .excludePathPatterns("/static/js/1.async.js")
