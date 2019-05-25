@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,33 +72,18 @@ public class DataControllerTest {
 
     @Test
     public void testCreateTableByScript() throws Exception {
-
-//        String sql =
-//                "create table test2ByScript(column_1 int not null, column_2 int null, column_3 int null, constraint user1_test_pk primary key (column_1));";
-
-//        String sql = "create table mytexts\n" +
-//                "(\n" +
-//                "\tid int auto_increment,\n" +
-//                "\tcontent MEDIUMTEXT not null,\n" +
-//                "\tconstraint texts_pk\n" +
-//                "\t\tprimary key (id)\n" +
-//                ");";
-//        Map<String,String> map = new HashMap();
-//        map.put("sql",sql);
-
-        String sql = "create table texts\n" +
+        String sql = "create table textAnalysis\n" +
                 "(\n" +
                 "\tcolumn_1 varchar(255) null,\n" +
                 "\tcolumn_2 mediumtext null\n" +
                 ");";
-
         mvc.perform(MockMvcRequestBuilders
                         .post("/data/createTableByScript")
                         .sessionAttr("userID", 1)
 //                .contentType(MediaType.APPLICATION_JSON)
 //                .content(JSONObject.toJSONString(map))
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("tableName", "texts")
+                        .param("tableName", "textAnalysis")
                         .param("sql", sql)
         )
                 .andExpect(status().isOk())

@@ -3,6 +3,7 @@ package backend.service.impl;
 import backend.dao.DatabaseHelper;
 import backend.daorepository.ExperimentRepository;
 import backend.daorepository.RUserExperimentRepository;
+import backend.enumclass.ColumnType;
 import backend.model.po.Experiment;
 import backend.model.po.TablePO;
 import backend.model.vo.ExperimentVO;
@@ -11,6 +12,7 @@ import backend.model.vo.ColumnVO;
 import backend.model.vo.TableVO;
 import backend.service.ScenarioService;
 import backend.util.json.HttpResponseHelper;
+import com.mysql.cj.xdevapi.Column;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.io.IOUtils;
@@ -102,9 +104,17 @@ public class DataServiceImpl implements DataService {
 
     // 根据SQL建表，成功返回(Long)tableID，失败返回(String)errorMessage
     public Map<String, Object> createTableByScript(long userID, String tableName, String scriptText) {
+//        String[] sql = scriptText.split(";");
+//        if(sql.length>1) {
+//            //多条语句
+//        }
+//        String sql_lowerCase = sql[0].toLowerCase().trim();
+//        String[] parts = sql_lowerCase.split(" ");
+//        if(!parts[0].equals("create")||!parts[1].equals("table")){
+//            //非建表语句
+//        }
+
         return databaseHelper.executeCreateTableByScript(userID, tableName, scriptText);
-
-
     }
 
     private Object handleCreateTableResult(Map<String, Object> result) {

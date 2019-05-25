@@ -51,7 +51,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return false;
         }
         String userID = JwtUtil.getUserID(token);
-        System.out.println(userID);
+//        System.out.println(userID);
         if(Integer.parseInt(userID)<=0) {
             Map<String,Object> map = HttpResponseHelper.newResultMap();
             map.put("result",false);
