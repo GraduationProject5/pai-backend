@@ -55,12 +55,26 @@ public class ScenarioController {
             @RequestParam("experimentName") String experimentName,
             @RequestParam(value = "description", required = false) String description) {
 
-        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
-        System.out.println("=======TextAnalysis Model Experiment=========");
-        System.out.println(picClassificationExec.createExp(userName, experimentName));
+//        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+//        System.out.println("=======TextAnalysis Model Experiment=========");
+//        System.out.println(picClassificationExec.createExp(userName, experimentName));
 
         return dataService.createTextAnalysisExperiment(Long.parseLong(userID), experimentName, description);
     }
+
+    @PostMapping(value = "/createPicTrainByTemplate")
+    public Map<String, Object> createPicTrainByTemplate(
+            @SessionAttribute("userID") String userID,
+            @RequestParam("experimentName") String experimentName,
+            @RequestParam(value = "description", required = false) String description) {
+
+        String userName = userService.getUserNameByUserID(Long.parseLong(userID));
+        System.out.println("=======PicTrain Model Experiment=========");
+        System.out.println(picClassificationExec.createExp(userName, experimentName));
+
+        return dataService.createPicTrainByTemplate(Long.parseLong(userID), experimentName, description);
+    }
+
 
     //创建实验
     @PostMapping(value = "/createExperiment")

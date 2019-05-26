@@ -74,9 +74,10 @@ public class DataServiceImpl implements DataService {
     }
 
     @Override
-    public Map<String, Object> createPicAnalysisExperiment(long userID, String experimentName, String description) {
+    public Map<String, Object> createPicTrainByTemplate(long userID, String experimentName, String description) {
         Map<String, Object> result = createExperiment(userID,experimentName,description);
-
+        Long experimentID = (Long) result.get("experimentID");
+        scenarioService.savePicTrainScenario(experimentID, userID);
         return result;
     }
 

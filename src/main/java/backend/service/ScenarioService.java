@@ -81,6 +81,13 @@ public interface ScenarioService {
     void saveTextAnalysisScenario(Long newExperimentID,Long userID);
 
     /**
+     * 从模板保存图片场景
+     *
+     * @param newExperimentID
+     * @param userID
+     */
+    void savePicTrainScenario(Long newExperimentID, Long userID);
+    /**
      * 清空场景
      *
      * @param experimentID
