@@ -180,6 +180,44 @@ public class ScenarioServiceImpl implements ScenarioService {
         }
     }
 
+    public void savePicTrainScenario(Long newExperimentID, Long userID) {
+        Long experimentID = 45L;//图片分类id
+        List<NodePO> nodePOList = nodePORepository.findByExperimentID(experimentID);
+        List<EdgePO> edgePOList = edgePORepository.findByExperimentID(experimentID);
+        List<DataSet> dataSetList = dataSetRepository.findByExperimentID(experimentID);
+
+        // nodes
+        for (NodePO nodePO : nodePOList) {
+            NodePO newNodePO = new NodePO(nodePO, newExperimentID);
+            nodePORepository.save(newNodePO);
+        }
+
+        //edges
+        for (EdgePO edgePO : edgePOList) {
+            EdgePO newEdgePO = new EdgePO(edgePO, newExperimentID);
+            edgePORepository.save(newEdgePO);
+        }
+
+        for (DataSet dataSet : dataSetList) {
+            Long oldDatasetID = dataSet.getDataSetID();
+
+            DataSet newDataSet = new DataSet(dataSet, newExperimentID, userID);
+            newDataSet = dataSetRepository.save(newDataSet);
+            Long newDatasetID = newDataSet.getDataSetID();
+
+            List<DataParam> dataParamList = dataParamRepository.findByDataSetID(oldDatasetID);
+            List<DataResult> dataResultList = dataResultRepository.findByDataSetID(oldDatasetID);
+            for (DataParam dataParam : dataParamList) {
+                DataParam newDataParam = new DataParam(dataParam, newDatasetID, newExperimentID);
+                dataParamRepository.save(newDataParam);
+            }
+            for (DataResult dataResult : dataResultList) {
+                DataResult newDataResult = new DataResult(dataResult, newDatasetID, newExperimentID);
+                dataResultRepository.save(newDataResult);
+            }
+        }
+    }
+
     @Override
     public void clearScenario(Long experimentID) {
         dataResultRepository.deleteByExperimentID(experimentID);

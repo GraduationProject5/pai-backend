@@ -30,11 +30,10 @@ public interface DataService {
      * 创建文本分析实验
      */
     Map<String, Object> createTextAnalysisExperiment(long userID, String experimentName, String description);
-
     /**
      * 创建图片分类实验
      */
-    Map<String, Object> createPicAnalysisExperiment(long userID, String experimentName, String description);
+    Map<String, Object> createPicTrainByTemplate(long userID, String experimentName, String description);
     /**
      * 删除实验以及相关的数据
      */
